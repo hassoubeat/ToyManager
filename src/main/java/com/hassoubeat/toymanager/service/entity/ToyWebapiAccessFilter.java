@@ -7,6 +7,7 @@ package com.hassoubeat.toymanager.service.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -66,6 +68,8 @@ public class ToyWebapiAccessFilter implements Serializable {
     @JoinColumn(name = "toy_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Toy toyId;
+    @OneToMany(mappedBy = "toyWebapiAccessFilterId")
+    private List<Toy> toyList;
 
     public ToyWebapiAccessFilter() {
     }
@@ -130,6 +134,14 @@ public class ToyWebapiAccessFilter implements Serializable {
         this.toyId = toyId;
     }
 
+    public List<Toy> getToyList() {
+        return toyList;
+    }
+
+    public void setToyList(List<Toy> toyList) {
+        this.toyList = toyList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -152,7 +164,7 @@ public class ToyWebapiAccessFilter implements Serializable {
 
     @Override
     public String toString() {
-        return "com.hassoubeat.toymanager.web.backingbean.admin.ToyWebapiAccessFilter[ id=" + id + " ]";
+        return "com.hassoubeat.toymanager.service.entity.ToyWebapiAccessFilter[ id=" + id + " ]";
     }
     
 }

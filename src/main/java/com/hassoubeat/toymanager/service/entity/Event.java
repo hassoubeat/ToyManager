@@ -25,8 +25,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -45,10 +43,10 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Event.findByRoop", query = "SELECT e FROM Event e WHERE e.roop = :roop")
     , @NamedQuery(name = "Event.findByRoopEndDate", query = "SELECT e FROM Event e WHERE e.roopEndDate = :roopEndDate")
     , @NamedQuery(name = "Event.findByCrontab", query = "SELECT e FROM Event e WHERE e.crontab = :crontab")
+    , @NamedQuery(name = "Event.findByIsTalking", query = "SELECT e FROM Event e WHERE e.isTalking = :isTalking")
     , @NamedQuery(name = "Event.findByIsDeleted", query = "SELECT e FROM Event e WHERE e.isDeleted = :isDeleted")
     , @NamedQuery(name = "Event.findByCreateDate", query = "SELECT e FROM Event e WHERE e.createDate = :createDate")
     , @NamedQuery(name = "Event.findByEditDate", query = "SELECT e FROM Event e WHERE e.editDate = :editDate")})
-@XmlRootElement
 public class Event implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -86,6 +84,10 @@ public class Event implements Serializable {
     private String crontab;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "is_talking")
+    private boolean isTalking;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "is_deleted")
     private boolean isDeleted;
     @Basic(optional = false)
@@ -106,6 +108,9 @@ public class Event implements Serializable {
     @JoinColumn(name = "event_type_id", referencedColumnName = "id")
     @ManyToOne
     private EventType eventTypeId;
+    @JoinColumn(name = "toy_facet_id", referencedColumnName = "id")
+    @ManyToOne
+    private ToyFacet toyFacetId;
     @JoinColumn(name = "toy_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Toy toyId;
@@ -117,10 +122,11 @@ public class Event implements Serializable {
         this.id = id;
     }
 
-    public Event(Integer id, String name, Date startDate, boolean isDeleted, Date createDate, Date editDate) {
+    public Event(Integer id, String name, Date startDate, boolean isTalking, boolean isDeleted, Date createDate, Date editDate) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
+        this.isTalking = isTalking;
         this.isDeleted = isDeleted;
         this.createDate = createDate;
         this.editDate = editDate;
@@ -198,6 +204,14 @@ public class Event implements Serializable {
         this.crontab = crontab;
     }
 
+    public boolean getIsTalking() {
+        return isTalking;
+    }
+
+    public void setIsTalking(boolean isTalking) {
+        this.isTalking = isTalking;
+    }
+
     public boolean getIsDeleted() {
         return isDeleted;
     }
@@ -222,7 +236,6 @@ public class Event implements Serializable {
         this.editDate = editDate;
     }
 
-    @XmlTransient
     public List<DiffSyncEvent> getDiffSyncEventList() {
         return diffSyncEventList;
     }
@@ -245,6 +258,14 @@ public class Event implements Serializable {
 
     public void setEventTypeId(EventType eventTypeId) {
         this.eventTypeId = eventTypeId;
+    }
+
+    public ToyFacet getToyFacetId() {
+        return toyFacetId;
+    }
+
+    public void setToyFacetId(ToyFacet toyFacetId) {
+        this.toyFacetId = toyFacetId;
     }
 
     public Toy getToyId() {
@@ -277,7 +298,7 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-        return "com.hassoubeat.toymanager.web.backingbean.admin.Event[ id=" + id + " ]";
+        return "com.hassoubeat.toymanager.service.entity.Event[ id=" + id + " ]";
     }
     
 }

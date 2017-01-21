@@ -248,7 +248,7 @@ public class FacetEvent implements Serializable {
 
     @Override
     public String toString() {
-        return "com.hassoubeat.toymanager.web.backingbean.admin.FacetEvent[ id=" + id + " ]";
+        return "com.hassoubeat.toymanager.service.entity.FacetEvent[ id=" + id + " ]";
     }
     
 }

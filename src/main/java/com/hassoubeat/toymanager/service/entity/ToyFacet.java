@@ -7,6 +7,7 @@ package com.hassoubeat.toymanager.service.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -57,6 +59,8 @@ public class ToyFacet implements Serializable {
     @JoinColumn(name = "toy_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Toy toyId;
+    @OneToMany(mappedBy = "toyFacetId")
+    private List<Event> eventList;
 
     public ToyFacet() {
     }
@@ -111,6 +115,14 @@ public class ToyFacet implements Serializable {
         this.toyId = toyId;
     }
 
+    public List<Event> getEventList() {
+        return eventList;
+    }
+
+    public void setEventList(List<Event> eventList) {
+        this.eventList = eventList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -133,7 +145,7 @@ public class ToyFacet implements Serializable {
 
     @Override
     public String toString() {
-        return "com.hassoubeat.toymanager.web.backingbean.admin.ToyFacet[ id=" + id + " ]";
+        return "com.hassoubeat.toymanager.service.entity.ToyFacet[ id=" + id + " ]";
     }
     
 }

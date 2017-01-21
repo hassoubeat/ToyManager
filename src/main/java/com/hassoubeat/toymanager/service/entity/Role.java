@@ -23,8 +23,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -38,7 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Role.findByName", query = "SELECT r FROM Role r WHERE r.name = :name")
     , @NamedQuery(name = "Role.findByCreateDate", query = "SELECT r FROM Role r WHERE r.createDate = :createDate")
     , @NamedQuery(name = "Role.findByEditDate", query = "SELECT r FROM Role r WHERE r.editDate = :editDate")})
-@XmlRootElement
 public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -111,7 +108,6 @@ public class Role implements Serializable {
         this.editDate = editDate;
     }
 
-    @XmlTransient
     public List<Account> getAccountList() {
         return accountList;
     }
@@ -142,7 +138,7 @@ public class Role implements Serializable {
 
     @Override
     public String toString() {
-        return "com.hassoubeat.toymanager.web.backingbean.admin.Role[ id=" + id + " ]";
+        return "com.hassoubeat.toymanager.service.entity.Role[ id=" + id + " ]";
     }
     
 }

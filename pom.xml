@@ -47,8 +47,8 @@
         <profile>
             <id>local</id>
             <properties>
-                <file.upload.url>http://localhost:8080/ToyManager/resources/</file.upload.url>
-                <file.upload.absolute.url>/Users/hassoubeat/NetBeansProjects/ToyManager/target/ToyManager-1.0-SNAPSHOT/resources</file.upload.absolute.url>
+                <resources.url>http://localhost:8080/ToyManager/resources/</resources.url>
+                <resources.absolute.path>/Users/hassoubeat/NetBeansProjects/ToyManager/target/ToyManager-1.0-SNAPSHOT/resources</resources.absolute.path>
             </properties>
             <build>
                 <resources>
@@ -64,8 +64,8 @@
         <profile>
             <id>aws</id>
             <properties>
-                <file.upload.url>http://52.196.234.137:8080/ToyManager/resources/</file.upload.url>
-                <file.upload.absolute.url>/usr/local/glassfish4/glassfish/domains/domain1/applications/ToyManager/resources</file.upload.absolute.url>
+                <resources.url>http://52.196.234.137:8080/ToyManager/resources/</resources.url>
+                <resources.absolute.path>/usr/local/glassfish4/glassfish/domains/domain1/applications/ToyManager/resources</resources.absolute.path>
             </properties>
             <build>
                 <finalName>ToyManager</finalName>

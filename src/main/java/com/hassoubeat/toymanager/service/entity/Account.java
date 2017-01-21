@@ -24,8 +24,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -43,7 +41,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Account.findByIsDeleted", query = "SELECT a FROM Account a WHERE a.isDeleted = :isDeleted")
     , @NamedQuery(name = "Account.findByCreateDate", query = "SELECT a FROM Account a WHERE a.createDate = :createDate")
     , @NamedQuery(name = "Account.findByEditDate", query = "SELECT a FROM Account a WHERE a.editDate = :editDate")})
-@XmlRootElement
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -175,7 +172,6 @@ public class Account implements Serializable {
         this.editDate = editDate;
     }
 
-    @XmlTransient
     public List<Event> getEventList() {
         return eventList;
     }
@@ -192,7 +188,6 @@ public class Account implements Serializable {
         this.roleId = roleId;
     }
 
-    @XmlTransient
     public List<Toy> getToyList() {
         return toyList;
     }
@@ -223,7 +218,7 @@ public class Account implements Serializable {
 
     @Override
     public String toString() {
-        return "com.hassoubeat.toymanager.web.backingbean.admin.Account[ id=" + id + " ]";
+        return "com.hassoubeat.toymanager.service.entity.Account[ id=" + id + " ]";
     }
     
 }

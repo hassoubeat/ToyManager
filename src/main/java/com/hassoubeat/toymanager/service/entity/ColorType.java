@@ -137,7 +137,7 @@ public class ColorType implements Serializable {
 
     @Override
     public String toString() {
-        return "com.hassoubeat.toymanager.web.backingbean.admin.ColorType[ id=" + id + " ]";
+        return "com.hassoubeat.toymanager.service.entity.ColorType[ id=" + id + " ]";
     }
     
 }

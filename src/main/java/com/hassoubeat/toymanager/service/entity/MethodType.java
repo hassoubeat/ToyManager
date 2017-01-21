@@ -138,7 +138,7 @@ public class MethodType implements Serializable {
 
     @Override
     public String toString() {
-        return "com.hassoubeat.toymanager.web.backingbean.admin.MethodType[ id=" + id + " ]";
+        return "com.hassoubeat.toymanager.service.entity.MethodType[ id=" + id + " ]";
     }
     
 }

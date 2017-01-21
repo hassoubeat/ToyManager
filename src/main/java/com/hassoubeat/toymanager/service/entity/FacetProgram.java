@@ -174,7 +174,7 @@ public class FacetProgram implements Serializable {
 
     @Override
     public String toString() {
-        return "com.hassoubeat.toymanager.web.backingbean.admin.FacetProgram[ id=" + id + " ]";
+        return "com.hassoubeat.toymanager.service.entity.FacetProgram[ id=" + id + " ]";
     }
     
 }

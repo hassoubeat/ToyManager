@@ -22,8 +22,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -44,7 +42,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "ToyVoiceType.findBySampleVoice5Url", query = "SELECT t FROM ToyVoiceType t WHERE t.sampleVoice5Url = :sampleVoice5Url")
     , @NamedQuery(name = "ToyVoiceType.findByCreateDate", query = "SELECT t FROM ToyVoiceType t WHERE t.createDate = :createDate")
     , @NamedQuery(name = "ToyVoiceType.findByEditDate", query = "SELECT t FROM ToyVoiceType t WHERE t.editDate = :editDate")})
-@XmlRootElement
 public class ToyVoiceType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -197,7 +194,6 @@ public class ToyVoiceType implements Serializable {
         this.editDate = editDate;
     }
 
-    @XmlTransient
     public List<Toy> getToyList() {
         return toyList;
     }
@@ -228,7 +224,7 @@ public class ToyVoiceType implements Serializable {
 
     @Override
     public String toString() {
-        return "com.hassoubeat.toymanager.web.backingbean.admin.ToyVoiceType[ id=" + id + " ]";
+        return "com.hassoubeat.toymanager.service.entity.ToyVoiceType[ id=" + id + " ]";
     }
     
 }

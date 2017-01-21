@@ -22,8 +22,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -38,7 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "EventType.findByNote", query = "SELECT e FROM EventType e WHERE e.note = :note")
     , @NamedQuery(name = "EventType.findByCreateDate", query = "SELECT e FROM EventType e WHERE e.createDate = :createDate")
     , @NamedQuery(name = "EventType.findByEditDate", query = "SELECT e FROM EventType e WHERE e.editDate = :editDate")})
-@XmlRootElement
 public class EventType implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -122,7 +119,6 @@ public class EventType implements Serializable {
         this.editDate = editDate;
     }
 
-    @XmlTransient
     public List<Event> getEventList() {
         return eventList;
     }
@@ -153,7 +149,7 @@ public class EventType implements Serializable {
 
     @Override
     public String toString() {
-        return "com.hassoubeat.toymanager.web.backingbean.admin.EventType[ id=" + id + " ]";
+        return "com.hassoubeat.toymanager.service.entity.EventType[ id=" + id + " ]";
     }
     
 }

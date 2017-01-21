@@ -25,8 +25,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -47,7 +45,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Toy.findByLastSyncDate", query = "SELECT t FROM Toy t WHERE t.lastSyncDate = :lastSyncDate")
     , @NamedQuery(name = "Toy.findByCreateDate", query = "SELECT t FROM Toy t WHERE t.createDate = :createDate")
     , @NamedQuery(name = "Toy.findByEditDate", query = "SELECT t FROM Toy t WHERE t.editDate = :editDate")})
-@XmlRootElement
 public class Toy implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -105,6 +102,9 @@ public class Toy implements Serializable {
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @ManyToOne
     private Account accountId;
+    @JoinColumn(name = "diff_sync_event_id", referencedColumnName = "id")
+    @ManyToOne
+    private DiffSyncEvent diffSyncEventId;
     @JoinColumn(name = "toy_type_id", referencedColumnName = "id")
     @ManyToOne
     private ToyType toyTypeId;
@@ -114,6 +114,9 @@ public class Toy implements Serializable {
     @JoinColumn(name = "toy_voice_type_id", referencedColumnName = "id")
     @ManyToOne
     private ToyVoiceType toyVoiceTypeId;
+    @JoinColumn(name = "toy_webapi_access_filter_id", referencedColumnName = "id")
+    @ManyToOne
+    private ToyWebapiAccessFilter toyWebapiAccessFilterId;
 
     public Toy() {
     }
@@ -219,7 +222,6 @@ public class Toy implements Serializable {
         this.editDate = editDate;
     }
 
-    @XmlTransient
     public List<ToyFacet> getToyFacetList() {
         return toyFacetList;
     }
@@ -228,7 +230,6 @@ public class Toy implements Serializable {
         this.toyFacetList = toyFacetList;
     }
 
-    @XmlTransient
     public List<ToyWebapiAccessFilter> getToyWebapiAccessFilterList() {
         return toyWebapiAccessFilterList;
     }
@@ -237,7 +238,6 @@ public class Toy implements Serializable {
         this.toyWebapiAccessFilterList = toyWebapiAccessFilterList;
     }
 
-    @XmlTransient
     public List<DiffSyncEvent> getDiffSyncEventList() {
         return diffSyncEventList;
     }
@@ -246,7 +246,6 @@ public class Toy implements Serializable {
         this.diffSyncEventList = diffSyncEventList;
     }
 
-    @XmlTransient
     public List<Event> getEventList() {
         return eventList;
     }
@@ -261,6 +260,14 @@ public class Toy implements Serializable {
 
     public void setAccountId(Account accountId) {
         this.accountId = accountId;
+    }
+
+    public DiffSyncEvent getDiffSyncEventId() {
+        return diffSyncEventId;
+    }
+
+    public void setDiffSyncEventId(DiffSyncEvent diffSyncEventId) {
+        this.diffSyncEventId = diffSyncEventId;
     }
 
     public ToyType getToyTypeId() {
@@ -287,6 +294,14 @@ public class Toy implements Serializable {
         this.toyVoiceTypeId = toyVoiceTypeId;
     }
 
+    public ToyWebapiAccessFilter getToyWebapiAccessFilterId() {
+        return toyWebapiAccessFilterId;
+    }
+
+    public void setToyWebapiAccessFilterId(ToyWebapiAccessFilter toyWebapiAccessFilterId) {
+        this.toyWebapiAccessFilterId = toyWebapiAccessFilterId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -309,7 +324,7 @@ public class Toy implements Serializable {
 
     @Override
     public String toString() {
-        return "com.hassoubeat.toymanager.web.backingbean.admin.Toy[ id=" + id + " ]";
+        return "com.hassoubeat.toymanager.service.entity.Toy[ id=" + id + " ]";
     }
     
 }
