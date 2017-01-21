@@ -16,12 +16,68 @@
     
     <dependencies>
         <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>2.5.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
+            <version>2.5.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
+            <artifactId>javaee-api</artifactId>
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.10</version>
+            <scope>provided</scope>
+	</dependency>
     </dependencies>
+    
+    <!-- 環境毎の設定ファイル定義 -->
+    <profiles>
+        <!-- ローカル用設定(デフォルトはこれ) -->
+        <profile>
+            <id>local</id>
+            <properties>
+                <file.upload.url>http://localhost:8080/ToyManager/resources/</file.upload.url>
+                <file.upload.absolute.url>/Users/hassoubeat/NetBeansProjects/ToyManager/target/ToyManager-1.0-SNAPSHOT/resources</file.upload.absolute.url>
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+
+        <!-- AWS(本番)用設定 -->
+        <profile>
+            <id>aws</id>
+            <properties>
+                <file.upload.url>http://52.196.234.137:8080/ToyManager/resources/</file.upload.url>
+                <file.upload.absolute.url>/usr/local/glassfish4/glassfish/domains/domain1/applications/ToyManager/resources</file.upload.absolute.url>
+            </properties>
+            <build>
+                <finalName>ToyManager</finalName>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>

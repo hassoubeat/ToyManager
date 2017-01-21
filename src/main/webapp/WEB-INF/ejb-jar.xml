@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<ejb-jar version="3.0"
+     xmlns="http://java.sun.com/xml/ns/javaee"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd">
+<!--     
+    <interceptors>
+        <interceptor>
+            <interceptor-class>com.hassoubeat.fightconnect.service.Intercepor.MethodInterceptor</interceptor-class>
+        </interceptor>
+    </interceptors>
+    
+    <assembly-descriptor>
+        <interceptor-binding>
+            <ejb-name>*</ejb-name>
+            <interceptor-class>com.hassoubeat.fightconnect.service.Intercepor.MethodInterceptor</interceptor-class>
+         </interceptor-binding>
+    </assembly-descriptor>-->
+</ejb-jar>

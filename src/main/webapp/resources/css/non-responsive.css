@@ -1,0 +1,22 @@
+.container {
+width: 970px;
+max-width: none !important;
+}
+
+.navbar-collapse {
+display: block !important;
+height: auto !important;
+padding-bottom: 0;
+overflow: visible !important;
+}
+
+.navbar-toggle {
+display: none;
+}
+.navbar-collapse {
+border-top: 0;
+}
+
+.navbar-brand {
+margin-left: -15px;
+}

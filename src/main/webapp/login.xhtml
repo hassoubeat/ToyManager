@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
+    <body>
+        <ui:composition template="/template/template.xhtml">
+            <f:metadata>
+                <f:viewAction action="#{loginBean.bookmarkable()}" onPostback="false"></f:viewAction>
+            </f:metadata>
+            <ui:define name="header">
+            </ui:define>
+            <ui:define name="content">
+                <div class="container well" style="margin-top: 10%">
+                    <div style="text-align: center;">
+                        <img class="thumnail_100 img-rounded" src="resources/img/toymanager.png"/>
+                    </div>
+                    <h3>ToyManager Welcome Back!</h3>
+                    <form jsf:id="login-form">
+                        <input type="text" id="userName" class="form-control input-sm chat-input" placeholder="username" jsf:value="#{loginBean.user}"/>
+                        <br/>
+                        <input type="password" id="userPassword" class="form-control input-sm chat-input" placeholder="password" jsf:value="#{loginBean.password}"/>
+                        
+                        <input type="text" id="salt" class="form-control input-sm chat-input" placeholder="salt" jsf:value="#{loginBean.salt}"/>
+                        <label class="small"><a href="#" >ユーザID、パスワードを忘れた方はこちら</a></label>
+                        <p/>
+                        <input class="btn btn-primary" type="submit" value="ログイン" jsf:action="#{loginBean.login()}"/>
+                        <input class="btn btn-primary" type="submit" value="ログアウト" jsf:action="#{loginBean.logout()}"/>
+                    </form>
+                    <a class="btn btn-warning" jsf:outcome="/signup" style="margin-left: 5px;">サインアップ</a>
+                    
+                    #{loginBean.account.user}
+                    #{loginBean.account.password}
+                    
+                    test
+                    <h:outputText value="一般" rendered="#{facesContext.externalContext.isUserInRole('general')}"/>
+                    <h:outputText value="管理者" rendered="#{facesContext.externalContext.isUserInRole('admin')}"/>
+                    
+                    権限：facesContext.externalContext.
+                </div>
+            </ui:define>
+        </ui:composition>        
+    </body>
+</html>
+

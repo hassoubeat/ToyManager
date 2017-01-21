@@ -1,0 +1,214 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
+    <body>
+        <ui:composition template="/auth/template/template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-xs-3 toy-side-menu">
+                        <ui:include src="/auth/template/toyMenu.xhtml"/>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="well">
+                            <h4><span class="glyphicon glyphicon-stats"/> Toyのステータス</h4>
+                            <h4 class="small">Toyの情報を確認します。</h4>
+                        </div>
+                        <form>
+                            <table class="table table-condensed table-striped">
+                                <tbody>
+                                    <tr>
+                                        <th>ToyのシリアルNo.</th>
+                                        <td>1145141919</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Toyの名前</th>
+                                        <td>ダンボー君</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Toyの同期状況</th>
+                                        <td>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>サーバ接続</th>
+                                                        <th>同期状態</th>
+                                                        <th>前回の同期日時</th>
+                                                        <th>前回同期からの差分</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="text-center">
+                                                    <tr>
+                                                        <td><label class="label label-success">on</label></td>
+                                                        <td><label class="label label-danger">unsync</label></td>
+                                                        <td><label class="label label-default">2017/01/10 10:25:35</label></td>
+                                                        <td><a class="label label-info" data-toggle="modal" href="#last-time-sync-diff-modal"><span class="glyphicon glyphicon-link"/> 差分を表示する</a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>初期化</th>
+                                        <td>
+                                            <a class="btn btn-danger"> 初期化する</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="modal fade" id="last-time-sync-diff-modal" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                    <h4 class="modal-title" >前回同期の差分</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <h5 class="alert alert-warning">次回同期のタイミングで以下のイベントがToyに同期されます</h5>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <b><span class="glyphicon glyphicon-plus"/> 追加： <u>MyJスマホスケジュール会議</u></b>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="well">
+                                                <p><b><u>Toyの読み上げ</u></b></p>
+                                                会議室FでMyJスマホのスケジュール会議
+                                            </div>
+                                            <b>日時:</b> <label class="label label-default">2017-01-09 13:30:00</label> 〜<label class="label label-default">2017-01-09 15:00:00</label> <br/>
+                                            <b>繰り返し:</b> <label class="label label-default">2017-04-01 00:00:00</label>まで
+                                            <div class="text-center">
+                                                <table class="table">
+                                                    <thead>
+                                                        <td>年</td><td>月</td><td class="fc-sun">日</td><td>月</td><td>火</td><td>水</td><td>木</td><td>金</td><td class="fc-sat">土</td>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>-</td><td>-</td><td>-</td><td>◯</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>-</td><td>-</td><td>-</td><td><label class="label label-info">13:30</label></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <b><span class="glyphicon glyphicon-edit"/> 編集： <u>MyJスマホスケジュール会議</u></b>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="well">
+                                                <p><b><u>Toyの読み上げ</u></b></p>
+                                                会議室FでMyJスマホのスケジュール会議
+                                            </div>
+                                            <b>日時:</b> <label class="label label-default">2017-01-09 13:30:00</label> 〜<label class="label label-default">2017-01-09 15:00:00</label> <br/>
+                                            <b>繰り返し:</b> <label class="label label-default">2017-04-01 00:00:00</label>まで
+                                            <div class="text-center">
+                                                <table class="table">
+                                                    <thead>
+                                                        <td>年</td><td>月</td><td class="fc-sun">日</td><td>月</td><td>火</td><td>水</td><td>木</td><td>金</td><td class="fc-sat">土</td>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>-</td><td>-</td><td>-</td><td>◯</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>-</td><td>-</td><td>-</td><td><label class="label label-info">13:30</label></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-danger">
+                                        <div class="panel-heading">
+                                            <b><span class="glyphicon glyphicon-minus"/> 削除： <u>MyJスマホスケジュール会議</u></b>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="well">
+                                                <p><b><u>Toyの読み上げ</u></b></p>
+                                                会議室FでMyJスマホのスケジュール会議
+                                            </div>
+                                            <b>日時:</b> <label class="label label-default">2017-01-09 13:30:00</label> 〜<label class="label label-default">2017-01-09 15:00:00</label> <br/>
+                                            <b>繰り返し:</b> <label class="label label-default">2017-04-01 00:00:00</label>まで
+                                            <div class="text-center">
+                                                <table class="table">
+                                                    <thead>
+                                                        <td>年</td><td>月</td><td class="fc-sun">日</td><td>月</td><td>火</td><td>水</td><td>木</td><td>金</td><td class="fc-sat">土</td>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>-</td><td>-</td><td>-</td><td>◯</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>-</td><td>-</td><td>-</td><td><label class="label label-info">13:30</label></td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                                </div>
+                            </div>
+                        </div>
+                   </div>
+                </div>
+            </ui:define>
+            <ui:define name="css">
+                <!-- jQueryUI CSS -->
+                <link jsf:library="css" jsf:name="jquery-ui.css"/>
+            </ui:define>
+            <ui:define name="js">
+                <!-- jQueryUI JS -->
+                <script jsf:library="js" jsf:name="jquery-ui.js"/>
+                <script type="text/javascript">
+                    var selectedToy = "";
+                    
+                    $(window).load(function () {
+                        // ナビゲーションバーのactiveを変更
+                        $("#top").addClass("active");
+                        
+                        $("[id^=toy-item]").hover(
+                            function(){
+                                // マウスホバー時の処理(背景色の変更, 枠線の変更)
+                               $(this).css("background-color","#d4d4d4");
+                            },
+                            function(){
+                                // マウスブラー時の処理
+                               $(this).css("background-color","");
+                            }
+                        );
+                        
+                        $("[id^=toy-item]").click(function(){
+                            // 他の選択を初期化する
+                            $("[id^=toy]").removeClass("toy-selected");
+                            
+                            // 選択した要素のclassに.toy-selectedを付与する
+                            $(this).addClass("toy-selected");
+                            
+                            // toy-menuを有効化する
+                            $("#toy-menu-select-alert").hide();
+                            $("#toy-menu-selected-item").removeClass("hide");
+                            $("[id^=toy-menu").removeClass("disabled");
+                            $("[id^=toy-menu").children().removeClass("unselected");
+                        });
+                    });
+                </script>
+            </ui:define>
+        </ui:composition>        
+    </body>
+</html>
+

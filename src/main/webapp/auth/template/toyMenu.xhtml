@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <body>
+        <ui:composition>
+            <div class="panel panel-primary" id="toy-item-1" style="margin-right: -15px; margin-bottom: 1px;">
+                <div class="panel-heading">
+                    Toy_1
+                    <div class="pull-right"><span class="glyphicon glyphicon-trash"/></div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <img class="thumnail_50" src="http://localhost:8080/ToyManagerMock/resources/img/toymanager.png" style="margin-left: 5px;"/>
+                        <b>ToyName</b>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>サーバ接続</th>
+                                <th>同期状態</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <tr>
+                                <td><label class="label label-success">on</label></td>
+                                <td><label class="label label-danger">unsync</label></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel panel-primary" id="toy-item-2" style="margin-right: -15px; margin-bottom: 1px;">
+                <div class="panel-heading">
+                    Toy_2
+                    <div class="pull-right"><span class="glyphicon glyphicon-trash"/></div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <img class="thumnail_50" src="http://localhost:8080/ToyManagerMock/resources/img/danbo.png" style="margin-left: 5px;"/>
+                        <b>ダンボーくん</b>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>サーバ接続</th>
+                                <th>同期状態</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <tr>
+                                <td><label class="label label-default">off</label></td>
+                                <td><label class="label label-default">off</label></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <a jsf:outcome="/auth/toy/register" style="text-decoration:none;">
+                <div class="panel panel-default" id="toy-item-register" style="margin-right: -15px; margin-bottom: 1px;">
+                    <div class="panel-body" style="border-color: #585858; border-style: dotted; text-align: center;">
+                        <h3 style="margin:0px;"><label class="label label-warning">+Toyを登録する</label></h3>
+                    </div>
+                </div>
+            </a>
+        </ui:composition>
+    </body>
+</html>

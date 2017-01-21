@@ -1,0 +1,329 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
+    <body>
+        <ui:composition template="/auth/template/template.xhtml">
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-xs-3 toy-side-menu">
+                        <ui:include src="/auth/template/toyMenu.xhtml"/>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="well">
+                            <h4><span class="glyphicon glyphicon-calendar"/> イベントの編集</h4>
+                            <form>
+                                <input type="text" id="event-title" class="form-control" placeholder="イベントのタイトルを【30】文字以内で入力してください" />
+                                <textarea id="event-content" class="form-control" placeholder="Toyが読み上げる内容を【200】文字以内で入力してください"/>
+                                <input id="start-event-date" class="input-date"  placeholder="開始日時" type="text" /> 〜
+                                <input id="end-event-date" class="input-date" placeholder="終了日時" type="text" />
+                                <div>イベントの色:
+                                    <div class="block-sm" id="event-colorset-defalut" style="background-color:#3a87b2;"/>
+                                    <div class="block-sm" id="event-colorset-deepblue" style="background-color:#375a7f;"/>
+                                    <div class="block-sm" id="event-colorset-blue" style="background-color:#5484ed;"/>
+                                    <div class="block-sm" id="event-colorset-lightblue" style="background-color:#a4bdfc"/>
+                                    <div class="block-sm" id="event-colorset-red" style="background-color:#e43725"/>
+                                    <div class="block-sm" id="event-colorset-lightred" style="background-color:#ff887c"/>
+                                    <div class="block-sm" id="event-colorset-green" style="background-color:#51b749"/>
+                                    <div class="block-sm" id="event-colorset-yellow" style="background-color:#fbd75b"/>
+                                    <div class="block-sm" id="event-colorset-purple" style="background-color:#dbadff"/>
+                                    <div class="block-sm" id="event-colorset-gray" style="background-color:#e1e1e1"/>
+                                </div>
+                                <input type="hidden" id="event-color-code"/>
+                               
+                                <p/>
+                                <a class="btn btn-primary" id="add-event"><span class="glyphicon glyphicon-plus"/> イベントの追加</a>
+                                <a class="btn btn-success" id="update-event"><span class="glyphicon glyphicon-edit"/> イベントの修正</a>
+                                <a class="btn btn-danger" id="remove-event"><span class="glyphicon glyphicon-minus"/> イベントの削除</a>
+                            </form>
+                        </div>
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </ui:define>
+            <ui:define name="css">
+                <!-- jQueryUI CSS -->
+                <link jsf:library="css" jsf:name="jquery-ui.css"/>
+                <!-- jQeury-DataTimePicker CSS -->
+                <link jsf:library="css" jsf:name="jquery.datetimepicker.css"/>
+                <!-- jQueryToaster CSS -->
+                <link jsf:library="css" jsf:name="jquery.toast.css"/>
+                <!-- FullCalendar CSS -->
+                <link jsf:library="css" jsf:name="fullcalendar.css"/>
+                <!-- FullCalendar Print CSS -->
+                <link jsf:library="css" jsf:name="fullcalendar.print.css" media="print"/>
+            </ui:define>
+            <ui:define name="js">
+                <!-- jQueryUI JS -->
+                <script jsf:library="js" jsf:name="jquery-ui.js"/>
+                <!-- jQeury-DataTimePicker JS -->
+                <script jsf:library="js" jsf:name="jquery.datetimepicker.full.js"/>
+                <!-- jQueryToaster JS -->
+                <script jsf:library="js" jsf:name="jquery.toast.js"/>
+                <!-- FullCalender JS -->
+                <script jsf:library="js" jsf:name="fullcalendar.js"/>
+                <!-- gcal JS -->
+                <script jsf:library="js" jsf:name="gcal.js"/>
+                <!-- FullCalendar日本語化 JS -->
+                <script jsf:library="js" jsf:name="ja.js"/>
+                
+                <script type="text/javascript">
+                    var selectedToy = "";
+                    var selectedEvent = "";
+                    
+                    $(window).load(function () {
+                        // ナビゲーションバーのactiveを変更
+                        $("#top").addClass("active");
+                        
+                        
+                        // 日付入力エリアにDataTimePickerの適応
+                        $.datetimepicker.setLocale("ja");
+                        $(".input-date").datetimepicker({
+                            format:"Y-m-d H:i:00",
+                            step:15
+                        });
+                        
+                        // カラーセットマウスホバー/ブラーの処理
+                        $("[id^=event-colorset]").hover(
+                            function(){
+                                // マウスホバー時の処理(枠線の変更)
+                               $(this).addClass("block-sm-hover");
+                            },
+                            function(){
+                                // マウスブラー時の処理
+                               $(this).removeClass("block-sm-hover")
+                            }
+                        );
+                
+                        $("[id^=event-colorset]").click(function(){
+                            // 他の選択を初期化する
+                            $("[id^=event-colorset]").removeClass("block-sm-checked");
+                            
+                            // 色コードを持つhidden要素に選択した色コードを代入
+                            $("#event-color-code").val($(this).css("background-color"));
+                            console.log($("#event-color-code").val());
+                            // 選択した要素のclassに.block-sm-checkedを付与する
+                            $(this).addClass("block-sm-checked");
+                        });
+                        
+                        $("[id^=toy-item]").hover(
+                            function(){
+                                // マウスホバー時の処理(背景色の変更, 枠線の変更)
+                               $(this).css("background-color","#d4d4d4");
+                            },
+                            function(){
+                                // マウスブラー時の処理
+                               $(this).css("background-color","");
+                            }
+                        );
+                        
+                        $("[id^=toy-item]").click(function(){
+                            // 他の選択を初期化する
+                            $("[id^=toy]").removeClass("toy-selected");
+                            
+                            // 選択した要素のclassに.toy-selectedを付与する
+                            $(this).addClass("toy-selected");
+                        });
+                        
+                        
+                        
+                        // カレンダー表示
+                        $("#calendar").fullCalendar({
+                            header: {
+                                // title, prev, next, prevYear, nextYear, today
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'month agendaWeek agendaDay'
+                            },
+                            height: 500,
+                            editable: true, 
+                            events: [
+                                {
+                                    title: 'All Day Event',
+                                    start: '2017-01-01'
+                                },
+                                {
+                                    title: 'Long Event',
+                                    start: '2017-01-07',
+                                    end: '2017-01-10'
+                                },
+                                {
+                                    id: 999,
+                                    title: 'Repeating Event',
+                                    start: '2017-01-09T16:00:00'
+                                },
+                                {
+                                    id: 999,
+                                    title: 'Repeating Event',
+                                    start: '2017-01-16T16:00:00'
+                                },
+                                {
+                                    title: 'Conference',
+                                    start: '2017-01-11',
+                                    end: '2017-01-13'
+                                },
+                                {
+                                    title: 'Meeting',
+                                    start: '2017-01-12T10:30:00',
+                                    end: '2017-01-12T12:30:00'
+                                },
+                                {
+                                    title: 'Lunch',
+                                    start: '2017-01-12T12:00:00'
+                                },
+                                {
+                                    title: 'Meeting',
+                                    start: '2017-01-12T14:30:00'
+                                },
+                                {
+                                    title: 'Happy Hour',
+                                    start: '2017-01-12T17:30:00'
+                                },
+                                {
+                                    title: 'Dinner',
+                                    start: '2017-01-12T20:00:00'
+                                },
+                                {
+                                    title: 'Birthday Party',
+                                    start: '2017-01-13T07:00:00'
+                                },
+                                {
+                                    title: 'Click for Google',
+                                    url: 'http://google.com/',
+                                    start: '2017-01-28'
+                                }
+                            ],
+                            // イベントクリック時の挙動(画面上部の入力フォームへ選択したイベントのパラメータを渡す)
+                            eventClick: function(event) {
+                                // 入力フォームの初期化
+                                clearInputForm();
+                                
+                                // 画面上部の編集画面に追加する(ロジック実装後は、idからBackingBeanの要素を検索してその要素を渡す様に変更
+                                selectedEvent = event;
+                                $("#event-title").val(event.title);
+                                if (event.start !== null) {
+                                    $("#start-event-date").val(event.start.toISOString());
+                                }
+                                if (event.end !== null) {
+                                    $("#end-event-date").val(event.end.toISOString());
+                                }
+                                $("[id^=event-colorset]").each(function(index, colorsetElement) {
+                                    if (event.color === $(colorsetElement).css("background-color")) {
+                                        // イベントのカラー・タイプが一致した場合、選択済にする
+                                        $(colorsetElement).addClass("block-sm-checked");
+                                        $("#event-color-code").val($(colorsetElement).css("background-color"));
+                                    }
+                                });
+                                
+                                $.toast({
+                                    heading: event.title + "を選択しました。",
+                                    text: "画面上部からイベントの編集/削除が行えます。",
+                                    showHideTransition: "slide",
+                                    icon: "info",
+                                    position: "bottom-right",
+                                    stack: "1"
+                                });
+                            }
+                        });
+                        
+                        // カレンダーにイベントの追加処理
+                        $("#add-event").click(function(){
+                            $("#calendar").fullCalendar("addEventSource", [{
+                                // IDはサーバサイドの作り込み時には、AutoIncrementIDで代替する
+                                id:$("#event-title").val() + $("#start-event-date").val() + $("#end-event-date").val(),
+                                title:$("#event-title").val(),
+                                start:$("#start-event-date").val(),
+                                end:$("#end-event-date").val(),
+                                color:$("#event-color-code").val()
+                            }]);
+                            $.toast({
+                                heading: $("#event-title").val() + "を登録しました。",
+                                showHideTransition: "slide",
+                                icon: "success",
+                                bgColor: "#375a7f",
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                            // 入力フォームの初期化
+                            clearInputForm();
+                        });
+                        // カレンダーのイベントの変更処理
+                        $("#update-event").click(function(){
+                            if (selectedEvent == null || selectedEvent == "") {
+                                // イベントが選択されていない場合、アラートを出して戻る
+                                $.toast({
+                                    heading: "イベントが未選択です。",
+                                    showHideTransition: "slide",
+                                    icon: "error",
+                                    position: "bottom-right",
+                                    stack: "5"
+                                });
+                                return false;
+                            }
+                            
+                            var editEvent = selectedEvent;
+                            editEvent.title = $("#event-title").val();
+                            editEvent.start = $("#start-event-date").val();
+                            editEvent.end = $("#end-event-date").val();
+                            editEvent.color = $("#event-color-code").val();
+                            $("#calendar").fullCalendar("updateEvent", editEvent);
+                            $.toast({
+                                heading: editEvent.title + "を変更しました。",
+                                showHideTransition: "slide",
+                                icon: "success",
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                            // 入力フォームの初期化
+                            clearInputForm();
+                        });
+                        // カレンダーのイベントの削除処理
+                        $("#remove-event").click(function(){
+                            if (selectedEvent == null || selectedEvent == "") {
+                                // イベントが選択されていない場合、アラートを出して戻る
+                                $.toast({
+                                    heading: "イベントが未選択です。",
+                                    showHideTransition: "slide",
+                                    icon: "error",
+                                    position: "bottom-right",
+                                    stack: "5"
+                                });
+                                return false;
+                            }
+                            var removeEvent = selectedEvent;
+                            $("#calendar").fullCalendar("removeEvents", removeEvent.id);
+                            $.toast({
+                                heading: removeEvent.title + "を削除しました。",
+                                showHideTransition: "slide",
+                                icon: "success",
+                                bgColor: "#e43725",
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                            // 入力フォームの初期化
+                            clearInputForm();
+                        });
+                        
+                        function clearInputForm () {
+                            selectedEvent = "";
+                            $("#event-title").val("");
+                            $("#event-content").val("");
+                            $("#start-event-date").val("");
+                            $("#end-event-date").val("");
+                            $("#event-color-code").val("");
+                            $("[id^=event-colorset]").removeClass("block-sm-checked");
+                        }
+                        
+                    });
+                </script>
+            </ui:define>
+        </ui:composition>        
+    </body>
+</html>
+

@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <body>
+        <ui:composition>
+            <div id="navbar" class="navbar navbar-default navbar-static-top">
+                <div class="container">
+                    <div class="header clearfix">
+                        <nav class="navbar navbar-static-top">
+                            <a class="navbar-brand" jsf:outcome="/auth/index">Toy Manager</a>
+                            <ul class="nav nav-pills pull-right">
+                            <li id="top" role="presentation"><a jsf:outcome="/login"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> TOP</a></li>
+                            <li id="user" class="dropdown" role="presentation">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    <span class="glyphicon glyphicon-user" aria-hidden="true"/> ユーザ
+                                    <span class="caret"/>
+                                </a> 
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#"><span class="glyphicon glyphicon-edit"/> ユーザ情報編集</a></li>
+                                    <li><a href="#"><span class="glyphicon glyphicon-log-out"/> ログアウト</a></li>
+                                </ul>
+                            </li>
+                          </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </ui:composition>
+    </body>
+</html>

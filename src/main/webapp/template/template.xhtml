@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <head jsf:id="head">
+        <meta charset="UTF-8"/>
+        <meta http-equiv="content-language" content="ja"/>
+        <!-- Bootstrap -->
+        <link href="/ToyManagerMock/resources/css/bootstrap.default.css" rel="stylesheet"/>
+        <!-- Bootstrapのレスポンシブデザインを無効化するCSS -->
+        <link href="/ToyManagerMock/resources/css/non-responsive.css" rel="stylesheet"/>
+        <!-- ブートストラップ風コメントを実装するCSS -->
+        <link href="/ToyManagerMock/resources/css/bs-callout.css" rel="stylesheet"/>
+        <!-- 汎用カスタマイズCSS -->
+        <link href="/ToyManagerMock/resources/css/common.css" rel="stylesheet"/>
+        <title>ToyManagerMock</title>
+    </head>
+    <body jsf:id="body">
+        <div id="content">
+            <ui:insert name="content">
+            </ui:insert>
+        </div>
+        <!-- 外部CSS定義/読込用エリア -->
+        <div id="css">
+            <ui:insert name="css">
+            </ui:insert>
+        </div>
+        <script src="/ToyManagerMock/resources/js/jquery-1.12.4.js"/>
+        <script src="/ToyManagerMock/resources/js/bootstrap.js"/>
+        
+        <!-- 外部JS定義/読込用エリア -->
+        <div id="js">
+            <ui:insert name="js">
+            </ui:insert>
+        </div>
+    </body>
+</html>
+

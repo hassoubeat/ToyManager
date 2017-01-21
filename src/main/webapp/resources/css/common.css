@@ -1,0 +1,91 @@
+/* 画像のサムネイル */
+.thumnail_100 {
+    background-color: #ccc;
+    background-position: center center;
+    background-repeat: no-repeat;
+    width: auto;
+    height: 100px;
+    border: 1px solid #ccc;
+    background-size: cover;
+}
+
+.thumnail_50 {
+    background-color: #ccc;
+    background-position: center center;
+    background-repeat: no-repeat;
+    width: auto;
+    height: 50px;
+    border: 1px solid #ccc;
+    background-size: cover;
+}
+
+/* ToySideMenu */
+.toy-side-menu {
+    overflow: scroll; 
+    border-right-style: ridge;
+    
+}
+
+/* ToyMenu(スケジュール編集) */
+.toy-menu-schedule {
+    background-color: #e4b9c0;
+    border-color: #ccc;
+}
+
+/* ToyMenu(ファセット編集) */
+.toy-menu-faset {
+    background-color: #66afe9;
+    border-color: #ccc;
+}
+
+/* ToyMenu(ステータス確認) */
+.toy-menu-status {
+    background-color: #b2dba1;
+    border-color: #ccc;
+}
+
+/* Toy選択状態 */
+.toy-selected {
+    background-color: #9acfea;
+    border-width: 2px;
+    border-color: red;
+}
+
+/* 未選択状態の時 */
+.unselected {
+    opacity: 0.4;
+}
+
+/* カレンダーの土曜日の色設定 */
+.fc-sat {
+    color: #003eff;
+}
+
+/* カレンダーの日曜日の色設定 */
+.fc-sun {
+    color: #cd2a19;
+}
+
+/* 小さいブロック */
+.block-sm {
+    width: 15px;
+    height: 15px;
+    margin-top: 5px;
+    margin-bottom: -2px;
+    display: inline-block;
+    _display: inline;
+}
+
+/* ブロックマウスホバー */
+.block-sm-hover {
+    border-style: dotted;
+    border-color: black;
+    border-width: 2px;
+}
+
+/* ブロック選択状態 */
+.block-sm-checked {
+    border-style:  solid;
+    border-color: black;
+    border-width: 2px;
+}
