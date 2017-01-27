@@ -52,7 +52,8 @@
                         <form jsf:id="signup-form">
                             <div class="form-group">
                                 <label for="InputEmail">メール・アドレス</label>
-                                <input type="email" class="form-control" id="InputEmail" placeholder="メール・アドレスを入力して下さい。" jsf:value="#{signupBean.user}"/>
+                                <input type="email" class="form-control" jsf:id="user-id" placeholder="メール・アドレスを入力して下さい。" jsf:value="#{signupBean.userId}"/>
+                                <h:message class="label label-danger" for="user-id"/>
                             </div>
                             <div class="form-group">
                                 <label for="InputPassword">パスワード</label>
@@ -62,7 +63,7 @@
                                 <label for="InputPassword">パスワード再入力</label>
                                 <input type="password" class="form-control" id="ReInputPassword" placeholder="パスワードを再度入力して下さい。" jsf:value="#{signupBean.checkPassword}"/>
                             </div>
-                            <input class="btn btn-primary" type="submit" value="サインアップ" jsf:action="#{signupBean.signup()}"/>
+                            <input class="btn btn-primary" type="submit" value="サインアップ" jsf:action="#{signupBean.userIdCheck()}"/>
                         </form>
                     </div>
                 </div>

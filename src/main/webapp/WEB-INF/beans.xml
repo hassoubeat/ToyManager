@@ -4,9 +4,9 @@
        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd"
        bean-discovery-mode="annotated">
     
-<!--        <interceptors>
-            <class>com.hassoubeat.fightconnect.service.Intercepor.MethodInterceptor</class>
-            <class>com.hassoubeat.fightconnect.service.Intercepor.ExceptionInterceptor</class>
-        </interceptors>-->
+        <interceptors>
+            <class>com.hassoubeat.toymanager.interceptor.LogInterceptor</class>
+<!--            <class>com.hassoubeat.toymanager.interceptor</class>-->
+        </interceptors>
     
 </beans>

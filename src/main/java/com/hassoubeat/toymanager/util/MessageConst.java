@@ -12,4 +12,8 @@ package com.hassoubeat.toymanager.util;
 public class MessageConst {
     // エラー時のメッセージ
     public static final String EXCEPTION_MESSAGE = "エラーが発生しました";
+    
+    // 想定内エラーメッセージ
+    public static final String ALREADY_REGISTED_USER_ID_MESSAGE_ID = "MER01000001";
+    public static final String ALREADY_REGISTED_USER_ID_MESSAGE = "入力したメールアドレスは既に登録されています。";
 }

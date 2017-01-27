@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType;
  * @author hassoubeat
  */
 @Stateless
-@Path("com.hassoubeat.toymanager.service.entity.event")
+@Path("events")
 public class EventREST {
 
 //    @POST

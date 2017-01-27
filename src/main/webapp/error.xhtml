@@ -1,12 +1,27 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:head>
-        <title>Facelet Title</title>
-    </h:head>
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
     <h:body>
-        Errorでち
+        <ui:composition template="/template/template.xhtml">
+            <ui:define name="header">
+            </ui:define>
+            <ui:define name="content">
+                <div class="container well" style="margin-top: 10%">
+                    <div style="text-align: center;">
+                        <div class="alert alert-danger">
+                            <h4><span class="glyphicon glyphicon-alert"/>エラー</h4>
+                            <h:message for="error" id="error-message"/>
+                        </div>
+                        <a class="btn btn-primary" jsf:outcome="/auth/index">トップ画面へ戻る</a>
+                    </div>
+        </ui:composition>
     </h:body>
 </html>
 

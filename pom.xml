@@ -16,6 +16,11 @@
     
     <dependencies>
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>eclipselink</artifactId>
             <version>2.5.2</version>
@@ -39,6 +44,11 @@
             <version>1.16.10</version>
             <scope>provided</scope>
 	</dependency>
+        <dependency>
+            <groupId>de.svenkubiak</groupId>
+            <artifactId>jBCrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
     </dependencies>
     
     <!-- 環境毎の設定ファイル定義 -->
@@ -49,6 +59,12 @@
             <properties>
                 <resources.url>http://localhost:8080/ToyManager/resources/</resources.url>
                 <resources.absolute.path>/Users/hassoubeat/NetBeansProjects/ToyManager/target/ToyManager-1.0-SNAPSHOT/resources</resources.absolute.path>
+                <!-- ログ出力用の変数 -->
+                <log.output.level>trace</log.output.level>
+                <log.file.output.pattern>[%level]: %logger :"%message" :%date{ISO8601} %n</log.file.output.pattern>
+                <log.file.output.path>./</log.file.output.path>
+                <log.file.output.name>toymanager_local.log</log.file.output.name>
+                <log.console.output.pattern>[%level]: %logger :"%message" :%date{ISO8601} %n</log.console.output.pattern>
             </properties>
             <build>
                 <resources>
@@ -66,6 +82,12 @@
             <properties>
                 <resources.url>http://52.196.234.137:8080/ToyManager/resources/</resources.url>
                 <resources.absolute.path>/usr/local/glassfish4/glassfish/domains/domain1/applications/ToyManager/resources</resources.absolute.path>
+                <!-- ログ出力用の変数 -->
+                <log.output.level>trace</log.output.level>
+                <log.file.output.pattern>[%level]: %logger :"%message" :%date{ISO8601} %n</log.file.output.pattern>
+                <log.file.output.path>./</log.file.output.path>
+                <log.file.output.name>toymanager_aws.log</log.file.output.name>
+                <log.console.output.pattern>[%level]: %logger :"%message" :%date{ISO8601} %n</log.console.output.pattern>
             </properties>
             <build>
                 <finalName>ToyManager</finalName>
