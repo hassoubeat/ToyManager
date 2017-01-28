@@ -6,6 +6,7 @@
 package com.hassoubeat.toymanager.web.backingbean;
 
 
+import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.entity.Account;
@@ -23,7 +24,6 @@ import lombok.Data;
 @Named(value = "accountBean")
 @RequestScoped
 @Data
-@LogInterceptor
 public class AccountBean {
 
     @EJB
@@ -48,6 +48,8 @@ public class AccountBean {
     /**
      * 
      */
+    @LogInterceptor
+    @ErrorInterceptor
     public String login() {
 //        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 //        HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();

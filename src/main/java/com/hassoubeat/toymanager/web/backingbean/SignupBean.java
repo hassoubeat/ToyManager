@@ -6,6 +6,7 @@
 package com.hassoubeat.toymanager.web.backingbean;
 
 
+import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.util.GMailLogic;
@@ -63,6 +64,7 @@ public class SignupBean implements Serializable{
     }
     
     @LogInterceptor
+    @ErrorInterceptor
     public String userIdCheck() throws MessagingException, UnsupportedEncodingException{
         
         System.out.println("自クラス: SignupBean : メソッド userIdChech");

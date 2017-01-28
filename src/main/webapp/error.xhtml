@@ -14,13 +14,15 @@
             </ui:define>
             <ui:define name="content">
                 <div class="container well" style="margin-top: 10%">
-                    <div style="text-align: center;">
-                        <div class="alert alert-danger">
+                    <div class="alert alert-danger">
+                        <div style="text-align: center;">
                             <h4><span class="glyphicon glyphicon-alert"/>エラー</h4>
-                            <h:message for="error" id="error-message"/>
                         </div>
-                        <a class="btn btn-primary" jsf:outcome="/auth/index">トップ画面へ戻る</a>
+                        <h:messages/>
                     </div>
+                    <a class="btn btn-primary" jsf:outcome="/auth/index">トップ画面へ戻る</a>
+                </div>
+            </ui:define>
         </ui:composition>
     </h:body>
 </html>

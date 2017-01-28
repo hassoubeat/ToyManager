@@ -5,8 +5,9 @@
        bean-discovery-mode="annotated">
     
         <interceptors>
+            <!-- 定義した順番でインターセプターが実行されるため、順番を変更しないこと -->
+            <class>com.hassoubeat.toymanager.interceptor.ExceptionInterceptor</class>
             <class>com.hassoubeat.toymanager.interceptor.LogInterceptor</class>
-<!--            <class>com.hassoubeat.toymanager.interceptor</class>-->
         </interceptors>
     
 </beans>
