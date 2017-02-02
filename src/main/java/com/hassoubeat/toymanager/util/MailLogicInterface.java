@@ -5,8 +5,7 @@
  */
 package com.hassoubeat.toymanager.util;
 
-import java.io.UnsupportedEncodingException;
-import javax.mail.MessagingException;
+import com.hassoubeat.toymanager.service.exception.FailedSendMailException;
 
 /**
  *
@@ -17,8 +16,10 @@ public interface MailLogicInterface {
     /**
      * メールを送信する処理
      * @param to 送信先
-     * @throws javax.mail.MessagingException
-     * @throws java.io.UnsupportedEncodingException
+     * @param letterTitle メールタイトル
+     * @param letterBody メール本文
+     * @param isHtmlMail htmlメールかを判断するフラグ
+     * @throws com.hassoubeat.toymanager.service.exception.FailedSendMailException
      */
-    public void send(String to) throws MessagingException, UnsupportedEncodingException;
+    public void send(String to, String letterTitle, String letterBody, boolean isHtmlMail) throws FailedSendMailException;
 }

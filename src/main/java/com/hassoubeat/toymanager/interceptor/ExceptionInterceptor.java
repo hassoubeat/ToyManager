@@ -10,6 +10,8 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
+import com.hassoubeat.toymanager.service.exception.FailedSendMailException;
+import com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException;
 import com.hassoubeat.toymanager.util.MessageConst;
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
@@ -44,18 +46,28 @@ public class ExceptionInterceptor implements Serializable{
         try {
             // インターセプトするオブジェクトの実行
             ret = context.proceed();
-            throw new Exception();
             // TODO 今後発生しうるExceptionは以下に追加していく
+        } catch (InvalidScreenTransitionException ex) {
+            // 不正な画面遷移例外の発生時処理
+            logger.warn("{} {}", MessageConst.INVALID_SCREEN_TRANSITION_ID + ":" + MessageConst.INVALID_SCREEN_TRANSITION, targetClassName + "." + targetMethodName, ex);
+            
+            // 例外発生時、エラーページにリダイレクト遷移する
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            
+            facesContext.addMessage(null, new FacesMessage(MessageConst.INVALID_SCREEN_TRANSITION));
+            facesContext.getExternalContext().getFlash().setKeepMessages(true);
+            facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath() + "/faces/error.xhtml");
         } catch (Exception ex) {
+            // 想定外例外の発生時処理
             logger.error("{} {}", MessageConst.SYSTEM_ERROR_ID + ":" +MessageConst.SYSTEM_ERROR, targetClassName + "." + targetMethodName, ex);
             
-            // Exception発生時、トップページに戻す
+            // 例外発生時、エラーページにリダイレクト遷移する
             FacesContext facesContext = FacesContext.getCurrentInstance();
             
             facesContext.addMessage(null, new FacesMessage(MessageConst.SYSTEM_ERROR));
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
             facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath() + "/faces/error.xhtml");
-        } 
+        }
 
         long afterTime = System.nanoTime();
         logger.info("{} : {}", "EXCEPTION_CHECK_TIME", targetClassName + "." + targetMethodName + ":" + (afterTime - beforeTime) + "nsecs.");

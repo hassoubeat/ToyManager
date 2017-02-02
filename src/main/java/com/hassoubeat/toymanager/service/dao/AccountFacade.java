@@ -7,15 +7,14 @@ package com.hassoubeat.toymanager.service.dao;
 
 import com.hassoubeat.toymanager.service.entity.Account;
 import com.hassoubeat.toymanager.service.entity.Account_;
-import java.util.List;
+import java.sql.SQLException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -56,5 +55,36 @@ public class AccountFacade extends AbstractFacade<Account> {
         
         return ((Long) query.getSingleResult()).intValue();
     }
+    
+    /**
+     * 引数で受け取ったUserIdで検索するメソッド
+     * @param userId
+     * @return account 合致したアカウント情報
+     * @throws java.sql.SQLException
+     */
+    public Account findByUserId(String userId) throws SQLException {
+        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery cq = builder.createQuery();
+        Root<Account> root = cq.from(Account.class);
+        cq.select(root);
+        
+        Predicate userIdEquals = builder.equal(root.get(Account_.userId), userId);
+        cq.where(userIdEquals);
+        
+        Query query = getEntityManager().createQuery(cq);
+        query.setFirstResult(0);
+        query.setMaxResults(0);
+        
+        try {
+            return (Account) query.getSingleResult();
+        } catch (NoResultException ex) {
+            // TODO メッセージを考える
+            throw new SQLException("", ex);
+        }
+        
+        
+        
+    }
+    
     
 }

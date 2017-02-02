@@ -21,6 +21,11 @@
             <version>1.1.3</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.5</version>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>eclipselink</artifactId>
             <version>2.5.2</version>
@@ -65,6 +70,16 @@
                 <log.file.output.path>./</log.file.output.path>
                 <log.file.output.name>toymanager_local.log</log.file.output.name>
                 <log.console.output.pattern>[%level]: %logger :"%message" :%date{ISO8601} %n</log.console.output.pattern>
+                <!-- メール送信用の変数 -->
+                <mail.from.address>hassoubeat.work@gmail.com</mail.from.address>
+                <mail.from.name>ToyManager</mail.from.name>
+                <mail.from.password>Arialove0</mail.from.password>
+                <mail.smtp.host>smtp.gmail.com</mail.smtp.host>
+                <mail.smtp.port>587</mail.smtp.port>
+                <mail.smtp.timeout>10000</mail.smtp.timeout>
+                <mail.is.starttls>true</mail.is.starttls>
+                <mail.charset>UTF-8</mail.charset>
+                <mail.encoding>base64</mail.encoding>
             </properties>
             <build>
                 <resources>
@@ -88,6 +103,16 @@
                 <log.file.output.path>./</log.file.output.path>
                 <log.file.output.name>toymanager_aws.log</log.file.output.name>
                 <log.console.output.pattern>[%level]: %logger :"%message" :%date{ISO8601} %n</log.console.output.pattern>
+                <!-- メール送信用の変数 -->
+                <mail.from.address>hassoubeat.work@gmail.com</mail.from.address>
+                <mail.from.name>ToyManager</mail.from.name>
+                <mail.from.password>Arialove0</mail.from.password>
+                <mail.smtp.host>smtp.gmail.com</mail.smtp.host>
+                <mail.smtp.port>587</mail.smtp.port>
+                <mail.smtp.timeout>10000</mail.smtp.timeout>
+                <mail.is.starttls>true</mail.is.starttls>
+                <mail.charset>UTF-8</mail.charset>
+                <mail.encoding>base64</mail.encoding>
             </properties>
             <build>
                 <finalName>ToyManager</finalName>

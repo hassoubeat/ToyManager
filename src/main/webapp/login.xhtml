@@ -13,21 +13,70 @@
             <ui:define name="header">
             </ui:define>
             <ui:define name="content">
+                <f:metadata>
+                    <f:viewAction action="#{accountBean.bookmarkable()}" onPostback="false"></f:viewAction>
+                </f:metadata>
                 <div class="container well" style="margin-top: 10%">
                     <div style="text-align: center;">
                         <img class="thumnail_100 img-rounded" src="resources/img/toymanager.png"/>
                     </div>
-                    <h3>ToyManager</h3>
+                    <h3>ログイン</h3>
                     <form jsf:id="login-form">
-                        <input type="text" id="userName" class="form-control input-sm chat-input" placeholder="username" jsf:value="#{accountBean.userId}"/>
+                        <input type="text" id="userName" class="form-control input-sm chat-input" jsf:id="user-id" placeholder="ユーザID(登録したメールアドレス)" jsf:value="#{accountBean.userId}"/>
+                        <h:message class="label label-danger" for="user-id"/>
                         <br/>
-                        <input type="password" id="userPassword" class="form-control input-sm chat-input" placeholder="password" jsf:value="#{accountBean.password}"/>
-                        
-                        <label class="small"><a href="#" >ユーザID、パスワードを忘れた方はこちら</a></label>
+                        <input type="password" id="userPassword" class="form-control input-sm chat-input" jsf:id="password" placeholder="パスワード" jsf:value="#{accountBean.password}"/>
+                        <h:message class="label label-danger" for="password"/>
+                        <p/>
+                        <label class="small"><a href="" data-toggle="modal" data-target="#remind-modal" >パスワードを忘れた方はこちら</a></label>
                         <p/>
                         <input class="btn btn-primary" type="submit" value="ログイン" jsf:action="#{accountBean.login()}"/>
                         <a class="btn btn-warning" jsf:outcome="/signup" style="margin-left: 5px;">サインアップ</a>
                     </form>
+                    <div class="modal fade" id="remind-modal" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                    <h4 class="modal-title">パスワードを忘れた方へ</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="bs-callout bs-callout-info">
+                                        <h4>登録されたユーザID(メールアドレス)を入力してください。</h4>
+                                        <h5 class="small">・入力されたメールアドレスに新しいパスワードを送信します。</h5>
+                                        <h5 class="small">・新たなパスワード発行後は、ToyManagerにログインしてパスワードを変更してください。</h5>
+                                    </div>
+                                    <form jsf:id="remind-form">
+                                        <div class="form-group">
+                                            <label for="InputEmail">メール・アドレス</label>
+                                            <input type="email" class="form-control" jsf:id="remind-user-id" placeholder="ユーザID(メールアドレス)" jsf:value="#{accountBean.remindUserId}"/>
+                                            <h:message class="label label-danger" for="remind-user-id"/>
+                                        </div>
+                                        <input class="btn btn-primary" type="submit" value="パスワード再発行" id="signup" jsf:action="#{accountBean.remind()}"/>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <!-- リマインド成功メッセージが存在する場合、表示する -->
+                    <ui:fragment rendered="#{facesContext.getMessageList('remind-complete').size() > 0}">
+                        <div class="bs-callout bs-callout-success">
+                            <h4>パスワードリマインドメールを送信しました。</h4>
+                            <h:messages/>
+                        </div>
+                    </ui:fragment>
+                    <!-- リマインド失敗メッセージが存在する場合、表示する -->
+                    <ui:fragment rendered="#{facesContext.getMessageList('remind-failed').size() > 0}">
+                        <div class="bs-callout bs-callout-danger">
+                            <h4>パスワードの再発行に失敗しました。</h4>
+                            <h:messages/>
+                        </div>
+                    </ui:fragment>
                 </div>
             </ui:define>
         </ui:composition>        
