@@ -9,7 +9,7 @@ package com.hassoubeat.toymanager.service.exception;
  * 不正な画面遷移例外
  * @author hassoubeat
  */
-public class InvalidScreenTransitionException extends Exception {
+public class InvalidScreenTransitionException extends RuntimeException {
 
     /**
      * Creates a new instance of <code>InvalidScreenTransitionException</code>

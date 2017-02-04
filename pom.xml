@@ -76,7 +76,7 @@
                 <mail.from.password>Arialove0</mail.from.password>
                 <mail.smtp.host>smtp.gmail.com</mail.smtp.host>
                 <mail.smtp.port>587</mail.smtp.port>
-                <mail.smtp.timeout>10000</mail.smtp.timeout>
+                <mail.smtp.timeout>30000</mail.smtp.timeout>
                 <mail.is.starttls>true</mail.is.starttls>
                 <mail.charset>UTF-8</mail.charset>
                 <mail.encoding>base64</mail.encoding>
@@ -109,7 +109,7 @@
                 <mail.from.password>Arialove0</mail.from.password>
                 <mail.smtp.host>smtp.gmail.com</mail.smtp.host>
                 <mail.smtp.port>587</mail.smtp.port>
-                <mail.smtp.timeout>10000</mail.smtp.timeout>
+                <mail.smtp.timeout>30000</mail.smtp.timeout>
                 <mail.is.starttls>true</mail.is.starttls>
                 <mail.charset>UTF-8</mail.charset>
                 <mail.encoding>base64</mail.encoding>

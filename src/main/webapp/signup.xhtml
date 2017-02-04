@@ -10,13 +10,11 @@
     </head>
     <body>
         <ui:composition template="/template/template.xhtml">
-            <ui:define name="header">
-            </ui:define>
             <ui:define name="content">
                 <div class="well">
                     <img class="thumnail_50 img-rounded" src="resources/img/toymanager.png"/>
                     <div class="pull-right">
-                        <a class="btn btn-primary" style="margin-top: 5px;">ログイン</a>
+                        <a class="btn btn-primary" jsf:outcome="/login" style="margin-top: 5px;">ログイン</a>
                     </div>
                 </div>
                 <h1 class="text-center text-muted">ToyTalkアカウントの作成</h1>

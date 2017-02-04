@@ -8,12 +8,8 @@ package com.hassoubeat.toymanager.web.backingbean;
 
 import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
-import com.hassoubeat.toymanager.service.exception.FailedSendMailException;
-import com.hassoubeat.toymanager.service.exception.LogicalDeletedException;
-import com.hassoubeat.toymanager.service.exception.LoginException;
-import com.hassoubeat.toymanager.service.exception.RemindPasswordException;
 import com.hassoubeat.toymanager.service.logic.AccountLogic;
-import com.hassoubeat.toymanager.util.MessageConst;
+import com.hassoubeat.toymanager.util.Message;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.IOException;
 import javax.ejb.EJB;
@@ -76,27 +72,35 @@ public class AccountBean {
     public String login() {
         
         // ログイン処理の実行
-        try {
-            accountLogic.login(this.getUserId(), this.getPassword());
-        } catch (LoginException ex) {
-            // ID/パスワード入力を誤った場合
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            facesContext.addMessage("login-form:user-id", new FacesMessage(MessageConst.INVALID_ID_OR_PASSWORD));
-            facesContext.addMessage("login-form:password", new FacesMessage(MessageConst.INVALID_ID_OR_PASSWORD));
+        Message resultCode = accountLogic.login(this.getUserId(), this.getPassword());
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        
+        switch(resultCode) {
+            case LOGICAL_DELETE_USER:
+                // ログインしようとしたユーザが論理削除済であった場合
+                facesContext.addMessage("login-form:user-id", new FacesMessage(Message.LOGICAL_DELETE_USER.getMessage()));
+                break;
             
-            // 元の画面に戻る
-            return "";
-            
-        } catch (LogicalDeletedException ex) {
-            // ログインしようとしたユーザが論理削除済であった場合
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            facesContext.addMessage("login-form:user-id", new FacesMessage(MessageConst.LOGICAL_DELETE_USER));
-            
-            // 元の画面に戻る
-            return "";
+            case INVALID_USERID: 
+                // ID入力を誤った場合
+                facesContext.addMessage("login-form:user-id", new FacesMessage(Message.INVALID_USERID_OR_PASSWORD.getMessage()));
+                facesContext.addMessage("login-form:password", new FacesMessage(Message.INVALID_USERID_OR_PASSWORD.getMessage()));
+                break;
+                
+            case INVALID_PASSWORD: 
+                // パスワード入力を誤った場合
+                facesContext.addMessage("login-form:user-id", new FacesMessage(Message.INVALID_USERID_OR_PASSWORD.getMessage()));
+                facesContext.addMessage("login-form:password", new FacesMessage(Message.INVALID_USERID_OR_PASSWORD.getMessage()));
+                break;
+                
+            case SUCCESS_LOGIN:
+                // ログイン正常
+                return "/auth/index?faces-redirect=true";
+
         }
         
-        return "/auth/index?faces-redirect=true";
+        // 元の画面に戻る
+        return "";
     }
     
     /**
@@ -125,22 +129,29 @@ public class AccountBean {
      */
     @ErrorInterceptor
     @LogInterceptor
-    public String remind() throws FailedSendMailException {
-        try {
-            accountLogic.remind(this.getRemindUserId());
-        } catch (RemindPasswordException ex) {
-            // 画面に戻ってエラーメッセージの出力
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            facesContext.addMessage("remind-failed", new FacesMessage(MessageConst.FAILED_SEND_REMIND_PASSWORD_MAIL));
-            
-            // 元の画面に戻る
-            return "";
-        }
+    public String remind() {
         
+        Message resultCode = accountLogic.remind(this.getRemindUserId());
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        facesContext.addMessage("remind-complete", new FacesMessage(MessageConst.SUCCESS_RIMIND_PASSWORD));
         
-        return "";
+        switch(resultCode) {
+            case NOT_FOUND_USER:
+                // リマインド対象のユーザがいなかった場合
+                
+                // 画面に戻ってエラーメッセージの出力        
+                facesContext.addMessage("remind-failed", new FacesMessage(Message.NOT_FOUND_USER.getMessage()));
+                break;
+
+            case SUCCESS_REMIND_PASSWORD:
+                // リマインド完了
+
+                // 画面に戻ってエラーメッセージの出力        
+                facesContext.addMessage("remind-complete", new FacesMessage(Message.SUCCESS_REMIND_PASSWORD.getMessage()));
+                break;
+        }
+          
+        // 元の画面に戻る
+        return "";   
     }
     
     @ErrorInterceptor

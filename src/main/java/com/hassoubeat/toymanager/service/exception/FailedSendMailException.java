@@ -9,7 +9,7 @@ package com.hassoubeat.toymanager.service.exception;
  *
  * @author hassoubeat
  */
-public class FailedSendMailException extends Exception {
+public class FailedSendMailException extends RuntimeException {
 
     /**
      * Creates a new instance of <code>FailedSendMailException</code> without

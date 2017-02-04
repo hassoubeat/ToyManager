@@ -9,11 +9,10 @@ package com.hassoubeat.toymanager.web.backingbean;
 import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
-import com.hassoubeat.toymanager.service.exception.FailedSendMailException;
 import com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException;
 import com.hassoubeat.toymanager.service.logic.AccountLogic;
 import com.hassoubeat.toymanager.util.GMailLogic;
-import com.hassoubeat.toymanager.util.MessageConst;
+import com.hassoubeat.toymanager.util.Message;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.ejb.EJB;
@@ -70,10 +69,9 @@ public class SignupCheckBean implements Serializable{
     
     /**
      * SignupBeanでセットされたUserIdとパスワードを受け取ってセットする
-     * @throws com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException
      */
     @LogInterceptor
-    public void init() throws InvalidScreenTransitionException {
+    public void init(){
         FacesContext faceContext = FacesContext.getCurrentInstance();
         
         try {
@@ -95,7 +93,7 @@ public class SignupCheckBean implements Serializable{
         this.authCode = RandomStringUtils.randomAlphanumeric(8);
 
         // ログ出力
-        logger.info("{} : USER_ID:{}, AUTH_CODE:{}, {}", MessageConst.GEN_USER_AUTH_CODE_ID + ":" + MessageConst.GEN_USER_AUTH_CODE, this.getUserId(), this.getAuthCode(), this.getClass().getName() + "." + this.getClass());
+        logger.info("{} : USER_ID:{}, AUTH_CODE:{}, {}", Message.GEN_USER_AUTH_CODE.getId() + ":" + Message.GEN_USER_AUTH_CODE.getMessage(), this.getUserId(), this.getAuthCode(), this.getClass().getName() + "." + this.getClass());
         
     }
     
@@ -104,7 +102,7 @@ public class SignupCheckBean implements Serializable{
     public String authSignup() {
         if (this.getInputAuthCode().equals(this.getAuthCode())) {
             // 認証が成功した場合
-            logger.info("{} : USER_ID:{}", MessageConst.SUCCESS_USER_AUTH_CODE_ID + ":" + MessageConst.SUCCESS_USER_AUTH_CODE, this.getUserId());
+            logger.info("{} : USER_ID:{}", Message.SUCCESS_USER_AUTH_CODE.getId() + ":" + Message.SUCCESS_USER_AUTH_CODE.getMessage(), this.getUserId());
             
             // ユーザ登録処理の実行
             accountLogic.signup(this.getUserId(), this.getPassword());
@@ -113,10 +111,10 @@ public class SignupCheckBean implements Serializable{
             
         } else {
             // 認証が失敗した場合
-            logger.warn("{} : USER_ID:{}, INPUT_AUTH_CODE:{}, {}", MessageConst.FAILED_USER_AUTH_CODE_ID + ":" + MessageConst.FAILED_USER_AUTH_CODE, this.getUserId(), this.getInputAuthCode(), this.getClass().getName() + "." + this.getClass());
+            logger.warn("{} : USER_ID:{}, INPUT_AUTH_CODE:{}, {}", Message.FAILED_USER_AUTH_CODE.getId() + ":" + Message.FAILED_USER_AUTH_CODE.getMessage(), this.getUserId(), this.getInputAuthCode(), this.getClass().getName() + "." + this.getClass());
             
             FacesContext facesContext = FacesContext.getCurrentInstance();
-            facesContext.addMessage("auth-code-form:auth-code", new FacesMessage(MessageConst.FAILED_USER_AUTH_CODE));
+            facesContext.addMessage("auth-code-form:auth-code", new FacesMessage(Message.FAILED_USER_AUTH_CODE.getMessage()));
             
             return "";
         }
@@ -127,25 +125,14 @@ public class SignupCheckBean implements Serializable{
     /**
      * ブックマーカビリティ
      * @throws com.hassoubeat.toymanager.service.exception.FailedSendMailException
-     * @throws com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException
      */
     @ErrorInterceptor
     @LogInterceptor
-    public void bookmarkable() throws FailedSendMailException, InvalidScreenTransitionException{
+    public void bookmarkable(){
         this.init();
         this.genAuthCode();
         // メールの送信
-        
-        try {
-            mailLogic.send("hassoubeat0@gmail.com", "認証コードを送信しました", mailLogic.genAuthCodeLetterBody(this.authCode, false) , false);
-        } catch (FailedSendMailException ex) {
-            // 認証コードメール送信失敗時
-            
-            logger.error("{}:{}, USER_ID:{}, {}", MessageConst.FAILED_SEND_AUTH_CODE_MAIL_ID, MessageConst.FAILED_SEND_AUTH_CODE_MAIL, this.getUserId(), this.getClass().getName() + "." + this.getClass());
-            throw new FailedSendMailException("", ex);
-        }
-        
-
+        mailLogic.send("hassoubeat0@gmail.com", "認証コードを送信しました", mailLogic.genAuthCodeLetterBody(this.authCode, false) , false);
     }
     
 }

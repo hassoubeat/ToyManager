@@ -10,9 +10,8 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
-import com.hassoubeat.toymanager.service.exception.FailedSendMailException;
 import com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException;
-import com.hassoubeat.toymanager.util.MessageConst;
+import com.hassoubeat.toymanager.util.Message;
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -49,22 +48,22 @@ public class ExceptionInterceptor implements Serializable{
             // TODO 今後発生しうるExceptionは以下に追加していく
         } catch (InvalidScreenTransitionException ex) {
             // 不正な画面遷移例外の発生時処理
-            logger.warn("{} {}", MessageConst.INVALID_SCREEN_TRANSITION_ID + ":" + MessageConst.INVALID_SCREEN_TRANSITION, targetClassName + "." + targetMethodName, ex);
+            logger.warn("{} {}", Message.INVALID_SCREEN_TRANSITION.getId() + ":" + Message.INVALID_SCREEN_TRANSITION.getMessage(), targetClassName + "." + targetMethodName, ex);
             
             // 例外発生時、エラーページにリダイレクト遷移する
             FacesContext facesContext = FacesContext.getCurrentInstance();
             
-            facesContext.addMessage(null, new FacesMessage(MessageConst.INVALID_SCREEN_TRANSITION));
+            facesContext.addMessage(null, new FacesMessage(Message.INVALID_SCREEN_TRANSITION.getMessage()));
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
             facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath() + "/faces/error.xhtml");
         } catch (Exception ex) {
             // 想定外例外の発生時処理
-            logger.error("{} {}", MessageConst.SYSTEM_ERROR_ID + ":" +MessageConst.SYSTEM_ERROR, targetClassName + "." + targetMethodName, ex);
+            logger.error("{} {}", Message.SYSTEM_ERROR.getId() + ":" +Message.SYSTEM_ERROR.getMessage(), targetClassName + "." + targetMethodName, ex);
             
             // 例外発生時、エラーページにリダイレクト遷移する
             FacesContext facesContext = FacesContext.getCurrentInstance();
             
-            facesContext.addMessage(null, new FacesMessage(MessageConst.SYSTEM_ERROR));
+            facesContext.addMessage(null, new FacesMessage(Message.SYSTEM_ERROR.getMessage()));
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
             facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath() + "/faces/error.xhtml");
         }

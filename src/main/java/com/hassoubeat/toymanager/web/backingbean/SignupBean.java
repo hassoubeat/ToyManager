@@ -10,7 +10,7 @@ import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.util.GMailLogic;
-import com.hassoubeat.toymanager.util.MessageConst;
+import com.hassoubeat.toymanager.util.Message;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import javax.ejb.EJB;
@@ -79,9 +79,9 @@ public class SignupBean implements Serializable{
         if(accountFacade.countByUserId(this.getUserId()) >= 1) {
             // 1件以上登録されていれば重複とみなし、エラーメッセージを表示する
             facesContext = FacesContext.getCurrentInstance();
-            facesContext.addMessage("signup-form:user-id", new FacesMessage(MessageConst.ALREADY_REGISTED_USER));
+            facesContext.addMessage("signup-form:user-id", new FacesMessage(Message.ALREADY_REGISTED_USER.getMessage()));
             
-            logger.warn("{} : {}", MessageConst.ALREADY_REGISTED_USER_ID + ":" + MessageConst.ALREADY_REGISTED_USER, this.getClass().getName() + "." + this.getClass());
+            logger.warn("{} : {}", Message.ALREADY_REGISTED_USER.getId() + ":" + Message.ALREADY_REGISTED_USER.getMessage(), this.getClass().getName() + "." + this.getClass());
             
             // 元の画面に戻る
             return "";

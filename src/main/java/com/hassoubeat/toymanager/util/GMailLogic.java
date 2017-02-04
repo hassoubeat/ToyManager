@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -92,7 +91,7 @@ public class GMailLogic implements MailLogicInterface {
             // 送信元のセット
             message.setFrom(new InternetAddress(fromAddress, fromName));
             // 送信先のセット
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.setRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(to));
             // 返信先のセット
     //        message.setReplyTo(new Address[]{new InternetAddress(this.getFrom())});
 
@@ -114,7 +113,8 @@ public class GMailLogic implements MailLogicInterface {
             Transport.send(message);
             
             logger.info("{}:{} , FROM_ADDRESS:{}, FROM_NAME:{}, SMTP_HOST:{}, SMTP_PORT:{}, SMTP_TIMEOUT:{}, STARTTLS:{}, CHARSET:{}, ENCODING:{}, {}",
-                    MessageConst.SUCCESS_SEND_AUTH_CODE_MAIL_ID + ":" + MessageConst.SUCCESS_SEND_AUTH_CODE_MAIL,
+                    Message.SUCCESS_SEND_AUTH_CODE_MAIL.getId(),
+                    Message.SUCCESS_SEND_AUTH_CODE_MAIL.getMessage(),
                     fromAddress,
                     fromName,
                     smtpHost,
@@ -124,10 +124,11 @@ public class GMailLogic implements MailLogicInterface {
                     charset,
                     encoding,
                     this.getClass().getName() + "." + this.getClass());
-        
+            
         } catch (MessagingException | UnsupportedEncodingException ex) {
             logger.error("{}:{} , FROM_ADDRESS:{}, FROM_NAME:{}, SMTP_HOST:{}, SMTP_PORT:{}, SMTP_TIMEOUT:{}, STARTTLS:{}, CHARSET:{}, ENCODING:{}, {}",
-                    MessageConst.FAILED_SEND_MAIL_ID + ":" + MessageConst.FAILED_SEND_MAIL,
+                    Message.FAILED_SEND_MAIL.getId(),
+                    Message.FAILED_SEND_MAIL.getMessage(),
                     fromAddress,
                     fromName,
                     smtpHost,

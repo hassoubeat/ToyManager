@@ -7,10 +7,8 @@ package com.hassoubeat.toymanager.service.dao;
 
 import com.hassoubeat.toymanager.service.entity.Account;
 import com.hassoubeat.toymanager.service.entity.Account_;
-import java.sql.SQLException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -60,9 +58,8 @@ public class AccountFacade extends AbstractFacade<Account> {
      * 引数で受け取ったUserIdで検索するメソッド
      * @param userId
      * @return account 合致したアカウント情報
-     * @throws java.sql.SQLException
      */
-    public Account findByUserId(String userId) throws SQLException {
+    public Account findByUserId(String userId) {
         CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
         CriteriaQuery cq = builder.createQuery();
         Root<Account> root = cq.from(Account.class);
@@ -75,14 +72,8 @@ public class AccountFacade extends AbstractFacade<Account> {
         query.setFirstResult(0);
         query.setMaxResults(0);
         
-        try {
-            return (Account) query.getSingleResult();
-        } catch (NoResultException ex) {
-            // TODO メッセージを考える
-            throw new SQLException("", ex);
-        }
         
-        
+        return (Account) query.getSingleResult();
         
     }
     
