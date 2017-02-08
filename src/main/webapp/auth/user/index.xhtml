@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
+    <body>
+        <ui:composition template="/auth/template/template.xhtml">
+            <ui:define name="content">
+                <f:metadata>
+                    <f:viewAction action="#{accountEditBean.bookmarkable()}" onPostback="false"></f:viewAction>
+                </f:metadata>
+                
+                <div class="container">
+                    <!-- パスワード変更成功メッセージが存在する場合、表示する -->
+                    <ui:fragment rendered="#{facesContext.getMessageList('edit-password-complete').size() > 0}">
+                        <div class="bs-callout bs-callout-success">
+                            <h4><h:messages/></h4>
+                        </div>
+                    </ui:fragment>
+                    <!-- ログインパスワード失敗メッセージが存在する場合、表示する -->
+                    <ui:fragment rendered="#{facesContext.getMessageList('invalid-password').size() > 0}">
+                        <div class="bs-callout bs-callout-danger">
+                            <h4><h:messages/></h4>
+                        </div>
+                    </ui:fragment>
+                    <form jsf:id="user-id-edit-form">
+                        <div class="bs-callout bs-callout-info">
+                            <h4><span class="glyphicon glyphicon-edit"/> ユーザIDの変更</h4>
+                            <p>現在ログインしているユーザのユーザID(メールアドレス)を変更します。</p>
+                            <div class="form-group">
+                                <label for="InputEmail">変更後のメールアドレス</label>
+                                <input type="email" class="form-control" jsf:id="edit-user-id" placeholder="変更後のメール・アドレスを入力して下さい。" jsf:value="#{accountEditBean.editUserId}"/>
+                                <h:message class="label label-danger" for="edit-user-id"/>
+                            </div>
+                            <a class="btn btn-primary" href="" data-toggle="modal" data-target="#edit-user-id-modal" >変更</a>
+                        </div>
+                        <div class="modal fade" id="edit-user-id-modal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                        <h4 class="modal-title">ログインパスワードを入力してください。</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="bs-callout bs-callout-info">
+                                            <h4>セキュリティのため、ログインパスワードを入力してください。</h4>
+                                        </div>
+                                        <form jsf:id="remind-form">
+                                            <div class="form-group">
+                                                <label for="InputPassword">ログインパスワード</label>
+                                                <input type="password" class="form-control check-password" jsf:id="password" jsf:value="#{accountEditBean.password}"/>
+                                            </div>
+                                            <input class="btn btn-primary" type="submit" value="ユーザIDの変更" id="account-edit" jsf:action="#{accountEditBean.userIdEdit()}"/>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <form jsf:id="password-edit-form">
+                        <div class="bs-callout bs-callout-info">
+                            <h4><span class="glyphicon glyphicon-edit"/> パスワードの変更</h4>
+                            <p>現在ログインしているユーザのパスワードを変更します。</p>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label for="InputPassword">変更後のパスワード</label>
+                                    <input type="password" class="form-control" jsf:id="edit-password" placeholder="変更後のパスワードを入力して下さい。" jsf:value="#{accountEditBean.editPassword}"/>
+                                    <h:message class="label label-danger" for="edit-password"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="InputPassword">変更後のパスワード再入力</label>
+                                    <input type="password" class="form-control" jsf:id="edit-check-password" placeholder="パスワードを再度入力して下さい。" jsf:value="#{accountEditBean.editCheckPassword}"/>
+                                    <h:message class="label label-danger" for="edit-check-password"/>
+                                </div>
+                                <a class="btn btn-primary" href="" data-toggle="modal" data-target="#edit-password-modal" >変更</a>
+                            </div>
+                            <div class="modal fade" id="edit-password-modal" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                            <h4 class="modal-title">ログインパスワードを入力してください。</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="bs-callout bs-callout-info">
+                                                <h4>セキュリティのため、ログインパスワードを入力してください。</h4>
+                                            </div>
+                                            <form jsf:id="remind-form">
+                                                <div class="form-group">
+                                                    <label for="InputPassword">ログインパスワード</label>
+                                                    <input type="password" class="form-control check-password" jsf:id="password" jsf:value="#{accountEditBean.password}"/>
+                                                </div>
+                                                <input class="btn btn-primary" type="submit" value="パスワードの変更" id="account-edit" jsf:action="#{accountEditBean.passwordEdit()}"/>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>    
+                    </form>
+                </div>  
+            </ui:define>
+            <ui:define name="js">
+                <script type="text/javascript">
+                    var selectedToy = "";
+                    
+                    $(window).load(function () {
+                        // ナビゲーションバーのactiveを変更
+                        $("#user").addClass("active");
+                    });
+                </script>
+            </ui:define>
+        </ui:composition>        
+    </body>
+</html>
+

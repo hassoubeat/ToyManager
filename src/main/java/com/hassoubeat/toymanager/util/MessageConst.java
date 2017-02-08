@@ -9,7 +9,7 @@ package com.hassoubeat.toymanager.util;
  *
  * @author hassoubeat
  */
-public enum Message {
+public enum MessageConst {
     // MIR(ToyManager側で発生するインフォメーションメッセージ)
     GEN_USER_AUTH_CODE("MIR_01000001", "ユーザID登録認証コードを発行します。"),
     SUCCESS_USER_AUTH_CODE("MIR_01000002", "ユーザID登録認証に成功しました。"),
@@ -18,6 +18,8 @@ public enum Message {
     SUCCESS_LOGIN("MIR_01000005", "ログインに成功しました。"),
     SUCCESS_EDIT_PASSWORD("MIR_01000006", "パスワードの変更に成功しました。"),
     SUCCESS_REMIND_PASSWORD("MIR_01000007", "パスワードのリマインドを実行しました。"),
+    SUCCESS_AUTHORITY("MIR_01000008", "認証が完了しました。"),
+    SUCCESS_LOGOUT("MIR_01000009", "ログアウトが完了しました。"),
     
     // MER(ToyManager側で発生する想定内エラー系)
     ALREADY_REGISTED_USER("MER_01000001", "入力したメールアドレスは既に登録されています。"),
@@ -29,6 +31,9 @@ public enum Message {
     INVALID_PASSWORD("MER_01000007", "入力されたパスワードが誤っています。"),
     LOGICAL_DELETE_USER("MER_01000008", "入力されたアカウントは現在使用することができません。"),
     NOT_FOUND_USER("MER_01000009", "入力されたユーザIDは存在しません。"),
+    NOT_LOGIN("MER_01000010", "ログインされていません。"),
+    UN_AUTHORITY("MER_01000011", "権限がありません。"),
+    INVALID_CHECK_PASSWORD("MER_01000012", "確認用パスワードが誤っています。"),
     
     // MCR(ToyManager側で発生する想定外エラー系)
     SYSTEM_ERROR("MCR_01000001", "システムエラーが発生しました。お手数ですが、操作をやりなおしてください。"),
@@ -40,7 +45,7 @@ public enum Message {
     private final String id;
     private final String message;
     
-    private Message(final String id, final String message) {
+    private MessageConst(final String id, final String message) {
         this.id = id;
         this.message = message;
     }

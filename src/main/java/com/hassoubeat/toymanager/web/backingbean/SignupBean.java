@@ -10,7 +10,7 @@ import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.util.GMailLogic;
-import com.hassoubeat.toymanager.util.Message;
+import com.hassoubeat.toymanager.util.MessageConst;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import javax.ejb.EJB;
@@ -75,13 +75,24 @@ public class SignupBean implements Serializable{
         
         FacesContext facesContext = FacesContext.getCurrentInstance();
         
+        // 確認用パスワードが正常に入力されているかチェック
+        if(!this.getPassword().equals(this.getCheckPassword())) {
+            // 確認用パスワードが誤っていた場合
+            facesContext = FacesContext.getCurrentInstance();
+            facesContext.addMessage("signup-form:check-input-password", new FacesMessage(MessageConst.INVALID_CHECK_PASSWORD.getMessage()));
+            
+            logger.warn("{}:{} PASSWORD:{}, CHECK_PASSWORD:{} {}.{}", MessageConst.INVALID_CHECK_PASSWORD.getId(), MessageConst.INVALID_CHECK_PASSWORD.getMessage(), this.getPassword(), this.getCheckPassword(), this.getClass().getName(), this.getClass());
+            
+            return "";
+        }
+        
         // userId(メールアドレスの重複登録チェック)
         if(accountFacade.countByUserId(this.getUserId()) >= 1) {
             // 1件以上登録されていれば重複とみなし、エラーメッセージを表示する
             facesContext = FacesContext.getCurrentInstance();
-            facesContext.addMessage("signup-form:user-id", new FacesMessage(Message.ALREADY_REGISTED_USER.getMessage()));
+            facesContext.addMessage("signup-form:user-id", new FacesMessage(MessageConst.ALREADY_REGISTED_USER.getMessage()));
             
-            logger.warn("{} : {}", Message.ALREADY_REGISTED_USER.getId() + ":" + Message.ALREADY_REGISTED_USER.getMessage(), this.getClass().getName() + "." + this.getClass());
+            logger.warn("{}:{} USER_ID:{}, {}.{}", MessageConst.ALREADY_REGISTED_USER.getId(), MessageConst.ALREADY_REGISTED_USER.getMessage(), this.getUserId(), this.getClass().getName(), this.getClass());
             
             // 元の画面に戻る
             return "";

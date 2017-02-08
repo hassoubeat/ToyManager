@@ -11,7 +11,8 @@ import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException;
-import com.hassoubeat.toymanager.util.Message;
+import com.hassoubeat.toymanager.util.MessageConst;
+import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -28,6 +29,9 @@ public class ExceptionInterceptor implements Serializable{
     @Inject
     Logger logger;
     
+    @Inject
+    SessionBean sessionBean;
+    
     public ExceptionInterceptor() {
     }
     
@@ -38,7 +42,7 @@ public class ExceptionInterceptor implements Serializable{
         String targetMethodName = context.getMethod().getName();
         
         
-        logger.info("{} {}", "START_EXCEPTION_CHECK", targetClassName + "." + targetMethodName);
+        logger.info("{} USER_ID:{} {}.{}", "START_EXCEPTION_CHECK", sessionBean.getUserId(),targetClassName, targetMethodName);
         
         long beforeTime = System.nanoTime();
         
@@ -48,30 +52,30 @@ public class ExceptionInterceptor implements Serializable{
             // TODO 今後発生しうるExceptionは以下に追加していく
         } catch (InvalidScreenTransitionException ex) {
             // 不正な画面遷移例外の発生時処理
-            logger.warn("{} {}", Message.INVALID_SCREEN_TRANSITION.getId() + ":" + Message.INVALID_SCREEN_TRANSITION.getMessage(), targetClassName + "." + targetMethodName, ex);
+            logger.warn("{}:{} USER_ID:{} {}.{}", MessageConst.INVALID_SCREEN_TRANSITION.getId(), MessageConst.INVALID_SCREEN_TRANSITION.getMessage(), sessionBean.getUserId(),targetClassName, targetMethodName, ex);
             
             // 例外発生時、エラーページにリダイレクト遷移する
             FacesContext facesContext = FacesContext.getCurrentInstance();
             
-            facesContext.addMessage(null, new FacesMessage(Message.INVALID_SCREEN_TRANSITION.getMessage()));
+            facesContext.addMessage(null, new FacesMessage(MessageConst.INVALID_SCREEN_TRANSITION.getMessage()));
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
             facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath() + "/faces/error.xhtml");
         } catch (Exception ex) {
             // 想定外例外の発生時処理
-            logger.error("{} {}", Message.SYSTEM_ERROR.getId() + ":" +Message.SYSTEM_ERROR.getMessage(), targetClassName + "." + targetMethodName, ex);
+            logger.error("{}:{} USER_ID:{} {}.{}", MessageConst.SYSTEM_ERROR.getId(), MessageConst.SYSTEM_ERROR.getMessage(), sessionBean.getUserId(), targetClassName, targetMethodName, ex);
             
             // 例外発生時、エラーページにリダイレクト遷移する
             FacesContext facesContext = FacesContext.getCurrentInstance();
             
-            facesContext.addMessage(null, new FacesMessage(Message.SYSTEM_ERROR.getMessage()));
+            facesContext.addMessage(null, new FacesMessage(MessageConst.SYSTEM_ERROR.getMessage()));
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
             facesContext.getExternalContext().redirect(facesContext.getExternalContext().getRequestContextPath() + "/faces/error.xhtml");
         }
 
         long afterTime = System.nanoTime();
-        logger.info("{} : {}", "EXCEPTION_CHECK_TIME", targetClassName + "." + targetMethodName + ":" + (afterTime - beforeTime) + "nsecs.");
+        logger.info("{} USER_ID:{} {}.{} TIME:{}nsecs.", "EXCEPTION_CHECK_TIME", sessionBean.getUserId(),targetClassName, targetMethodName, (afterTime - beforeTime));
         
-        logger.info("{} {}", "END_EXCEPTION_CHECK", targetClassName + "." + targetMethodName);
+        logger.info("{} USER_ID:{} {}.{}", "END_EXCEPTION_CHECK", sessionBean.getUserId(),targetClassName, targetMethodName);
   
         return ret;
 

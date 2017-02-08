@@ -18,12 +18,34 @@
                                     <span class="caret"/>
                                 </a> 
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#"><span class="glyphicon glyphicon-edit"/> ユーザ情報編集</a></li>
-                                    <li><a href="#"><span class="glyphicon glyphicon-log-out"/> ログアウト</a></li>
+                                    <li><a jsf:outcome="/auth/user/index"><span class="glyphicon glyphicon-edit"/> ユーザ情報</a></li>
+                                    <li><a href="" data-toggle="modal" data-target="#logout-modal" ><span class="glyphicon glyphicon-log-out"/> ログアウト</a></li>
                                 </ul>
                             </li>
                           </ul>
                         </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- ログアウト用モーダルダイアログ -->
+            <div class="modal fade" id="logout-modal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                            <h4 class="modal-title">ログアウトしますか？</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>ログアウト後、ログイン画面へ遷移します。</h4>
+                            </div>
+                            <form jsf:id="logout-form">
+                                <input class="btn btn-primary" type="submit" value="ログアウト" id="logout" jsf:action="#{accountBean.logout()}"/>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                        </div>
                     </div>
                 </div>
             </div>

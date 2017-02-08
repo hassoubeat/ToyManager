@@ -7,9 +7,7 @@ package com.hassoubeat.toymanager.service.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +15,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,6 +31,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r")
     , @NamedQuery(name = "Role.findById", query = "SELECT r FROM Role r WHERE r.id = :id")
     , @NamedQuery(name = "Role.findByName", query = "SELECT r FROM Role r WHERE r.name = :name")
+    , @NamedQuery(name = "Role.findByAuthority", query = "SELECT r FROM Role r WHERE r.authority = :authority")
     , @NamedQuery(name = "Role.findByCreateDate", query = "SELECT r FROM Role r WHERE r.createDate = :createDate")
     , @NamedQuery(name = "Role.findByEditDate", query = "SELECT r FROM Role r WHERE r.editDate = :editDate")})
 public class Role implements Serializable {
@@ -51,6 +49,10 @@ public class Role implements Serializable {
     private String name;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "authority")
+    private int authority;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "create_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
@@ -59,8 +61,6 @@ public class Role implements Serializable {
     @Column(name = "edit_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date editDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "roleId")
-    private List<Account> accountList;
 
     public Role() {
     }
@@ -69,9 +69,10 @@ public class Role implements Serializable {
         this.id = id;
     }
 
-    public Role(Integer id, String name, Date createDate, Date editDate) {
+    public Role(Integer id, String name, int authority, Date createDate, Date editDate) {
         this.id = id;
         this.name = name;
+        this.authority = authority;
         this.createDate = createDate;
         this.editDate = editDate;
     }
@@ -92,6 +93,14 @@ public class Role implements Serializable {
         this.name = name;
     }
 
+    public int getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(int authority) {
+        this.authority = authority;
+    }
+
     public Date getCreateDate() {
         return createDate;
     }
@@ -106,14 +115,6 @@ public class Role implements Serializable {
 
     public void setEditDate(Date editDate) {
         this.editDate = editDate;
-    }
-
-    public List<Account> getAccountList() {
-        return accountList;
-    }
-
-    public void setAccountList(List<Account> accountList) {
-        this.accountList = accountList;
     }
 
     @Override

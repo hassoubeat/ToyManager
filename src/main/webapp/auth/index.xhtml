@@ -11,6 +11,9 @@
     <body>
         <ui:composition template="/auth/template/template.xhtml">
             <ui:define name="content">
+                <f:metadata>
+                    <f:viewAction action="#{topBean.bookmarkable()}" onPostback="false"></f:viewAction>
+                </f:metadata>
                 <div class="row">
                     <div class="col-xs-3 toy-side-menu">
                         <ui:include src="/auth/template/toyMenu.xhtml"/>
@@ -26,7 +29,7 @@
                             <h4 class="small">下記メニューから行いたい処理を選択してください。</h4>
                         </div>
                         <div class="col-xs-6">
-                            <a class="disabled" id="toy-menu-schedule" jsf:outcome="/auth/schedule/index" style="text-decoration:none; color:#666">
+                            <a class="disabled" id="toy-menu-schedule" jsf:outcome="/login" style="text-decoration:none; color:#666">
                                 <div class="panel toy-menu-schedule unselected" id="edit-schedule">
                                     <div class="panel-body">
                                         <h2><span class="glyphicon glyphicon-calendar"/> イベントの編集</h2>
@@ -62,9 +65,6 @@
                         </div>
                     </div>
                 </div>
-                test
-                    <h:outputText value="一般" rendered="#{facesContext.externalContext.isUserInRole('general')}"/>
-                    <h:outputText value="管理者" rendered="#{facesContext.externalContext.isUserInRole('admin')}"/>
             </ui:define>
             <ui:define name="css">
                 <!-- jQueryUI CSS -->

@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
+    <body>
+        <ui:composition template="/auth/template/template.xhtml">
+            <ui:define name="header">
+            </ui:define>
+            <ui:define name="content">
+                <f:metadata>
+                    <f:viewAction action="#{editUserIdCheckBean.bookmarkable()}" onPostback="false"></f:viewAction>
+                </f:metadata>
+                <div class="container well" style="margin-top: 10%">
+                    <div style="text-align: center;">
+                        <img class="thumnail_100 img-rounded" src="../../resources/img/toymanager.png"/>
+                    </div>
+                    <p/>
+                    <div class="alert alert-info">
+                        <h4><span class="glyphicon glyphicon-info-sign"/> 変更したメールアドレスに認証コードを送信しました</h4>
+                        確認の上、以下の入力フォームに認証コードを入力してください。<br/>
+                        <u><b>※ 認証コードは現在のページを開いている間のみ有効です。(ページを閉じる場合は、お手数ですが再度ユーザID変更を行って下さい)</b></u>
+                    </div>    
+                    <form jsf:id="auth-code-form">
+                        <h4>認証コード</h4>
+                        <input type="text" jsf:id="auth-code" class="form-control input-sm chat-input" jsf:value="#{editUserIdCheckBean.inputAuthCode}"/>
+                        <h:message class="label label-danger" for="auth-code"/>
+                        <p/>
+                        <input class="btn btn-primary" type="submit" value="認証する" jsf:action="#{editUserIdCheckBean.authEditUserId()}"/>
+                    </form>
+                </div>
+            </ui:define>
+        </ui:composition>        
+    </body>
+</html>
+

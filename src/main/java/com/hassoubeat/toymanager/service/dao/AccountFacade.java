@@ -76,6 +76,6 @@ public class AccountFacade extends AbstractFacade<Account> {
         return (Account) query.getSingleResult();
         
     }
-    
-    
+
+
 }

@@ -33,6 +33,9 @@ public class SessionBean implements Serializable {
     String role = null;
     
     @Getter
+    int roleAuthority = 0;
+    
+    @Getter
     Boolean isAuth = false;
     
     /**
@@ -56,6 +59,7 @@ public class SessionBean implements Serializable {
         id = account.getId();
         userId = account.getUserId();
         role = account.getRoleId().getName();
+        roleAuthority = account.getRoleId().getAuthority();
         isAuth = true;
     }
     

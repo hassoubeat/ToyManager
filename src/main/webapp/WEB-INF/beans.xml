@@ -7,6 +7,9 @@
         <interceptors>
             <!-- 定義した順番でインターセプターが実行されるため、順番を変更しないこと -->
             <class>com.hassoubeat.toymanager.interceptor.ExceptionInterceptor</class>
+            <class>com.hassoubeat.toymanager.interceptor.AuthAdminInterceptor</class>
+            <class>com.hassoubeat.toymanager.interceptor.AuthManagerInterceptor</class>
+            <class>com.hassoubeat.toymanager.interceptor.AuthGeneralInterceptor</class>
             <class>com.hassoubeat.toymanager.interceptor.LogInterceptor</class>
         </interceptors>
     

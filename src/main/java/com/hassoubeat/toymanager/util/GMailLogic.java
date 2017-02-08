@@ -113,8 +113,8 @@ public class GMailLogic implements MailLogicInterface {
             Transport.send(message);
             
             logger.info("{}:{} , FROM_ADDRESS:{}, FROM_NAME:{}, SMTP_HOST:{}, SMTP_PORT:{}, SMTP_TIMEOUT:{}, STARTTLS:{}, CHARSET:{}, ENCODING:{}, {}",
-                    Message.SUCCESS_SEND_AUTH_CODE_MAIL.getId(),
-                    Message.SUCCESS_SEND_AUTH_CODE_MAIL.getMessage(),
+                    MessageConst.SUCCESS_SEND_AUTH_CODE_MAIL.getId(),
+                    MessageConst.SUCCESS_SEND_AUTH_CODE_MAIL.getMessage(),
                     fromAddress,
                     fromName,
                     smtpHost,
@@ -127,8 +127,8 @@ public class GMailLogic implements MailLogicInterface {
             
         } catch (MessagingException | UnsupportedEncodingException ex) {
             logger.error("{}:{} , FROM_ADDRESS:{}, FROM_NAME:{}, SMTP_HOST:{}, SMTP_PORT:{}, SMTP_TIMEOUT:{}, STARTTLS:{}, CHARSET:{}, ENCODING:{}, {}",
-                    Message.FAILED_SEND_MAIL.getId(),
-                    Message.FAILED_SEND_MAIL.getMessage(),
+                    MessageConst.FAILED_SEND_MAIL.getId(),
+                    MessageConst.FAILED_SEND_MAIL.getMessage(),
                     fromAddress,
                     fromName,
                     smtpHost,
@@ -191,7 +191,7 @@ public class GMailLogic implements MailLogicInterface {
             String separator = System.getProperty("line.separator");
             letterBody += "認証コード：" + content + separator;
             letterBody += separator;
-            letterBody += "上記の認証コードをブラウザより入力し、サインアップを完了させてください。" + separator;
+            letterBody += "上記の認証コードをブラウザより入力し、処理を完了させてください。" + separator;
             letterBody += separator;
             letterBody += "@ToyManager";
         

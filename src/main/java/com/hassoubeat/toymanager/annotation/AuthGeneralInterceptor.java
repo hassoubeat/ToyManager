@@ -18,5 +18,5 @@ import javax.interceptor.InterceptorBinding;
 @InterceptorBinding
 @Retention(RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
-public @interface AuthInterceptor {
+public @interface AuthGeneralInterceptor {
 }

@@ -9,7 +9,7 @@ package com.hassoubeat.toymanager.web.backingbean;
 import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.service.logic.AccountLogic;
-import com.hassoubeat.toymanager.util.Message;
+import com.hassoubeat.toymanager.util.MessageConst;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.IOException;
 import javax.ejb.EJB;
@@ -72,25 +72,25 @@ public class AccountBean {
     public String login() {
         
         // ログイン処理の実行
-        Message resultCode = accountLogic.login(this.getUserId(), this.getPassword());
+        MessageConst resultCode = accountLogic.login(this.getUserId(), this.getPassword());
         FacesContext facesContext = FacesContext.getCurrentInstance();
         
         switch(resultCode) {
             case LOGICAL_DELETE_USER:
                 // ログインしようとしたユーザが論理削除済であった場合
-                facesContext.addMessage("login-form:user-id", new FacesMessage(Message.LOGICAL_DELETE_USER.getMessage()));
+                facesContext.addMessage("login-form:user-id", new FacesMessage(MessageConst.LOGICAL_DELETE_USER.getMessage()));
                 break;
             
             case INVALID_USERID: 
                 // ID入力を誤った場合
-                facesContext.addMessage("login-form:user-id", new FacesMessage(Message.INVALID_USERID_OR_PASSWORD.getMessage()));
-                facesContext.addMessage("login-form:password", new FacesMessage(Message.INVALID_USERID_OR_PASSWORD.getMessage()));
+                facesContext.addMessage("login-form:user-id", new FacesMessage(MessageConst.INVALID_USERID_OR_PASSWORD.getMessage()));
+                facesContext.addMessage("login-form:password", new FacesMessage(MessageConst.INVALID_USERID_OR_PASSWORD.getMessage()));
                 break;
                 
             case INVALID_PASSWORD: 
                 // パスワード入力を誤った場合
-                facesContext.addMessage("login-form:user-id", new FacesMessage(Message.INVALID_USERID_OR_PASSWORD.getMessage()));
-                facesContext.addMessage("login-form:password", new FacesMessage(Message.INVALID_USERID_OR_PASSWORD.getMessage()));
+                facesContext.addMessage("login-form:user-id", new FacesMessage(MessageConst.INVALID_USERID_OR_PASSWORD.getMessage()));
+                facesContext.addMessage("login-form:password", new FacesMessage(MessageConst.INVALID_USERID_OR_PASSWORD.getMessage()));
                 break;
                 
             case SUCCESS_LOGIN:
@@ -110,14 +110,9 @@ public class AccountBean {
     @ErrorInterceptor
     @LogInterceptor
     public String logout() {
-//        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-//        HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
-//        
-//        try {
-//            request.logout();
-//        } catch(Exception ex) {
-//            // エラーでもログイン画面に遷移する
-//        }
+        
+        // TODO ログアウト実行時に失敗した際の処理いるか？
+        accountLogic.logout();
         
         return "/login?faces-redirect=true";
     }
@@ -131,7 +126,7 @@ public class AccountBean {
     @LogInterceptor
     public String remind() {
         
-        Message resultCode = accountLogic.remind(this.getRemindUserId());
+        MessageConst resultCode = accountLogic.remind(this.getRemindUserId());
         FacesContext facesContext = FacesContext.getCurrentInstance();
         
         switch(resultCode) {
@@ -139,14 +134,14 @@ public class AccountBean {
                 // リマインド対象のユーザがいなかった場合
                 
                 // 画面に戻ってエラーメッセージの出力        
-                facesContext.addMessage("remind-failed", new FacesMessage(Message.NOT_FOUND_USER.getMessage()));
+                facesContext.addMessage("remind-failed", new FacesMessage(MessageConst.NOT_FOUND_USER.getMessage()));
                 break;
 
             case SUCCESS_REMIND_PASSWORD:
                 // リマインド完了
 
                 // 画面に戻ってエラーメッセージの出力        
-                facesContext.addMessage("remind-complete", new FacesMessage(Message.SUCCESS_REMIND_PASSWORD.getMessage()));
+                facesContext.addMessage("remind-complete", new FacesMessage(MessageConst.SUCCESS_REMIND_PASSWORD.getMessage()));
                 break;
         }
           
