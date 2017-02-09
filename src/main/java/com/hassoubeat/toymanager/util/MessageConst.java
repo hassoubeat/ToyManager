@@ -20,6 +20,7 @@ public enum MessageConst {
     SUCCESS_REMIND_PASSWORD("MIR_01000007", "パスワードのリマインドを実行しました。"),
     SUCCESS_AUTHORITY("MIR_01000008", "認証が完了しました。"),
     SUCCESS_LOGOUT("MIR_01000009", "ログアウトが完了しました。"),
+    SELECT_TOY("MIR_01000010", "Toyを選択しました。"),
     
     // MER(ToyManager側で発生する想定内エラー系)
     ALREADY_REGISTED_USER("MER_01000001", "入力したメールアドレスは既に登録されています。"),

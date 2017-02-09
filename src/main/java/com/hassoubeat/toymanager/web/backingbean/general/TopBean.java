@@ -34,9 +34,6 @@ public class TopBean {
     @AuthGeneralInterceptor
     @LogInterceptor
     public void bookmarkable() {
-        // セッション情報でログイン済であった場合、トップ画面へリダイレクトする
-        
-        
     }
     
 }

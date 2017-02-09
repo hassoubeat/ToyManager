@@ -14,6 +14,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -37,6 +38,10 @@ public class SessionBean implements Serializable {
     
     @Getter
     Boolean isAuth = false;
+    
+    @Getter
+    @Setter
+    Integer selectedToyId = null;
     
     /**
      * Creates a new instance of SessionBean
@@ -73,6 +78,7 @@ public class SessionBean implements Serializable {
         userId = null;
         role = null;
         isAuth = false;
+        selectedToyId = null;
     }
     
 }
