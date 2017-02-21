@@ -5,6 +5,7 @@
  */
 package com.hassoubeat.toymanager.util;
 
+import com.hassoubeat.toymanager.constant.MessageConst;
 import com.hassoubeat.toymanager.service.exception.FailedSendMailException;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;

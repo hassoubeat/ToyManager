@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.hassoubeat.toymanager.util;
+package com.hassoubeat.toymanager.constant;
 
 /**
  *

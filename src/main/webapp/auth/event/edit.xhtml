@@ -1,0 +1,419 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
+    <body>
+        <ui:composition template="/auth/template/template.xhtml">
+            <ui:define name="content">
+                <f:metadata>
+                    <f:viewParam name="startDate" value="#{eventEditBean.eventStartDate}">
+                        <f:convertDateTime type="both" />
+                    </f:viewParam>
+                    <f:viewParam name="endDate" value="#{eventEditBean.eventEndDate}">
+                        <f:convertDateTime type="both" />
+                    </f:viewParam>
+                    <f:viewAction action="#{eventEditBean.bookmarkable()}" onPostback="false"></f:viewAction>
+                </f:metadata>
+                <div class="row">
+                    <div class="well">
+                        <h4><span class="glyphicon glyphicon-calendar"/> イベントの編集</h4>
+                        <form jsf:id="event-form">
+                            <input type="text" id="event-title" jsf:id="event-title" class="form-control" placeholder="イベントのタイトルを【30】文字以内で入力してください" jsf:value="#{eventEditBean.eventName}"/>
+                            <h:message class="label label-danger" for="event-title"/>
+                            <textarea id="event-content" class="form-control" jsf:id="event-content" placeholder="Toyが読み上げる内容を【200】文字以内で入力してください" jsf:value="#{eventEditBean.eventContent}"/>
+                            <h:message class="label label-danger" for="event-content"/>
+                            <input id="start-event-date" jsf:id="start-event-date" class="input-date"  placeholder="開始日時" type="text" jsf:value="#{eventEditBean.eventStartDate}">
+                                <f:convertDateTime type="both" />
+                            </input>
+                            <h:message class="label label-danger" for="start-event-date"/>
+                            〜
+                            <input id="end-event-date" jsf:id="end-event-date" class="input-date" placeholder="終了日時" type="text" jsf:value="#{eventEditBean.eventEndDate}">
+                                <f:convertDateTime type="both" />
+                            </input>
+                            <h:message class="label label-danger" for="end-event-date"/>
+                            <table>
+                                <tr>
+                                    <th>イベントカラー:</th>
+                                    <td>
+                                        <div>
+                                            <ui:repeat var="item" value="#{eventEditBean.colorTypeList}">
+                                                <div class="block-sm" id="event-colorset-#{item.name}" style="background-color:#{item.colorCode};" />
+                                            </ui:repeat>
+                                            <input type="hidden" id="event-color-code" jsf:value="#{eventEditBean.eventColorCode}"/>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <th>アカウント共通のイベント:</th>
+                                    <td><input type="checkbox" id="is-account-share" jsf:value="#{eventEditBean.accountShare}"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Toyに喋らせる？:</th>
+                                    <td><input type="checkbox" id="is-talking" jsf:value="#{eventEditBean.talking}"/></td>
+                                </tr>
+                                <tr>
+                                    <th>イベントの繰り返し:</th>
+                                    <td>
+                                        <h:selectOneMenu id="roop-type-select">
+                                            <f:selectItem itemLabel="しない" itemValue="not-roop"/>
+                                            <f:selectItem itemLabel="毎日" itemValue="every-day"/>
+                                            <f:selectItem itemLabel="毎週" itemValue="every-week"/>
+                                            <f:selectItem itemLabel="毎月" itemValue="every-mouth"/>
+                                            <f:selectItem itemLabel="毎年" itemValue="every-year"/>
+                                        </h:selectOneMenu>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- 繰り返しオプションここから -->
+                            <div class="alert alert-info" id="roop-option-owner" style="display:none; margin-top: 5px;">
+                                <h5 style="margin-top: -5px;"><u><b>繰り返しの設定</b></u></h5>
+                                <p/>
+                                <div id="roop-option-every-day" style="display:none;">
+                                    繰り返す間隔:
+                                    <h:selectOneMenu id="roop-option-every-day-roop-interval">
+                                        <f:selectItem itemValue="1" itemLabel="1"/><f:selectItem itemValue="2" itemLabel="2"/><f:selectItem itemValue="3" itemLabel="3"/><f:selectItem itemValue="4" itemLabel="4"/><f:selectItem itemValue="5" itemLabel="5"/><f:selectItem itemValue="6" itemLabel="6"/><f:selectItem itemValue="7" itemLabel="7"/><f:selectItem itemValue="8" itemLabel="8"/><f:selectItem itemValue="9" itemLabel="9"/><f:selectItem itemValue="10" itemLabel="10"/><f:selectItem itemValue="11" itemLabel="11"/><f:selectItem itemValue="12" itemLabel="12"/><f:selectItem itemValue="13" itemLabel="13"/><f:selectItem itemValue="14" itemLabel="14"/><f:selectItem itemValue="15" itemLabel="15"/><f:selectItem itemValue="16" itemLabel="16"/><f:selectItem itemValue="17" itemLabel="17"/><f:selectItem itemValue="18" itemLabel="18"/><f:selectItem itemValue="19" itemLabel="19"/><f:selectItem itemValue="20" itemLabel="20"/><f:selectItem itemValue="21" itemLabel="21"/><f:selectItem itemValue="22" itemLabel="22"/><f:selectItem itemValue="23" itemLabel="23"/><f:selectItem itemValue="24" itemLabel="24"/><f:selectItem itemValue="25" itemLabel="25"/><f:selectItem itemValue="26" itemLabel="26"/><f:selectItem itemValue="27" itemLabel="27"/><f:selectItem itemValue="28" itemLabel="28"/><f:selectItem itemValue="29" itemLabel="29"/><f:selectItem itemValue="30" itemLabel="30"/>
+                                    </h:selectOneMenu>
+                                    日毎
+                                    <p/>
+                                </div>
+                                <div id="roop-option-every-week" style="display:none;">
+                                    繰り返す間隔:
+                                    <h:selectOneMenu id="roop-option-every-week-roop-interval">
+                                        <f:selectItem itemValue="1" itemLabel="1"/><f:selectItem itemValue="2" itemLabel="2"/><f:selectItem itemValue="3" itemLabel="3"/><f:selectItem itemValue="4" itemLabel="4"/><f:selectItem itemValue="5" itemLabel="5"/><f:selectItem itemValue="6" itemLabel="6"/><f:selectItem itemValue="7" itemLabel="7"/><f:selectItem itemValue="8" itemLabel="8"/><f:selectItem itemValue="9" itemLabel="9"/><f:selectItem itemValue="10" itemLabel="10"/><f:selectItem itemValue="11" itemLabel="11"/><f:selectItem itemValue="12" itemLabel="12"/><f:selectItem itemValue="13" itemLabel="13"/><f:selectItem itemValue="14" itemLabel="14"/><f:selectItem itemValue="15" itemLabel="15"/><f:selectItem itemValue="16" itemLabel="16"/><f:selectItem itemValue="17" itemLabel="17"/><f:selectItem itemValue="18" itemLabel="18"/><f:selectItem itemValue="19" itemLabel="19"/><f:selectItem itemValue="20" itemLabel="20"/><f:selectItem itemValue="21" itemLabel="21"/><f:selectItem itemValue="22" itemLabel="22"/><f:selectItem itemValue="23" itemLabel="23"/><f:selectItem itemValue="24" itemLabel="24"/><f:selectItem itemValue="25" itemLabel="25"/><f:selectItem itemValue="26" itemLabel="26"/><f:selectItem itemValue="27" itemLabel="27"/><f:selectItem itemValue="28" itemLabel="28"/><f:selectItem itemValue="29" itemLabel="29"/><f:selectItem itemValue="30" itemLabel="30"/>
+                                    </h:selectOneMenu>
+                                    週毎
+                                    <p/>
+                                    通知をする曜日：
+                                    <input type="checkbox" id="roop-option-every-week-checker-sunday" value="日">日</input><input type="checkbox" id="roop-option-every-week-checker-monday" value="月">月</input><input type="checkbox" id="roop-option-every-week-checker-tuesday" value="火">火</input><input type="checkbox" id="roop-option-every-week-checker-wednesday" value="水">水</input><input type="checkbox" id="roop-option-every-week-checker-thursday" value="木">木</input><input type="checkbox" id="roop-option-every-week-checker-friday" value="金">金</input><input type="checkbox" id="roop-option-every-week-checker-saturday" value="土">土</input>
+                                    <p/>
+                                </div>
+                                <div id="roop-option-every-mouth" style="display:none;">
+                                    繰り返す間隔:
+                                    <h:selectOneMenu id="roop-option-every-mouth-roop-interval">
+                                        <f:selectItem itemValue="1" itemLabel="1"/><f:selectItem itemValue="2" itemLabel="2"/><f:selectItem itemValue="3" itemLabel="3"/><f:selectItem itemValue="4" itemLabel="4"/><f:selectItem itemValue="5" itemLabel="5"/><f:selectItem itemValue="6" itemLabel="6"/><f:selectItem itemValue="7" itemLabel="7"/><f:selectItem itemValue="8" itemLabel="8"/><f:selectItem itemValue="9" itemLabel="9"/><f:selectItem itemValue="10" itemLabel="10"/><f:selectItem itemValue="11" itemLabel="11"/><f:selectItem itemValue="12" itemLabel="12"/><f:selectItem itemValue="13" itemLabel="13"/><f:selectItem itemValue="14" itemLabel="14"/><f:selectItem itemValue="15" itemLabel="15"/><f:selectItem itemValue="16" itemLabel="16"/><f:selectItem itemValue="17" itemLabel="17"/><f:selectItem itemValue="18" itemLabel="18"/><f:selectItem itemValue="19" itemLabel="19"/><f:selectItem itemValue="20" itemLabel="20"/><f:selectItem itemValue="21" itemLabel="21"/><f:selectItem itemValue="22" itemLabel="22"/><f:selectItem itemValue="23" itemLabel="23"/><f:selectItem itemValue="24" itemLabel="24"/><f:selectItem itemValue="25" itemLabel="25"/><f:selectItem itemValue="26" itemLabel="26"/><f:selectItem itemValue="27" itemLabel="27"/><f:selectItem itemValue="28" itemLabel="28"/><f:selectItem itemValue="29" itemLabel="29"/><f:selectItem itemValue="30" itemLabel="30"/>
+                                    </h:selectOneMenu>
+                                    ヶ月毎
+                                    <p/>
+                                    繰り返しの基準
+                                    <input type="radio" name="roop-standard" value="date" id="roop-standard-default">日付</input>
+                                    <input type="radio" name="roop-standard" value="day-of-the-week" >曜日</input>
+
+                                    <p/>
+                                </div>
+                                <div id="roop-option-every-year" style="display:none;">
+                                    繰り返す間隔:
+                                    <h:selectOneMenu id="roop-option-every-year-roop-interval">
+                                        <f:selectItem itemValue="1" itemLabel="1"/><f:selectItem itemValue="2" itemLabel="2"/><f:selectItem itemValue="3" itemLabel="3"/><f:selectItem itemValue="4" itemLabel="4"/><f:selectItem itemValue="5" itemLabel="5"/><f:selectItem itemValue="6" itemLabel="6"/><f:selectItem itemValue="7" itemLabel="7"/><f:selectItem itemValue="8" itemLabel="8"/><f:selectItem itemValue="9" itemLabel="9"/><f:selectItem itemValue="10" itemLabel="10"/><f:selectItem itemValue="11" itemLabel="11"/><f:selectItem itemValue="12" itemLabel="12"/><f:selectItem itemValue="13" itemLabel="13"/><f:selectItem itemValue="14" itemLabel="14"/><f:selectItem itemValue="15" itemLabel="15"/><f:selectItem itemValue="16" itemLabel="16"/><f:selectItem itemValue="17" itemLabel="17"/><f:selectItem itemValue="18" itemLabel="18"/><f:selectItem itemValue="19" itemLabel="19"/><f:selectItem itemValue="20" itemLabel="20"/><f:selectItem itemValue="21" itemLabel="21"/><f:selectItem itemValue="22" itemLabel="22"/><f:selectItem itemValue="23" itemLabel="23"/><f:selectItem itemValue="24" itemLabel="24"/><f:selectItem itemValue="25" itemLabel="25"/><f:selectItem itemValue="26" itemLabel="26"/><f:selectItem itemValue="27" itemLabel="27"/><f:selectItem itemValue="28" itemLabel="28"/><f:selectItem itemValue="29" itemLabel="29"/><f:selectItem itemValue="30" itemLabel="30"/>
+                                    </h:selectOneMenu>
+                                    年毎
+                                    <p/>
+                                </div>
+                                <div id="roop-option-share" style="display:none;">
+                                    繰り返しの終了日時：
+                                    <input id="roop-end-event-date" class="input-date" placeholder="繰り返し終了日時" type="text" jsf:value="#{eventEditBean.roopEndDate}">
+                                        <f:convertDateTime pattern="yyyy/MM/dd HH:mm:dd"/>
+                                    </input>
+                                </div>
+                                <input type="hidden" id="roop-param" jsf:value="#{eventEditBean.roop}"/>
+                            </div>
+                            <!-- 繰り返しオプションここまで -->
+                            <p/>
+
+                            <h:commandButton class="btn btn-primary" id="add-event" action="#{eventEditBean.addEvent()}" value="イベントの追加" style="margin-right: 5px;">
+                                <f:ajax execute="@form" render="@form" onevent="addEventSuccessAfterTest"/>
+                            </h:commandButton>
+                            <input type="submit" class="btn btn-success" id="update-event" jsf:action="#{eventEditBean.editEvent()}" value="イベントの修正" style="margin-right: 5px;"></input>
+                            <input type="submit" class="btn btn-danger" id="remove-event" jsf:action="#{eventEditBean.removeEvent()}" value="イベントの削除"></input>
+                        </form>
+                    </div>
+                </div>
+                <!-- Toy未選択時の通知ダイアログ -->
+                <div class="modal fade" id="not-selected-toy-modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                <h4 class="modal-title">Toyが未選択です。</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="bs-callout bs-callout-warning">
+                                    <h4>画面右のToy一覧からToyを選択してください。</h4>
+                                    <h5 class="small">・Toyが未選択の状態では、イベントの追加/編集が行うことができません。</h5>
+                                </div>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+            <ui:define name="css">
+                <!-- jQueryUI CSS -->
+                <link jsf:library="css" jsf:name="jquery-ui.css"/>
+                <!-- jQeury-DataTimePicker CSS -->
+                <link jsf:library="css" jsf:name="jquery.datetimepicker.css"/>
+                <!-- jQueryToaster CSS -->
+                <link jsf:library="css" jsf:name="jquery.toast.css"/>
+                <!-- FullCalendar CSS -->
+                <link jsf:library="css" jsf:name="fullcalendar.css"/>
+                <!-- FullCalendar Print CSS -->
+                <link jsf:library="css" jsf:name="fullcalendar.print.css" media="print"/>
+            </ui:define>
+            <ui:define name="js">
+                <!-- jQueryUI JS -->
+                <script jsf:library="js" jsf:name="jquery-ui.js"/>
+                <!-- jQeury-DataTimePicker JS -->
+                <script jsf:library="js" jsf:name="jquery.datetimepicker.full.js"/>
+                <!-- jQueryToaster JS -->
+                <script jsf:library="js" jsf:name="jquery.toast.js"/>
+                <!-- FullCalender JS -->
+                <script jsf:library="js" jsf:name="fullcalendar.js"/>
+                <!-- gcal JS -->
+                <script jsf:library="js" jsf:name="gcal.js"/>
+                <!-- FullCalendar日本語化 JS -->
+                <script jsf:library="js" jsf:name="ja.js"/>
+                
+                <script type="text/javascript">
+                    var selectedToy = "";
+                    var selectedEvent = "";
+                    
+                    $(window).load(function () {
+                        // Toy選択済チェック
+                        if(#{sessionBean.selectedToyId} === 0) {
+                            // Toyが未選択だった場合、選択を促すダイアログを表示する
+                            $("#not-selected-toy-modal").modal();
+                            // イベント登録/変更/削除ボタンを無効にする
+                            $("#add-event").prop("disabled", true);
+                            $("#update-event").prop("disabled", true);
+                            $("#remove-event").prop("disabled", true);
+                        }
+                        
+                        // ナビゲーションバーのactiveを変更
+                        $("#event").addClass("active");
+                        
+                        // 日付入力エリアにDataTimePickerの適応
+                        $.datetimepicker.setLocale("ja");
+                        $(".input-date").datetimepicker({
+                            format:"Y/m/d H:i:00",
+                            step:15
+                        });
+                        
+                        // カラーセットマウスホバー/ブラーの処理
+                        $("[id^=event-colorset]").hover(
+                            function(){
+                                // マウスホバー時の処理(枠線の変更)
+                               $(this).addClass("block-sm-hover");
+                            },
+                            function(){
+                                // マウスブラー時の処理
+                               $(this).removeClass("block-sm-hover")
+                            }
+                        );
+                
+                        $("[id^=event-colorset]").click(function(){
+                            // 他の選択を初期化する
+                            $("[id^=event-colorset]").removeClass("block-sm-checked");
+                            
+                            // 色コードを持つhidden要素に選択した色コードを代入
+                            $("#event-color-code").val($(this).css("background-color"));
+                            console.log($("#event-color-code").val());
+                            // 選択した要素のclassに.block-sm-checkedを付与する
+                            $(this).addClass("block-sm-checked");
+                        });
+                        
+                        // 繰り返し種別のセレクトボックスを変更した場合の処理
+                        $("[id$=roop-type-select]").change(function(){
+                            // ループ終了日時のクリア
+                            $("#roop-end-event-date").val("");
+                            // ループ間隔セレクトボックスの初期化
+                            $("[id$=roop-interval]").val(0);
+                            // ループ種別"毎週"の曜日選択チェックボックスの初期化
+                            $("[id^=roop-option-every-week-checker]").prop("checked", false);
+                            // ループ種別"毎月"のループ基準セレクトボックスの初期化
+                            $("[name=roop-standard]").prop("checked", false);
+                            
+                            // 全ループオプションブロックの非表示
+                           $("[id^=roop-option]").hide();
+                           
+                           $("#roop-option-owner").show();
+                            
+                            // roop値のクリア
+                            $("#roop-param").val(0);
+                            
+                            // 選択したループ種別毎の処理を実行
+                            switch($(this).val()){
+                                case "not-roop":
+                                    // ループ種別"しない"を選択した場合
+                                    $("#roop-option-owner").hide();
+                                    break;
+                                case "every-day":
+                                    // ループ種別"毎日"を選択した場合
+                                    $("#roop-option-every-day").show();
+                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_DAY_ROOP}))
+                                    break;
+                                case "every-week":
+                                    // ループ種別"毎週"を選択した場合
+                                    $("#roop-option-every-week").show();
+                                    $("[id*=roop-option-every-week-checker]").show();
+                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_WEEK_ROOP}))
+                                    break;
+                                case "every-mouth":
+                                    // ループ種別"毎月"を選択した場合
+                                    $("#roop-option-every-mouth").show();
+                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_MOUTH_ROOP}))
+                                    $("#roop-standard-default").prop("checked","checked");
+                                    $("#roop-param").val(bitOr($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_STANDARD_DAY}));
+                                    break;
+                                case "every-year":
+                                    // ループ種別"毎年"を選択した場合
+                                    $("#roop-option-every-year").show();
+                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_YEAR_ROOP}))
+                                    break;
+                            }
+                            
+                            if($(this).val() !== "not-roop") {
+                                // ループ種別"いいえ"以外の時に、ループ共通ブロックの表示
+                                $("#roop-option-share").show();
+                                // ループ有効ビットをONにする
+                                $("#roop-param").val(bitOr($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP}));
+                            }
+                            show2_10_16($("#roop-param").val());
+                        });
+                        
+                        // 繰り返し間隔を変更した時の処理
+                        $("[id$=roop-interval]").change(function(){
+                            // 前選択のパラメータをリセットする(日付間隔定義するビットの位をクリアする)
+                            $("#roop-param").val(bitAnd($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_INTERVAL_BIT}));
+                            // 選択した繰り返し間隔の値を加算する
+                            $("#roop-param").val(sum($("#roop-param").val(), $(this).val()));
+                            show2_10_16($("#roop-param").val());
+                        });
+                        
+                        // ループ種別"週次"の曜日選択チェックボックス選択時の処理
+                        $("[id^=roop-option-every-week-checker]").change(function(){
+                            switch($(this).attr("id")) {
+                                case "roop-option-every-week-checker-sunday":
+                                    // 日曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SUNDAY}));
+                                    break;
+                                case "roop-option-every-week-checker-monday":
+                                    // 月曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_MONDAY}));
+                                    break;
+                                case "roop-option-every-week-checker-tuesday":
+                                    // 火曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_TUESDAY}));
+                                    break;
+                                case "roop-option-every-week-checker-wednesday":
+                                    // 水曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_WEDNESDAY}));
+                                    break;
+                                case "roop-option-every-week-checker-thursday":
+                                    // 木曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_THURSDAY}));
+                                    break;
+                                case "roop-option-every-week-checker-friday":
+                                    // 金曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_FRIDAY}));
+                                    break;
+                                case "roop-option-every-week-checker-saturday":
+                                    // 土曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SATURDAY}));
+                                    break;
+                            }
+                            show2_10_16($("#roop-param").val());
+                        });
+                        
+                        // ループ種別"週次"の曜日選択チェックボックス選択時の処理
+                        $("[name=roop-standard]:radio").change(function(){
+                            
+                            //日付基準ビットをクリアする
+                            $("#roop-param").val(bitAnd($("#roop-param").val(), bitNot(#{eventEditBean.erpConst.IS_ROOP_STANDARD_DAY})));
+                            
+                            if($(this).val() === "date"){
+                                // 日付基準を選択された時のみ、日付基準ビットをONにする
+                                $("#roop-param").val(bitOr($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_STANDARD_DAY}));
+                            }
+                            show2_10_16($("#roop-param").val());
+                        });
+                        
+                        // ローディング画像の非表示
+                        $(".loadingWrap").fadeOut();
+                    });
+                    
+                    // イベント登録後処理
+                    function addEventSuccessAfter(e) {
+                        console.log("test");
+                        console.log(e.source);
+                        console.log(e.responseCode);
+                        console.log(e.responseXML);
+                        console.log(e.responseText);
+                        if(#{facesContext.getMessageList('remind-complete').size() > 0}) {
+                            console.log("test2");
+                        }
+                        
+                        if(e.status === "success"){
+                            // FullCallendarに今回追加したイベントの情報を追加する
+//                            $("#calendar").fullCalendar("addEventSource", [{
+//                                // IDはサーバサイドの作り込み時には、AutoIncrementIDで代替する
+//                                id:$("#event-title").val(),
+//                                // titleにはループ種別やToyTalk有無でアイコンを表示する
+//                                title:$("#event-title").val(),
+//                                start:$("#start-event-date").val(),
+//                                end:$("#end-event-date").val(),
+//                                color:$("#event-color-code").val()
+//                            }]);
+                            // 追加が完了したダイアログの表示
+                            $.toast({
+                                heading: $("#event-title").val() + "を登録しました。",
+                                showHideTransition: "slide",
+                                icon: "success",
+                                bgColor: "#375a7f",
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                            // 入力フォームの初期化
+                            clearInputForm();
+
+                        }
+                    }
+                    
+                    // 入力フォームの値をクリアする
+                    function clearInputForm () {
+                        selectedEvent = "";
+                        $("#event-title").val("");
+                        $("#event-content").val("");
+                        $("#start-event-date").val("");
+                        $("#end-event-date").val("");
+                        $("#event-color-code").val("");
+                        $("#roop-param").val("");
+                        $("#roop-end-event-date").val("");
+                        $("[id^=event-colorset]").removeClass("block-sm-checked");
+                    }
+                    
+                </script>
+            </ui:define>
+        </ui:composition>        
+    </body>
+</html>
+

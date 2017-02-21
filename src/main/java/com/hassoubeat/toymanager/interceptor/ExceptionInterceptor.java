@@ -11,7 +11,7 @@ import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException;
-import com.hassoubeat.toymanager.util.MessageConst;
+import com.hassoubeat.toymanager.constant.MessageConst;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;

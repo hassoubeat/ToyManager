@@ -5,10 +5,13 @@
  */
 package com.hassoubeat.toymanager.web.backingbean.general;
 
+import com.hassoubeat.toymanager.annotation.AuthGeneralInterceptor;
+import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
+import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.entity.Account;
 import com.hassoubeat.toymanager.service.entity.Toy;
-import com.hassoubeat.toymanager.util.MessageConst;
+import com.hassoubeat.toymanager.constant.MessageConst;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -46,11 +49,22 @@ public class ToyMenuBean {
     /**
      * Creates a new instance of ToyMenuBean
      */
+    
     public ToyMenuBean() {
     }
     
     @PostConstruct
-    public void init() {
+    public void init(){
+        this.toyListReload();
+    }
+    
+    /**
+     * Toy情報を取得しなおすメソッド
+     */
+    @ErrorInterceptor
+    @AuthGeneralInterceptor
+    @LogInterceptor
+    private void toyListReload() {
         // ログイン中のユーザに紐づくToyを取得する
         Account targetAccount = accountFacade.findByUserId(sessionBean.getUserId());
         setToyList(targetAccount.getToyList());
@@ -61,6 +75,9 @@ public class ToyMenuBean {
      * @param selectedToyId 選択したToyのID
      * @return 
      */
+    @ErrorInterceptor
+    @AuthGeneralInterceptor
+    @LogInterceptor
     public String selectToy(int selectedToyId){
         // セッションに選択したToyIDを格納する
         sessionBean.setSelectedToyId(selectedToyId);

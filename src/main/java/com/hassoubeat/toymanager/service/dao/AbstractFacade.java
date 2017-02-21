@@ -5,7 +5,7 @@
  */
 package com.hassoubeat.toymanager.service.dao;
 
-import com.hassoubeat.toymanager.util.ParamConst;
+import com.hassoubeat.toymanager.constant.ParamConst;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;

@@ -9,7 +9,7 @@ import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.dao.RoleFacade;
 import com.hassoubeat.toymanager.service.entity.Account;
 import com.hassoubeat.toymanager.util.GMailLogic;
-import com.hassoubeat.toymanager.util.MessageConst;
+import com.hassoubeat.toymanager.constant.MessageConst;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;

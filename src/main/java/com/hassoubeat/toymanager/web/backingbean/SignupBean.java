@@ -10,7 +10,7 @@ import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.util.GMailLogic;
-import com.hassoubeat.toymanager.util.MessageConst;
+import com.hassoubeat.toymanager.constant.MessageConst;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import javax.ejb.EJB;

@@ -11,11 +11,11 @@ import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.exception.ToyManagerException;
 import com.hassoubeat.toymanager.service.logic.AccountLogic;
-import com.hassoubeat.toymanager.util.MessageConst;
-import static com.hassoubeat.toymanager.util.MessageConst.INVALID_PASSWORD;
-import static com.hassoubeat.toymanager.util.MessageConst.INVALID_USERID;
-import static com.hassoubeat.toymanager.util.MessageConst.LOGICAL_DELETE_USER;
-import static com.hassoubeat.toymanager.util.MessageConst.SUCCESS_LOGIN;
+import com.hassoubeat.toymanager.constant.MessageConst;
+import static com.hassoubeat.toymanager.constant.MessageConst.INVALID_PASSWORD;
+import static com.hassoubeat.toymanager.constant.MessageConst.INVALID_USERID;
+import static com.hassoubeat.toymanager.constant.MessageConst.LOGICAL_DELETE_USER;
+import static com.hassoubeat.toymanager.constant.MessageConst.SUCCESS_LOGIN;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -102,7 +102,7 @@ public class AccountEditBean {
             facesContext = FacesContext.getCurrentInstance();
             facesContext.addMessage("user-id-edit-form:edit-user-id", new FacesMessage(MessageConst.ALREADY_REGISTED_USER.getMessage()));
 
-            logger.warn("{} : {}", MessageConst.ALREADY_REGISTED_USER.getId() + ":" + MessageConst.ALREADY_REGISTED_USER.getMessage(), this.getClass().getName() + "." + this.getClass());
+            logger.warn("{}:{}", MessageConst.ALREADY_REGISTED_USER.getId() + ":" + MessageConst.ALREADY_REGISTED_USER.getMessage(), this.getClass().getName() + "." + this.getClass());
 
             // 元の画面に戻る
             return "";

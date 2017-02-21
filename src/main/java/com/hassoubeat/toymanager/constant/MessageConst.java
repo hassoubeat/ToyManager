@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.hassoubeat.toymanager.util;
+package com.hassoubeat.toymanager.constant;
 
 /**
  *
@@ -21,6 +21,7 @@ public enum MessageConst {
     SUCCESS_AUTHORITY("MIR_01000008", "認証が完了しました。"),
     SUCCESS_LOGOUT("MIR_01000009", "ログアウトが完了しました。"),
     SELECT_TOY("MIR_01000010", "Toyを選択しました。"),
+    SELECT_EVENT("MIR_01000011", "イベントを選択しました。"),
     
     // MER(ToyManager側で発生する想定内エラー系)
     ALREADY_REGISTED_USER("MER_01000001", "入力したメールアドレスは既に登録されています。"),
@@ -35,6 +36,8 @@ public enum MessageConst {
     NOT_LOGIN("MER_01000010", "ログインされていません。"),
     UN_AUTHORITY("MER_01000011", "権限がありません。"),
     INVALID_CHECK_PASSWORD("MER_01000012", "確認用パスワードが誤っています。"),
+    ALREADY_REMOVE_EVENT("MER_10000013", "選択したイベントは既に存在しません。"),
+    DATE_CONTRADICTION("MER_10000014", "終了日付より開始日付の方が過去の値が設定されています。"),
     
     // MCR(ToyManager側で発生する想定外エラー系)
     SYSTEM_ERROR("MCR_01000001", "システムエラーが発生しました。お手数ですが、操作をやりなおしてください。"),

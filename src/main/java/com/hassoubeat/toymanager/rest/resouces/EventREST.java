@@ -5,18 +5,18 @@
  */
 package com.hassoubeat.toymanager.rest.resouces;
 
+import com.hassoubeat.toymanager.service.dao.AccountFacade;
+import com.hassoubeat.toymanager.service.dao.EventFacade;
+import com.hassoubeat.toymanager.service.dao.ToyFacade;
 import com.hassoubeat.toymanager.service.entity.Event;
+import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
+import java.util.ArrayList;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -27,6 +27,78 @@ import javax.ws.rs.core.MediaType;
 @Stateless
 @Path("events")
 public class EventREST {
+    
+    @Inject
+    SessionBean sessionBean;
+    
+    @EJB
+    AccountFacade accountFacade;
+    
+    @EJB
+    EventFacade eventFacade;
+    
+    @EJB
+    ToyFacade toyFacade;
+    
+    @GET
+    @Path("0.1/callenderEvents")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<RestCallenderEvent> fetchEventForCallender() {
+        // TODO 本格的にREST API周りの実装を行う時、他の設計をあわせて実装を見直す
+        // TODO SessionBeanの値がなかったらトップに戻す(インターセプター？)
+        
+        List<RestCallenderEvent> responseList = new ArrayList();
+        // アカウントに紐づくイベントの取得
+        for(Event event : eventFacade.findByAccountId(accountFacade.find(sessionBean.getId()))) {
+            // 取得したイベントリストをREST用エンティティに詰め替える
+            RestCallenderEvent rcEvent = new RestCallenderEvent();
+            rcEvent.setId(event.getId());
+            rcEvent.setTitle(event.getName());
+            rcEvent.setStart(event.getStartDate());
+            rcEvent.setEnd(event.getEndDate());
+            
+            List<String> eventType = new ArrayList();
+            eventType.add("account-share");
+            if (event.getRoop() > 0) {
+                eventType.add("roop");
+            }
+            if (event.getIsTalking()) {
+                eventType.add("is-toy-talk");
+            }
+            rcEvent.setClassName(eventType);
+            responseList.add(rcEvent);
+            
+        }
+        // Toyに紐づくイベントの取得
+        for (Event event:eventFacade.findByToyId(toyFacade.find(sessionBean.getSelectedToyId()))){
+            // TODO AccountIdが指定されているイベントの場合は、スルーする
+            
+            if(event.getAccountId() == null) {
+                // アカウント共有イベントではなかった場合
+                
+                // 取得したイベントリストをREST用エンティティに詰め替える
+                RestCallenderEvent rcEvent = new RestCallenderEvent();
+                rcEvent.setId(event.getId());
+                rcEvent.setTitle(event.getName());
+                rcEvent.setStart(event.getStartDate());
+                rcEvent.setEnd(event.getEndDate());
+                rcEvent.setColor(event.getColorCode());
+                List<String> eventType = new ArrayList();
+                if (event.getRoop() > 0) {
+                    eventType.add("roop");
+                }
+                if (event.getIsTalking()) {
+                    eventType.add("is-toy-talk");
+                }
+                rcEvent.setClassName(eventType);
+                responseList.add(rcEvent);
+
+                System.out.println("event.title:" + event.getName());
+            }
+        }
+        
+        return responseList;
+    }
 
 //    @POST
 //    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

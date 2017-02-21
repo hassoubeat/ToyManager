@@ -41,7 +41,7 @@ public class SessionBean implements Serializable {
     
     @Getter
     @Setter
-    Integer selectedToyId = null;
+    Integer selectedToyId = 0;
     
     /**
      * Creates a new instance of SessionBean
@@ -77,8 +77,9 @@ public class SessionBean implements Serializable {
         id = null;
         userId = null;
         role = null;
+        roleAuthority = 0;
         isAuth = false;
-        selectedToyId = null;
+        selectedToyId = 0;
     }
     
 }

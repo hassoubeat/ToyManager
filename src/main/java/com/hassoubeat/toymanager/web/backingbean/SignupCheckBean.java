@@ -12,7 +12,7 @@ import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException;
 import com.hassoubeat.toymanager.service.logic.AccountLogic;
 import com.hassoubeat.toymanager.util.GMailLogic;
-import com.hassoubeat.toymanager.util.MessageConst;
+import com.hassoubeat.toymanager.constant.MessageConst;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.ejb.EJB;

@@ -20,6 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -130,6 +132,23 @@ public class Event implements Serializable {
         this.isDeleted = isDeleted;
         this.createDate = createDate;
         this.editDate = editDate;
+    }
+    
+    @PrePersist
+    public void prePersist(){
+        // 削除フラグを入力する
+        this.setIsDeleted(false);
+        // 登録日時と更新日時に現在日時を設定する
+        Date now = new Date();
+        this.setCreateDate(now);
+        this.setEditDate(now);
+    }
+    
+    @PreUpdate
+    public void preUpdate(){
+        // 更新日時を更新する
+        Date now = new Date();
+        this.setEditDate(now);
     }
 
     public Integer getId() {
