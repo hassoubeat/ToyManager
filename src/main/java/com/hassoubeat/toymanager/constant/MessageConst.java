@@ -22,6 +22,10 @@ public enum MessageConst {
     SUCCESS_LOGOUT("MIR_01000009", "ログアウトが完了しました。"),
     SELECT_TOY("MIR_01000010", "Toyを選択しました。"),
     SELECT_EVENT("MIR_01000011", "イベントを選択しました。"),
+    SUCCESS_EVENT_CREATE("MIR_01000012", "イベントとDiffイベントの登録が完了しました。"),
+    SUCCESS_EVENT_EDIT("MIR_01000013", "イベントの更新が完了しました。"),
+    SUCCESS_EVENT_LOGIC_REMOVE("MIR_01000014", "イベントの論理削除が完了しました。"),
+    SUCCESS_EVENT_REMOVE("MIR_01000015", "イベントの削除が完了しました。"),
     
     // MER(ToyManager側で発生する想定内エラー系)
     ALREADY_REGISTED_USER("MER_01000001", "入力したメールアドレスは既に登録されています。"),

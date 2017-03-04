@@ -66,6 +66,7 @@ public class SessionBean implements Serializable {
         role = account.getRoleId().getName();
         roleAuthority = account.getRoleId().getAuthority();
         isAuth = true;
+        selectedToyId = account.getLastSelectedToyId();
     }
     
     /**

@@ -60,6 +60,16 @@
             <artifactId>primefaces</artifactId>
             <version>5.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz-jobs</artifactId>
+            <version>2.2.1</version>
+        </dependency>   
     </dependencies>
     
     <!-- 環境毎の設定ファイル定義 -->

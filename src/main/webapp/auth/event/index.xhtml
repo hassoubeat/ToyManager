@@ -39,6 +39,7 @@
                                 <div class="bs-callout bs-callout-warning">
                                     <h4>画面右のToy一覧からToyを選択してください。</h4>
                                     <h5 class="small">・Toyが未選択の状態では、イベントの追加/編集が行うことができません。</h5>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -73,9 +74,16 @@
                                                 <th>イベントカラー<a data-toggle="tooltip" title="カレンダーに表示するイベントの色を選択します"><span class="glyphicon glyphicon-question-sign" /></a>:</th>
                                                 <td>
                                                     <div>
-                                                        <ui:repeat var="item" value="#{eventBean.colorTypeList}">
-                                                            <div class="block-sm #{item.colorCode}" id="event-colorset-#{item.colorCode}" style="background-color:#{item.colorCode};" />
-                                                        </ui:repeat>
+                                                        <div class="block-sm #3a87b2" id="event-colorset-#3a87b2" style="background-color:#3a87b2;"></div>
+                                                        <div class="block-sm #375a7f" id="event-colorset-#375a7f" style="background-color:#375a7f;"></div>
+                                                        <div class="block-sm #5484ed" id="event-colorset-#5484ed" style="background-color:#5484ed;"></div>
+                                                        <div class="block-sm #a4bdfc" id="event-colorset-#a4bdfc" style="background-color:#a4bdfc;"></div>
+                                                        <div class="block-sm #e43725" id="event-colorset-#e43725" style="background-color:#e43725;"></div>
+                                                        <div class="block-sm #ff887c" id="event-colorset-#ff887c" style="background-color:#ff887c;"></div>
+                                                        <div class="block-sm #51b749" id="event-colorset-#51b749" style="background-color:#51b749;"></div>
+                                                        <div class="block-sm #fbd75b" id="event-colorset-#fbd75b" style="background-color:#fbd75b;"></div>
+                                                        <div class="block-sm #dbadff" id="event-colorset-#dbadff" style="background-color:#dbadff;"></div>
+                                                        <div class="block-sm #e1e1e1" id="event-colorset-#e1e1e1" style="background-color:#e1e1e1;"></div>
                                                         <input type="hidden" id="event-color-code" jsf:value="#{eventBean.eventColorCode}"/>
                                                     </div>
                                                 </td>
@@ -166,22 +174,54 @@
                                                     <f:convertDateTime pattern="yyyy/MM/dd HH:mm:dd"/>
                                                 </input>
                                             </div>
-                                            <input type="hidden" id="roop-param" jsf:value="#{eventBean.roop}"/>
+                                            <input type="hidden" jsf:id="roop-param" id="roop-param" jsf:value="#{eventBean.roop}"/>
                                         </div>
                                         <!-- 繰り返しオプションここまで -->
                                         <p/>
-
-                                        <h:commandButton class="btn btn-primary" id="add-event" action="#{eventBean.addEvent()}" value="イベントの追加" style="margin-right: 5px;">
-                                            <f:ajax execute="@form" render="@form" onevent="addEventSuccessAfterTest"/>
-                                        </h:commandButton>
-                                        <input type="submit" class="btn btn-success" id="update-event" jsf:action="#{eventBean.editEvent()}" value="イベントの修正" style="margin-right: 5px;"></input>
-                                        <input type="submit" class="btn btn-danger" id="remove-event" jsf:action="#{eventBean.removeEvent()}" value="イベントの削除"></input>
+                                        <!-- イベント変更/削除用のイベントIDを保持するフォーム(非表示) -->
+                                        <input type="hidden" id="selected-event-id" jsf:id="selected-event-id" jsf:value="#{eventBean.eventId}" style="display:none;"/>
                                         <!-- ajaxの実行結果を格納するフォーム(バッキングビーンに送信するが、使わない) -->
-                                        <input type="text" id="ajaxResult" value="#{eventBean.ajaxResult}" style="display:none;"/>
+<!--                                        <input type="hidden" id="is-ajax-process-result" jsf:id="is-ajax-process-result" jsf:value="#{eventBean.ajaxProcessResult}" style="display:none;">-->
+                                        
+                                        <h:commandButton class="btn btn-primary" id="add-event" action="#{eventBean.addEvent()}" value="イベントの追加" style="margin-right: 5px;">
+                                            <f:ajax execute="@form" render="event-form" onevent="addEventSuccessAfter" resetValues="true"/>
+                                        </h:commandButton>
+                                        <h:commandButton class="btn btn-success" id="update-event" action="#{eventBean.editEvent()}" value="イベントの修正" style="margin-right: 5px;">
+                                            <f:ajax execute="@form" render="event-form" onevent="editEventSuccessAfter" resetValues="true"/>
+                                        </h:commandButton>
+                                        <h:commandButton class="btn btn-danger" id="remove-event" action="#{eventBean.removeEvent()}" value="イベントの削除" style="margin-right: 5px;">
+                                            <f:ajax execute="@form" render="event-form" onevent="removeEventSuccessAfter" resetValues="true"/>
+                                        </h:commandButton>
+                                        
+                                        <!-- イベント選択成功フラグの判定 -->
+                                        <ui:fragment rendered="#{facesContext.getMessageList('select-event-success').size() > 0}">
+                                            <!-- ajaxの実行結果を格納するフォーム(バッキングビーンに送信するが、使わない) -->
+                                            <input type="hidden" id="is-select-event-success" value="true" style="display:none;"/>
+                                        </ui:fragment>
+                                        <!-- イベント登録成功フラグの判定 -->
+                                        <ui:fragment rendered="#{facesContext.getMessageList('add-event-success').size() > 0}">
+                                            <!-- ajaxの実行結果を格納するフォーム(バッキングビーンに送信するが、使わない) -->
+                                            <input type="hidden" id="is-add-event-success" value="true" style="display:none;"/>
+                                        </ui:fragment>
+                                        <!-- イベント更新成功フラグの判定 -->
+                                        <ui:fragment rendered="#{facesContext.getMessageList('edit-event-success').size() > 0}">
+                                            <!-- ajaxの実行結果を格納するフォーム(バッキングビーンに送信するが、使わない) -->
+                                            <input type="hidden" id="is-edit-event-success" value="true" style="display:none;"/>
+                                        </ui:fragment>
+                                        <!-- イベント削除成功フラグの判定 -->
+                                        <ui:fragment rendered="#{facesContext.getMessageList('remove-event-success').size() > 0}">
+                                            <!-- ajaxの実行結果を格納するフォーム(バッキングビーンに送信するが、使わない) -->
+                                            <input type="hidden" id="is-remove-event-success" value="true" style="display:none;"/>
+                                        </ui:fragment>
+                                        <!-- イベント論理削除成功フラグの判定 -->
+                                        <ui:fragment rendered="#{facesContext.getMessageList('logic-remove-event-success').size() > 0}">
+                                            <!-- ajaxの実行結果を格納するフォーム(バッキングビーンに送信するが、使わない) -->
+                                            <input type="hidden" id="is-logic-remove-event-success" value="true" style="display:none;"/>
+                                        </ui:fragment>
                                     </form>
                                     <form jsf:id="event-select-form">
                                         <!-- イベント選択時にajaxでEventBean.selectEvent()メソッドを実行し、event-formエリアを再描画した後にコールバック関数(JavaScript)としてeventFormSetup()を実行する処理 -->
-                                        <p:remoteCommand name="selectEvent" action="#{eventBean.selectEvent}" update="event-form" oncomplete="selectEventCallBack()"/>
+                                        <p:remoteCommand name="selectEvent" action="#{eventBean.selectEvent}" update="event-form" oncomplete="selectEventCallBack()" resetValues="true"/>
                                     </form>
                                 </div>
                             </div>
@@ -218,6 +258,9 @@
                 <script jsf:library="js" jsf:name="rgbcolor.js"/>
                 
                 <script type="text/javascript">
+                    // イベント選択(ajax処理)二度押し防止フラグ
+                    var isEventSelectAjaxConnecting = false;
+                    
                     $(window).load(function () {
                         // Toy選択済チェック
                         if(#{sessionBean.selectedToyId} === 0) {
@@ -241,7 +284,11 @@
                             timezone: "local",
                             selectable:true,
                             selectHelper:true,
+                            // 選択する時間間隔
+                            snapMinutes: 15,
+                            
                             eventRender: function(event, $element) {
+//                                $element.html('<span class="fc-title">' + event.title + ':' + event.start + '</span>');
                                 $element.html('<span class="fc-title">' + event.title + '</span>');
                                 
                                 console.log(event.title + ":" + event.className);
@@ -259,6 +306,11 @@
                                         // Toyが喋るイベントだった場合
                                         $element.find('.fc-title').before('<span class="glyphicon glyphicon-volume-up"/> ');
                                     }
+                                    if (elem === "is-event-deleted") {
+                                        // 削除予定のイベントだった場合
+                                        $element.find('.fc-title').before('<span class="glyphicon glyphicon-trash"/> ');
+                                    }
+                                    
                                 });
                             },
                             events: "http://localhost:8080/ToyManager/webapi/events/0.1/callenderEvents",
@@ -296,24 +348,35 @@
                                     return false;
                                 }
                                 
-                                // 二度押し防止(他のイベントをクリックできなくする)
-//                                $(".fc-event").prop("disabled", true);
-                                $("#calendar").prop("disabled", true);
-                                
-                                // 入力フォームの初期化
-                                clearInputForm();
-                                
-                                // 画面上部の編集画面に追加する(ロジック実装後は、idからBackingBeanの要素を検索してその要素を渡す様に変更
-                                selectEvent([{name: "eventId", value: event.id}]);
-                                
-                                $.toast({
-                                    heading: event.title + "を選択しました。",
-                                    text: "読込中です。少々お待ち下さい。",
-                                    showHideTransition: "slide",
-                                    icon: "info",
-                                    position: "bottom-right",
-                                    stack: "1"
-                                });
+                                if (!isEventSelectAjaxConnecting) {
+                                    // 二度押し防止
+                                    isEventSelectAjaxConnecting = true; 
+                                    
+                                    // 入力フォームの初期化
+                                    clearInputForm();
+
+                                    // 画面上部の編集画面に追加する(ロジック実装後は、idからBackingBeanの要素を検索してその要素を渡す様に変更
+                                    selectEvent([{name: "eventId", value: event.id}]);
+
+                                    $.toast({
+                                        heading: event.title + "を選択しました。",
+                                        text: "読込中です。少々お待ち下さい。",
+                                        showHideTransition: "slide",
+                                        icon: "info",
+                                        position: "bottom-right",
+                                        stack: "1"
+                                    });
+                                }                                
+                            },
+                            eventDragStop: function(event, jsEvent, ui, view ){ //カレンダー上にドラッグし終わったときに実行
+                                console.log("ドラッグ:" + event.start.format("YYYY/MM/DD HH:mm:ss"));
+                                console.log("ドラッグ:" + event.end.format("YYYY/MM/DD HH:mm:ss"));
+                                console.log("ドラッグ:" + view.intervalStart.format("YYYY/MM/DD HH:mm:ss"));
+                                console.log("ドラッグ:" + view.intervalEnd.format("YYYY/MM/DD HH:mm:ss"));
+//                                console.log("ドラッグ2:" + start.format("YYYY/MM/DD HH:mm:ss"));
+                                // TODO
+                                // primefacesでドラッグ時の処理をBean側に定義する。
+                                // エンドが設定されている
                             }
                         });
                         
@@ -323,174 +386,10 @@
                         $(".loadingWrap").fadeOut();
                     });
                     
-                    
-                    
-                    // event-form内のイベントを適応する
-                    function eventFormSetup() {
-                        // 日付入力エリアにDataTimePickerの適応
-                        $.datetimepicker.setLocale("ja");
-                        $(".input-date").datetimepicker({
-                            format:"Y/m/d H:i:00",
-                            step:15
-                        });
-
-                        // カラーセットマウスホバー/ブラーの処理
-                        $("[id^=event-colorset]").hover(
-                            function(){
-                                // マウスホバー時の処理(枠線の変更)
-                               $(this).addClass("block-sm-hover");
-                            },
-                            function(){
-                                // マウスブラー時の処理
-                               $(this).removeClass("block-sm-hover")
-                            }
-                        );
-                    
-                        $("[id^=event-colorset]").click(function(){
-                            // 他の選択を初期化する
-                            $("[id^=event-colorset]").removeClass("block-sm-checked");
-                            
-                            // 色コードを持つhidden要素に選択した色コードを16進数に変換して代入
-                            var color = new RGBColor($(this).css("background-color"));
-                            $("#event-color-code").val(color.toHex());
-                            // 選択した要素のclassに.block-sm-checkedを付与する
-                            $(this).addClass("block-sm-checked");
-                        });
-                        
-                        // 繰り返し種別のセレクトボックスを変更した場合の処理
-                        $("[id$=roop-type-select]").change(function(){
-                            // ループ終了日時のクリア
-                            $("#roop-end-event-date").val("");
-                            // ループ間隔セレクトボックスの初期化
-                            $("[id$=roop-interval]").val(0);
-                            // ループ種別"毎週"の曜日選択チェックボックスの初期化
-                            $("[id^=roop-option-every-week-checker]").prop("checked", false);
-                            // ループ種別"毎月"のループ基準セレクトボックスの初期化
-                            $("[name=roop-standard]").prop("checked", false);
-                            
-                            // 全ループオプションブロックの非表示
-                           $("[id^=roop-option]").hide();
-                           
-                           $("#roop-option-owner").show();
-                            
-                            // roop値のクリア
-                            $("#roop-param").val(0);
-                            
-                            // 選択したループ種別毎の処理を実行
-                            switch($(this).val()){
-                                case "not-roop":
-                                    // ループ種別"しない"を選択した場合
-                                    $("#roop-option-owner").hide();
-                                    break;
-                                case "every-day":
-                                    // ループ種別"毎日"を選択した場合
-                                    $("#roop-option-every-day").show();
-                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_DAY_ROOP}))
-                                    break;
-                                case "every-week":
-                                    // ループ種別"毎週"を選択した場合
-                                    $("#roop-option-every-week").show();
-                                    $("[id*=roop-option-every-week-checker]").show();
-                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_WEEK_ROOP}))
-                                    break;
-                                case "every-mouth":
-                                    // ループ種別"毎月"を選択した場合
-                                    $("#roop-option-every-mouth").show();
-                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_MOUTH_ROOP}))
-                                    $("#roop-standard-default").prop("checked","checked");
-                                    $("#roop-param").val(bitOr($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_STANDARD_DAY}));
-                                    break;
-                                case "every-year":
-                                    // ループ種別"毎年"を選択した場合
-                                    $("#roop-option-every-year").show();
-                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_YEAR_ROOP}))
-                                    break;
-                            }
-                            
-                            if($(this).val() !== "not-roop") {
-                                // ループ種別"いいえ"以外の時に、ループ共通ブロックの表示
-                                $("#roop-option-share").show();
-                                // ループ有効ビットをONにする
-                                $("#roop-param").val(bitOr($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP}));
-                            }
-                            show2_10_16($("#roop-param").val());
-                        });
-                        
-                        // 繰り返し間隔を変更した時の処理
-                        $("[id$=roop-interval]").change(function(){
-                            // 前選択のパラメータをリセットする(日付間隔定義するビットの位をクリアする)
-                            $("#roop-param").val(bitAnd($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_INTERVAL_BIT}));
-                            // 選択した繰り返し間隔の値を加算する
-                            $("#roop-param").val(sum($("#roop-param").val(), $(this).val()));
-                            show2_10_16($("#roop-param").val());
-                        });
-                        
-                        // ループ種別"週次"の曜日選択チェックボックス選択時の処理
-                        $("[id^=roop-option-every-week-checker]").change(function(){
-                            switch($(this).attr("id")) {
-                                case "roop-option-every-week-checker-sunday":
-                                    // 日曜日のチェックボックスを変更した場合
-                                    
-                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SUNDAY}));
-                                    break;
-                                case "roop-option-every-week-checker-monday":
-                                    // 月曜日のチェックボックスを変更した場合
-                                    
-                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_MONDAY}));
-                                    break;
-                                case "roop-option-every-week-checker-tuesday":
-                                    // 火曜日のチェックボックスを変更した場合
-                                    
-                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_TUESDAY}));
-                                    break;
-                                case "roop-option-every-week-checker-wednesday":
-                                    // 水曜日のチェックボックスを変更した場合
-                                    
-                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_WEDNESDAY}));
-                                    break;
-                                case "roop-option-every-week-checker-thursday":
-                                    // 木曜日のチェックボックスを変更した場合
-                                    
-                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_THURSDAY}));
-                                    break;
-                                case "roop-option-every-week-checker-friday":
-                                    // 金曜日のチェックボックスを変更した場合
-                                    
-                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_FRIDAY}));
-                                    break;
-                                case "roop-option-every-week-checker-saturday":
-                                    // 土曜日のチェックボックスを変更した場合
-                                    
-                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SATURDAY}));
-                                    break;
-                            }
-                            show2_10_16($("#roop-param").val());
-                        });
-                        
-                        // ループ種別"月次"のループ基準選択時の処理
-                        $("[name=roop-standard]:radio").change(function(){
-                            
-                            //日付基準ビットをクリアする
-                            $("#roop-param").val(bitAnd($("#roop-param").val(), bitNot(#{eventEditBean.erpConst.IS_ROOP_STANDARD_DAY})));
-                            
-                            if($(this).val() === "date"){
-                                // 日付基準を選択された時のみ、日付基準ビットをONにする
-                                $("#roop-param").val(bitOr($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_STANDARD_DAY}));
-                            }
-                            show2_10_16($("#roop-param").val());
-                        });
-                    }
-                    
                     // 入力フォームの値をクリアする
                     function clearInputForm () {
                         selectedEvent = "";
+                        $("#selected-event-id").val("");
                         $("#event-title").val("");
                         $("#event-content").val("");
                         $("#start-event-date").val("");
@@ -500,8 +399,8 @@
                         $("#is-account-share").prop("checked", false);
                         $("#is-talking").prop("checked", false);
                         // 編集ボタン削除ボタンの無効化
-                        $("#update-event").prop("disabled", true);
-                        $("#remove-event").prop("disabled", true);
+                        $("[id$=update-event]").prop("disabled", true);
+                        $("[id$=remove-event]").prop("disabled", true);
                         
                         // ループ値のクリア
                         $("#roop-param").val("");
@@ -521,10 +420,28 @@
                     }
                     
                     // イベント選択時のコールバックメソッド
-                    function selectEventCallBack() {
-                        // ajaxで選択したイベントの情報をフォームにセットして再描画した後の処理
+                    function selectEventCallBack () {
+                        // ajaxで剥げたイベントの再設定
+                        eventFormSetup();
                         
-                        if ($("#ajaxResult").val() === "false") {
+                        // ajaxで選択したイベントの情報をフォームにセットして再描画した後の処理
+                        if ($("#is-select-event-success").val() === "true") {
+
+                            $.toast({
+                                heading: "イベントの読込が完了しました。",
+                                text: "イベントの編集/削除が行えます。",
+                                showHideTransition: "slide",
+                                icon: "info",
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                            
+                            colorBlockSetup();
+                            roopBlockSetup();
+
+                            $("#event-edit-modal").modal();
+                            
+                        } else {
                             // 選択したイベントが存在しなかった場合
                             
                             $.toast({
@@ -537,21 +454,183 @@
                             });
                             
                             $("#calendar").fullCalendar('refetchEvents');
+                        }
+                            
+                        // 二度押し防止を解除する
+                        isEventSelectAjaxConnecting = false; 
+                    }
+                    
+                    // 登録処理の実行後に呼ばれるコールバック関数
+                    function addEventSuccessAfter(e) {
+
+                        if(e.status === "success"){
                             
                             // ajaxで剥げたイベントの再設定
                             eventFormSetup();
-                            // 二度押し防止でロックしていた他のイベントを解除する
-                            $("#calendar").prop("disabled", false);
-                            
-                            return false;
+
+                            if ($("#is-add-event-success").val() === "true") {
+                                // イベントの登録処理に成功した時
+                                
+                                // イベント編集フォームを閉じる
+                                $("#event-edit-modal").modal("hide");
+                                
+                                // 追加が完了したダイアログの表示
+                                $.toast({
+                                    heading: $("#event-title").val() + "を登録しました。",
+                                    showHideTransition: "slide",
+                                    icon: "success",
+                                    bgColor: "#375a7f",
+                                    position: "bottom-right",
+                                    stack: "1"
+                                });
+                                
+                                // カレンダー更新
+                                $("#calendar").fullCalendar('refetchEvents');
+                                
+                            } else {
+                                // イベントの登録処理に失敗した時
+                                
+                                // カラーブロック、ループブロックの再設定
+                                colorBlockSetup();
+                                roopBlockSetup();
+                                
+                                // 編集ボタン削除ボタンの無効化
+                                $("[id$=update-event]").prop("disabled", true);
+                                $("[id$=remove-event]").prop("disabled", true);
+                                
+                                $.toast({
+                                    heading: "イベントの登録に失敗しました",
+                                    text: "入力値を確認してください。",
+                                    showHideTransition: "slide",
+                                    icon: "error",
+                                    position: "bottom-right",
+                                    stack: "1"
+                                });
+                            }
                         }
-                        
+                    }
+                    
+                    // 変更処理の実行後に呼ばれるコールバック関数
+                    function editEventSuccessAfter(e) {
+
+                        if(e.status === "success"){
+                            
+                            // ajaxで剥げたイベントの再設定
+                            eventFormSetup();
+                            
+                            if ($("#is-edit-event-success").val() === "true") {
+                                // イベントの変更処理に成功した時
+                                
+                                // イベント編集フォームを閉じる
+                                $("#event-edit-modal").modal("hide");
+                                
+                                // 追加が完了したダイアログの表示
+                                $.toast({
+                                    heading: $("#event-title").val() + "を修正しました。",
+                                    showHideTransition: "slide",
+                                    icon: "success",
+                                    bgColor: "#375a7f",
+                                    position: "bottom-right",
+                                    stack: "1"
+                                });
+                                
+                                // カレンダーの更新
+                                $("#calendar").fullCalendar('refetchEvents');
+                                
+                            } else {
+                                // イベントの変更処理に失敗した時
+                                
+                                colorBlockSetup();
+                                roopBlockSetup();
+                                
+                                $.toast({
+                                    heading: "イベントの修正に失敗しました",
+                                    text: "入力値を確認してください。",
+                                    showHideTransition: "slide",
+                                    icon: "error",
+                                    position: "bottom-right",
+                                    stack: "1"
+                                });
+                            }
+                        }
+                    }
+                    
+                    // 削除処理の実行後に呼ばれるコールバック関数
+                    function removeEventSuccessAfter(e) {
+
+                        if(e.status === "success"){
+                            
+                            // ajaxで剥げたイベントの再設定
+                            eventFormSetup();
+                            
+                            if ($("#is-remove-event-success").val() === "true") {
+                                // イベントの削除処理に成功した時
+                                
+                                // イベント編集フォームを閉じる
+                                $("#event-edit-modal").modal("hide");
+                                
+                                // 追加が完了したダイアログの表示
+                                $.toast({
+                                    heading: $("#event-title").val() + "を削除しました。",
+                                    showHideTransition: "slide",
+                                    icon: "success",
+                                    bgColor: "#375a7f",
+                                    position: "bottom-right",
+                                    stack: "1"
+                                });
+                                
+                                // カレンダーの更新
+                                $("#calendar").fullCalendar('refetchEvents');
+                                
+                            } else if ($("#is-logic-remove-event-success").val() === "true"){
+                                // イベントの論理削除処理に成功した時
+                                
+                                // イベント編集フォームを閉じる
+                                $("#event-edit-modal").modal("hide");
+                                
+                                // 追加が完了したダイアログの表示
+                                $.toast({
+                                    heading: $("#event-title").val() + "の削除予約をしました。",
+                                    text: "Toyに登録されているイベント「" + $("#event-title").val() + "」が削除された後、カレンダーからも削除されます。",
+                                    showHideTransition: "slide",
+                                    icon: "warning",
+                                    hideAfter : 7500,  
+                                    bgColor: "#375a7f",
+                                    position: "bottom-right",
+                                    stack: "1"
+                                });
+                                
+                                // カレンダーの更新
+                                $("#calendar").fullCalendar('refetchEvents');
+                            } else {
+                                // イベントの変更処理に失敗した時
+                                
+                                colorBlockSetup();
+                                roopBlockSetup();
+                                
+                                $.toast({
+                                    heading: "イベントの削除に失敗しました",
+                                    text: "",
+                                    showHideTransition: "slide",
+                                    icon: "error",
+                                    position: "bottom-right",
+                                    stack: "1"
+                                });
+                            }
+                        }
+                    }
+                    
+                    // カラーコードを参照してカラーブロックを設定する
+                    function colorBlockSetup() {
                         // カラーコードが設定されていた場合は、チェックを入れる
                         var colorCode = $("#event-color-code").val();
                         if (colorCode !== "") {
                             $("[id$=" + colorCode.substr(1) + "]").addClass("block-sm-checked");
                         }
-                        
+                    }
+                    
+                    // ループ値を参照してループブロックを設定する
+                    function roopBlockSetup() {
                         // Roop値を参照してRoop情報設定フォームにパラメータ設定
                         var roop = $("#roop-param").val();
                         if (bitCheck(roop, #{eventBean.erpConst.IS_ROOP})) {
@@ -643,57 +722,289 @@
                             }
                             
                         }
-                        
-                        // ajaxで剥げたイベントの再設定
-                        eventFormSetup();
-                        
-                        $.toast({
-                            heading: "イベントの読込が完了しました。",
-                            text: "イベントの編集/削除が行えます。",
-                            showHideTransition: "slide",
-                            icon: "info",
-                            position: "bottom-right",
-                            stack: "1"
-                        });
-                        
-                        $("#event-edit-modal").modal();
-                        
-                        // 二度押し防止でロックしていた他のイベントを解除する
-                        $("#calendar").prop("disabled", false);
-                        
                     }
                     
-                    // 登録処理の実行後に呼ばれるコールバック関数
-                    function addEventSuccessAfterTest(e) {
+                    // event-form内のイベントを適応する
+                    function eventFormSetup() {
+                        // 日付入力エリアにDataTimePickerの適応
+                        $.datetimepicker.setLocale("ja");
+                        $(".input-date").datetimepicker({
+                            format:"Y/m/d H:i:00",
+                            step:15
+                        });
 
-                        if(e.status === "success"){
-                            $("#calendar").fullCalendar('refetchEvents');
-                            // FullCallendarに今回追加したイベントの情報を追加する
-//                            $("#calendar").fullCalendar("addEventSource", [{
-//                                // IDはサーバサイドの作り込み時には、AutoIncrementIDで代替する
-//                                id:$("#event-title").val(),
-//                                // titleにはループ種別やToyTalk有無でアイコンを表示する
-//                                title:$("#event-title").val(),
-//                                start:$("#start-event-date").val(),
-//                                end:$("#end-event-date").val(),
-//                                color:$("#event-color-code").val()
-//                            }]);
-//                          
-                            // 追加が完了したダイアログの表示
-                            $.toast({
-                                heading: $("#event-title").val() + "を登録しました。",
-                                showHideTransition: "slide",
-                                icon: "success",
-                                bgColor: "#375a7f",
-                                position: "bottom-right",
-                                stack: "1"
-                            });
-                            // 入力フォームの初期化
-                            clearInputForm();
-                            // 剥げたイベントの有効化
-                            eventFormSetup();
-                             
-                        }
+                        // カラーセットマウスホバー/ブラーの処理
+                        $("[id^=event-colorset]").hover(
+                            function(){
+                                // マウスホバー時の処理(枠線の変更)
+                               $(this).addClass("block-sm-hover");
+                            },
+                            function(){
+                                // マウスブラー時の処理
+                               $(this).removeClass("block-sm-hover")
+                            }
+                        );
+                    
+                        $("[id^=event-colorset]").click(function(){
+                            // 他の選択を初期化する
+                            $("[id^=event-colorset]").removeClass("block-sm-checked");
+                            
+                            // 色コードを持つhidden要素に選択した色コードを16進数に変換して代入
+                            var color = new RGBColor($(this).css("background-color"));
+                            $("#event-color-code").val(color.toHex());
+                            // 選択した要素のclassに.block-sm-checkedを付与する
+                            $(this).addClass("block-sm-checked");
+                        });
+                        
+                        // 繰り返し種別のセレクトボックスを変更した場合の処理
+                        $("[id$=roop-type-select]").change(function(){
+                            // ループ終了日時のクリア
+                            $("#roop-end-event-date").val("");
+                            // ループ間隔セレクトボックスの初期化
+                            $("[id$=roop-interval]").val(0);
+                            // ループ種別"毎週"の曜日選択チェックボックスの初期化
+                            $("[id^=roop-option-every-week-checker]").prop("checked", false);
+                            // ループ種別"毎月"のループ基準セレクトボックスの初期化
+                            $("[name=roop-standard]").prop("checked", false);
+                            
+                            // 全ループオプションブロックの非表示
+                           $("[id^=roop-option]").hide();
+                           
+                           $("#roop-option-owner").show();
+                            
+                            // roop値のクリア
+                            $("#roop-param").val(0);
+                            
+                            // 選択したループ種別毎の処理を実行
+                            switch($(this).val()){
+                                case "not-roop":
+                                    // ループ種別"しない"を選択した場合
+                                    $("#roop-option-owner").hide();
+                                    break;
+                                case "every-day":
+                                    // ループ種別"毎日"を選択した場合
+                                    $("#roop-option-every-day").show();
+                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_DAY_ROOP}))
+                                    break;
+                                case "every-week":
+                                    // ループ種別"毎週"を選択した場合
+                                    
+                                    $("#roop-option-every-week").show();
+                                    $("[id*=roop-option-every-week-checker]").show();
+                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_WEEK_ROOP}))
+                                    
+                                    
+                                    // 曜日チェックボックス初期化(選択した曜日のチェックボックスにチェックを入れる)
+                                    var date = new Date($("#start-event-date").val());
+                                    switch (date.getDay()) {
+                                        case 0:
+                                            // 日曜日
+                                            $("#roop-option-every-week-checker-sunday").prop("checked", true);
+                                            // 日曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SUNDAY}));
+                                            break;
+                                        case 1:
+                                            // 月曜日
+                                            $("#roop-option-every-week-checker-monday").prop("checked", true);
+                                            // 月曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_MONDAY}));
+                                            break;
+                                        case 2:
+                                            // 火曜日
+                                            $("#roop-option-every-week-checker-tuesday").prop("checked", true);
+                                            // 火曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_TUESDAY}));
+                                            break;
+                                        case 3:
+                                            // 水曜日
+                                            $("#roop-option-every-week-checker-wednesday").prop("checked", true);
+                                            // 水曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_WEDNESDAY}));
+                                            break;
+                                        case 4:
+                                            // 木曜日
+                                            $("#roop-option-every-week-checker-thursday").prop("checked", true);
+                                            // 木曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_THURSDAY}));
+                                            break;
+                                        case 5:
+                                            // 金曜日
+                                            $("#roop-option-every-week-checker-friday").prop("checked", true);
+                                            // 金曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_FRIDAY}));
+                                            break;
+                                        case 6:
+                                            // 土曜日
+                                            $("#roop-option-every-week-checker-saturday").prop("checked", true);
+                                            // 土曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SATURDAY}));
+                                            break;
+                                    }
+                                    break;   
+                                case "every-mouth":
+                                    // ループ種別"毎月"を選択した場合
+                                    $("#roop-option-every-mouth").show();
+                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_MOUTH_ROOP}))
+                                    $("#roop-standard-default").prop("checked","checked");
+                                    $("#roop-param").val(bitOr($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_STANDARD_DAY}));
+                                    break;
+                                case "every-year":
+                                    // ループ種別"毎年"を選択した場合
+                                    $("#roop-option-every-year").show();
+                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_YEAR_ROOP}))
+                                    break;
+                            }
+                            
+                            if($(this).val() !== "not-roop") {
+                                // ループ種別"いいえ"以外の時に、ループ共通ブロックの表示
+                                $("#roop-option-share").show();
+                                // ループ有効ビットをONにする
+                                $("#roop-param").val(bitOr($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP}));
+                                // ループ間隔の初期化(1を設定する)
+                                $("[id$=roop-interval]").val(1);
+                                $("#roop-param").val(sum($("#roop-param").val(), 1));
+                            }
+                            show2_10_16($("#roop-param").val());
+                        });
+                        
+                        // 繰り返し間隔を変更した時の処理
+                        $("[id$=roop-interval]").change(function(){
+                            // 前選択のパラメータをリセットする(日付間隔定義するビットの位をクリアする)
+                            $("#roop-param").val(bitAnd($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_INTERVAL_BIT}));
+                            // 選択した繰り返し間隔の値を加算する
+                            $("#roop-param").val(sum($("#roop-param").val(), $(this).val()));
+                            show2_10_16($("#roop-param").val());
+                        });
+                        
+                        // ループ種別"週次"の曜日選択チェックボックス選択時の処理
+                        $("[id^=roop-option-every-week-checker]").change(function(){
+                            switch($(this).attr("id")) {
+                                case "roop-option-every-week-checker-sunday":
+                                    // 日曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SUNDAY}));
+                                    break;
+                                case "roop-option-every-week-checker-monday":
+                                    // 月曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_MONDAY}));
+                                    break;
+                                case "roop-option-every-week-checker-tuesday":
+                                    // 火曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_TUESDAY}));
+                                    break;
+                                case "roop-option-every-week-checker-wednesday":
+                                    // 水曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_WEDNESDAY}));
+                                    break;
+                                case "roop-option-every-week-checker-thursday":
+                                    // 木曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_THURSDAY}));
+                                    break;
+                                case "roop-option-every-week-checker-friday":
+                                    // 金曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_FRIDAY}));
+                                    break;
+                                case "roop-option-every-week-checker-saturday":
+                                    // 土曜日のチェックボックスを変更した場合
+                                    
+                                    // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SATURDAY}));
+                                    break;
+                            }
+                            
+//                            // 選択中の曜日チェックボックスがなくなった場合、イベント開始日の曜日にチェックを入れ直してトースターでエラーを表示する
+//                            var isSundayCheck = $("[id$=roop-option-every-week-checker-sunday]").prop("checked");
+//                            var isMondayCheck = $("[id$=roop-option-every-week-checker-monday]").prop("checked");
+//                            var isTuesdayCheck = $("[id$=roop-option-every-week-checker-tuesday]").prop("checked");
+//                            var isWednesdayCheck = $("[id$=roop-option-every-week-checker-wednesday]").prop("checked");
+//                            var isThursdayCheck = $("[id$=roop-option-every-week-checker-thursday]").prop("checked");
+//                            var isFridayCheck = $("[id$=roop-option-every-week-checker-friday]").prop("checked");
+//                            var isSaturdayCheck = $("[id$=roop-option-every-week-checker-saturday]").prop("checked");
+//                            if (!(isSundayCheck | isMondayCheck | isTuesdayCheck | isWednesdayCheck | isThursdayCheck | isFridayCheck | isSaturdayCheck)) {
+//                                // 選択されている曜日がない場合
+//                                
+//                                // 曜日チェックボックス初期化(選択した曜日のチェックボックスにチェックを入れる)
+//                                var date = new Date($("#start-event-date").val());
+//                                switch (date.getDay()) {
+//                                    case 0:
+//                                        // 日曜日
+//                                        $("#roop-option-every-week-checker-sunday").prop("checked", true);
+//                                        // 日曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SUNDAY}));
+//                                        break;
+//                                    case 1:
+//                                        // 月曜日
+//                                        $("#roop-option-every-week-checker-monday").prop("checked", true);
+//                                        // 月曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_MONDAY}));
+//                                        break;
+//                                    case 2:
+//                                        // 火曜日
+//                                        $("#roop-option-every-week-checker-tuesday").prop("checked", true);
+//                                        // 火曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_TUESDAY}));
+//                                        break;
+//                                    case 3:
+//                                        // 水曜日
+//                                        $("#roop-option-every-week-checker-wednesday").prop("checked", true);
+//                                        // 水曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_WEDNESDAY}));
+//                                        break;
+//                                    case 4:
+//                                        // 木曜日
+//                                        $("#roop-option-every-week-checker-thursday").prop("checked", true);
+//                                        // 木曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_THURSDAY}));
+//                                        break;
+//                                    case 5:
+//                                        // 金曜日
+//                                        $("#roop-option-every-week-checker-friday").prop("checked", true);
+//                                        // 金曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_FRIDAY}));
+//                                        break;
+//                                    case 6:
+//                                        // 土曜日
+//                                        $("#roop-option-every-week-checker-saturday").prop("checked", true);
+//                                        // 土曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SATURDAY}));
+//                                        break;
+//                                }
+//                                $.toast({
+//                                    heading: "曜日選択を空にすることはできません。",
+//                                    text: "",
+//                                    showHideTransition: "slide",
+//                                    icon: "error",
+//                                    position: "bottom-right",
+//                                    stack: "1"
+//                                });
+//                            }
+                            
+                            show2_10_16($("#roop-param").val());
+                        });
+                        
+                        // ループ種別"月次"のループ基準選択時の処理
+                        $("[name=roop-standard]:radio").change(function(){
+                            
+                            //日付基準ビットをクリアする
+                            $("#roop-param").val(bitAnd($("#roop-param").val(), bitNot(#{eventEditBean.erpConst.IS_ROOP_STANDARD_DAY})));
+                            
+                            if($(this).val() === "date"){
+                                // 日付基準を選択された時のみ、日付基準ビットをONにする
+                                $("#roop-param").val(bitOr($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_STANDARD_DAY}));
+                            }
+                            show2_10_16($("#roop-param").val());
+                        });
                     }
                                         
                 </script>

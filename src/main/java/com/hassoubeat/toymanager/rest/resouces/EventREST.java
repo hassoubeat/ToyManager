@@ -5,6 +5,8 @@
  */
 package com.hassoubeat.toymanager.rest.resouces;
 
+import com.hassoubeat.toymanager.annotation.AuthGeneralInterceptor;
+import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.dao.EventFacade;
 import com.hassoubeat.toymanager.service.dao.ToyFacade;
@@ -43,9 +45,23 @@ public class EventREST {
     @GET
     @Path("0.1/callenderEvents")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @AuthGeneralInterceptor
+    @ErrorInterceptor
     public List<RestCallenderEvent> fetchEventForCallender() {
         // TODO 本格的にREST API周りの実装を行う時、他の設計をあわせて実装を見直す
         // TODO SessionBeanの値がなかったらトップに戻す(インターセプター？)
+        
+//        boolean test = true;
+//        Account targetAccount = accountFacade.find(sessionBean.getUserId());
+//        for(Toy toy:targetAccount.getToyList()) {
+//            if (Objects.equals(toy.getId(), sessionBean.getSelectedToyId())) {
+//                test = false;
+//            }
+//        } 
+//        
+//        if (test) {
+//            return null;
+//        }
         
         List<RestCallenderEvent> responseList = new ArrayList();
         // アカウントに紐づくイベントの取得
@@ -56,6 +72,7 @@ public class EventREST {
             rcEvent.setTitle(event.getName());
             rcEvent.setStart(event.getStartDate());
             rcEvent.setEnd(event.getEndDate());
+            rcEvent.setColor(event.getColorCode());
             
             List<String> eventType = new ArrayList();
             eventType.add("account-share");
@@ -65,36 +82,38 @@ public class EventREST {
             if (event.getIsTalking()) {
                 eventType.add("is-toy-talk");
             }
+            if (event.getIsDeleted()) {
+                eventType.add("is-event-deleted");
+            }
             rcEvent.setClassName(eventType);
             responseList.add(rcEvent);
             
         }
         // Toyに紐づくイベントの取得
         for (Event event:eventFacade.findByToyId(toyFacade.find(sessionBean.getSelectedToyId()))){
-            // TODO AccountIdが指定されているイベントの場合は、スルーする
             
-            if(event.getAccountId() == null) {
-                // アカウント共有イベントではなかった場合
-                
-                // 取得したイベントリストをREST用エンティティに詰め替える
-                RestCallenderEvent rcEvent = new RestCallenderEvent();
-                rcEvent.setId(event.getId());
-                rcEvent.setTitle(event.getName());
-                rcEvent.setStart(event.getStartDate());
-                rcEvent.setEnd(event.getEndDate());
-                rcEvent.setColor(event.getColorCode());
-                List<String> eventType = new ArrayList();
-                if (event.getRoop() > 0) {
-                    eventType.add("roop");
-                }
-                if (event.getIsTalking()) {
-                    eventType.add("is-toy-talk");
-                }
-                rcEvent.setClassName(eventType);
-                responseList.add(rcEvent);
-
-                System.out.println("event.title:" + event.getName());
+            // 取得したイベントリストをREST用エンティティに詰め替える
+            RestCallenderEvent rcEvent = new RestCallenderEvent();
+            rcEvent.setId(event.getId());
+            rcEvent.setTitle(event.getName());
+            rcEvent.setStart(event.getStartDate());
+            rcEvent.setEnd(event.getEndDate());
+            rcEvent.setColor(event.getColorCode());
+            List<String> eventType = new ArrayList();
+            if (event.getRoop() > 0) {
+                eventType.add("roop");
             }
+            if (event.getIsTalking()) {
+                eventType.add("is-toy-talk");
+            }
+            if (event.getIsDeleted()) {
+                eventType.add("is-event-deleted");
+            }
+            rcEvent.setClassName(eventType);
+            responseList.add(rcEvent);
+
+            System.out.println("event.title:" + event.getName());
+            
         }
         
         return responseList;

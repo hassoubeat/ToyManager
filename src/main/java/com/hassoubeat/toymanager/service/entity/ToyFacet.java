@@ -147,5 +147,5 @@ public class ToyFacet implements Serializable {
     public String toString() {
         return "com.hassoubeat.toymanager.service.entity.ToyFacet[ id=" + id + " ]";
     }
-    
+
 }

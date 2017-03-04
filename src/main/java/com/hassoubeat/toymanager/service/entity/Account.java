@@ -5,11 +5,9 @@
  */
 package com.hassoubeat.toymanager.service.entity;
 
-import com.hassoubeat.toymanager.service.dao.RoleFacade;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.ejb.EJB;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,7 +42,8 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "Account.findByIsAuthenticated", query = "SELECT a FROM Account a WHERE a.isAuthenticated = :isAuthenticated")
     , @NamedQuery(name = "Account.findByIsDeleted", query = "SELECT a FROM Account a WHERE a.isDeleted = :isDeleted")
     , @NamedQuery(name = "Account.findByCreateDate", query = "SELECT a FROM Account a WHERE a.createDate = :createDate")
-    , @NamedQuery(name = "Account.findByEditDate", query = "SELECT a FROM Account a WHERE a.editDate = :editDate")})
+    , @NamedQuery(name = "Account.findByEditDate", query = "SELECT a FROM Account a WHERE a.editDate = :editDate")
+    , @NamedQuery(name = "Account.findByLastSelectedToyId", query = "SELECT a FROM Account a WHERE a.lastSelectedToyId = :lastSelectedToyId")})
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -86,6 +85,8 @@ public class Account implements Serializable {
     @Column(name = "edit_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date editDate;
+    @Column(name = "last_selected_toy_id")
+    private Integer lastSelectedToyId;
     @OneToMany(mappedBy = "accountId")
     private List<Event> eventList;
     @JoinColumn(name = "role_id", referencedColumnName = "id")
@@ -93,7 +94,7 @@ public class Account implements Serializable {
     private Role roleId;
     @OneToMany(mappedBy = "accountId")
     private List<Toy> toyList;
-    
+
     public Account() {
     }
 
@@ -193,6 +194,14 @@ public class Account implements Serializable {
 
     public void setEditDate(Date editDate) {
         this.editDate = editDate;
+    }
+
+    public Integer getLastSelectedToyId() {
+        return lastSelectedToyId;
+    }
+
+    public void setLastSelectedToyId(Integer lastSelectedToyId) {
+        this.lastSelectedToyId = lastSelectedToyId;
     }
 
     public List<Event> getEventList() {

@@ -19,10 +19,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -34,7 +37,8 @@ import javax.validation.constraints.NotNull;
     @NamedQuery(name = "DiffSyncEvent.findAll", query = "SELECT d FROM DiffSyncEvent d")
     , @NamedQuery(name = "DiffSyncEvent.findById", query = "SELECT d FROM DiffSyncEvent d WHERE d.id = :id")
     , @NamedQuery(name = "DiffSyncEvent.findByCreateDate", query = "SELECT d FROM DiffSyncEvent d WHERE d.createDate = :createDate")
-    , @NamedQuery(name = "DiffSyncEvent.findByEditDate", query = "SELECT d FROM DiffSyncEvent d WHERE d.editDate = :editDate")})
+    , @NamedQuery(name = "DiffSyncEvent.findByEditDate", query = "SELECT d FROM DiffSyncEvent d WHERE d.editDate = :editDate")
+    , @NamedQuery(name = "DiffSyncEvent.findByMethodType", query = "SELECT d FROM DiffSyncEvent d WHERE d.methodType = :methodType")})
 public class DiffSyncEvent implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -53,12 +57,14 @@ public class DiffSyncEvent implements Serializable {
     @Column(name = "edit_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date editDate;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "method_type")
+    private String methodType;
     @JoinColumn(name = "event_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Event eventId;
-    @JoinColumn(name = "method_type_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private MethodType methodTypeId;
     @JoinColumn(name = "toy_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Toy toyId;
@@ -72,16 +78,32 @@ public class DiffSyncEvent implements Serializable {
         this.id = id;
     }
 
-    public DiffSyncEvent(Integer id, Date createDate, Date editDate) {
+    public DiffSyncEvent(Integer id, Date createDate, Date editDate, String methodType) {
         this.id = id;
         this.createDate = createDate;
         this.editDate = editDate;
+        this.methodType = methodType;
     }
 
     public Integer getId() {
         return id;
     }
 
+    @PrePersist
+    public void prePersist(){
+        // 登録日時と更新日時に現在日時を設定する
+        Date now = new Date();
+        this.setCreateDate(now);
+        this.setEditDate(now);
+    }
+    
+    @PreUpdate
+    public void preUpdate(){
+        // 更新日時を更新する
+        Date now = new Date();
+        this.setEditDate(now);
+    }
+    
     public void setId(Integer id) {
         this.id = id;
     }
@@ -102,20 +124,20 @@ public class DiffSyncEvent implements Serializable {
         this.editDate = editDate;
     }
 
+    public String getMethodType() {
+        return methodType;
+    }
+
+    public void setMethodType(String methodType) {
+        this.methodType = methodType;
+    }
+
     public Event getEventId() {
         return eventId;
     }
 
     public void setEventId(Event eventId) {
         this.eventId = eventId;
-    }
-
-    public MethodType getMethodTypeId() {
-        return methodTypeId;
-    }
-
-    public void setMethodTypeId(MethodType methodTypeId) {
-        this.methodTypeId = methodTypeId;
     }
 
     public Toy getToyId() {

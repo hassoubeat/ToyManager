@@ -36,9 +36,15 @@ public class RestCallenderEvent {
     
     @Getter
     @Setter
+    private String borderColor;
+    
+    @Getter
+    @Setter
     private List<String> className;
+    
 
     public RestCallenderEvent() {
+        this.borderColor = "#b1b1b1";
     }
 
     

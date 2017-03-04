@@ -46,11 +46,11 @@ public class EventFacade extends AbstractFacade<Event> {
     public List<Event> findByAccountId(Account accountId) {
         CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
         CriteriaQuery cq = builder.createQuery();
-        Root<Event> charaRoot = cq.from(Event.class);
-        cq.select(charaRoot);
+        Root<Event> root = cq.from(Event.class);
+        cq.select(root);
         
         // WHERE条件の型と検索条件名(Entityの要素名)を指定する
-        Predicate isEqual = builder.equal(charaRoot.get(Event_.accountId), accountId);
+        Predicate isEqual = builder.equal(root.get(Event_.accountId), accountId);
         cq.where(isEqual);
         
         return getEntityManager().createQuery(cq).getResultList();
@@ -64,11 +64,11 @@ public class EventFacade extends AbstractFacade<Event> {
     public List<Event> findByToyId(Toy toyId) {
         CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
         CriteriaQuery cq = builder.createQuery();
-        Root<Event> charaRoot = cq.from(Event.class);
-        cq.select(charaRoot);
+        Root<Event> root = cq.from(Event.class);
+        cq.select(root);
         
         // WHERE条件の型と検索条件名(Entityの要素名)を指定する
-        Predicate isEqual = builder.equal(charaRoot.get(Event_.toyId), toyId);
+        Predicate isEqual = builder.equal(root.get(Event_.toyId), toyId);
         cq.where(isEqual);
         
         return getEntityManager().createQuery(cq).getResultList();

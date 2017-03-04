@@ -82,6 +82,10 @@ public class ToyMenuBean {
         // セッションに選択したToyIDを格納する
         sessionBean.setSelectedToyId(selectedToyId);
         
+        Account targetAccount = accountFacade.find(sessionBean.getId());
+        targetAccount.setLastSelectedToyId(selectedToyId);
+        accountFacade.edit(targetAccount);
+        
         logger.info("{}:{} USER_ID:{}, SELECT_TOY_ID:{}, {}.{}", MessageConst.SELECT_TOY.getId(), MessageConst.SELECT_TOY.getMessage(), sessionBean.getUserId(), selectedToyId, this.getClass().getName(), this.getClass());
         
         // 元の画面にリダイレクトして戻る(各ページのbookmarkableを動作させるためにリダイレクトする)

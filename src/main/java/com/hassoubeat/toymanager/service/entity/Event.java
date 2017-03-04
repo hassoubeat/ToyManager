@@ -44,7 +44,6 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "Event.findByColorCode", query = "SELECT e FROM Event e WHERE e.colorCode = :colorCode")
     , @NamedQuery(name = "Event.findByRoop", query = "SELECT e FROM Event e WHERE e.roop = :roop")
     , @NamedQuery(name = "Event.findByRoopEndDate", query = "SELECT e FROM Event e WHERE e.roopEndDate = :roopEndDate")
-    , @NamedQuery(name = "Event.findByCrontab", query = "SELECT e FROM Event e WHERE e.crontab = :crontab")
     , @NamedQuery(name = "Event.findByIsTalking", query = "SELECT e FROM Event e WHERE e.isTalking = :isTalking")
     , @NamedQuery(name = "Event.findByIsDeleted", query = "SELECT e FROM Event e WHERE e.isDeleted = :isDeleted")
     , @NamedQuery(name = "Event.findByCreateDate", query = "SELECT e FROM Event e WHERE e.createDate = :createDate")
@@ -81,9 +80,6 @@ public class Event implements Serializable {
     @Column(name = "roop_end_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date roopEndDate;
-    @Size(max = 100)
-    @Column(name = "crontab")
-    private String crontab;
     @Basic(optional = false)
     @NotNull
     @Column(name = "is_talking")
@@ -114,7 +110,7 @@ public class Event implements Serializable {
     @ManyToOne
     private ToyFacet toyFacetId;
     @JoinColumn(name = "toy_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Toy toyId;
 
     public Event() {
@@ -213,14 +209,6 @@ public class Event implements Serializable {
 
     public void setRoopEndDate(Date roopEndDate) {
         this.roopEndDate = roopEndDate;
-    }
-
-    public String getCrontab() {
-        return crontab;
-    }
-
-    public void setCrontab(String crontab) {
-        this.crontab = crontab;
     }
 
     public boolean getIsTalking() {

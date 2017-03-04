@@ -57,6 +57,11 @@ public class AccountBean {
     @Setter
     private String remindUserId;
     
+    // ウェブストレージから受け取るToyId
+    @Getter
+    @Setter
+    private int selectedToyId = 0;
+    
     /**
      * Creates a new instance of LoginBean
      */

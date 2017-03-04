@@ -30,7 +30,9 @@
                         <p/>
                         <label class="small"><a href="" data-toggle="modal" data-target="#remind-modal" >パスワードを忘れた方はこちら</a></label>
                         <p/>
-                        <input class="btn btn-primary" type="submit" value="ログイン" jsf:action="#{accountBean.login()}"/>
+                        <!-- 前回選択していたToyID(ローカルストレージから取得する -->
+<!--                        <input type="hidden" id="selected-toy-id" jsf:value="#{accountBean.selectedToyId}"/>-->
+                        <input class="btn btn-primary" type="submit" value="ログイン" id="login-btn" jsf:action="#{accountBean.login()}"/>
                         <a class="btn btn-warning" jsf:outcome="/signup" style="margin-left: 5px;">サインアップ</a>
                     </form>
                     <div class="modal fade" id="remind-modal" tabindex="-1">
@@ -78,6 +80,18 @@
                         </div>
                     </ui:fragment>
                 </div>
+            </ui:define>
+            <ui:define name="js">
+                <script type="text/javascript">
+                    $(window).load(function () {
+//                        $("#login-btn").click(function(){
+//                            var localStorageKey = $("#userName").val();
+//                            var localStorage = window.localStorage.getItem(localStorageKey);
+//                            // ウェブストレージから前回選択していたToyIdを取得してhiddenフォームにセットする
+//                            $("#selected-toy-id").val(localStorage[selectedToyId]);
+//                        });
+                    });
+                </script>
             </ui:define>
         </ui:composition>        
     </body>
