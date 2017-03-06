@@ -25,6 +25,15 @@
                     </div>
                     <div class="col-xs-9">    
                         <div id="calendar"></div>
+                        <p/>
+                        <div class="well">
+                            <h4>ヘルプ</h4>
+                            <p/>
+                            <h5>Q.イベントの横の記号の意味は？</h5>
+                            <h5 class="small"><span class="glyphicon glyphicon-user"/>...アカウント共有が指定されているイベントです。全てのToyで適応されるイベントです。</h5>
+                            <h5 class="small"><span class="glyphicon glyphicon-volume-up"/>...ToyTalk属性が指定されたイベントです。ToyTalkにイベントが同期された後、イベントの開始時刻に読み上げを行ってくれます。</h5>
+                            <h5 class="small"><span class="glyphicon glyphicon-repeat"/>...繰り返しが指定されたイベントです。</h5>
+                        </div>
                     </div>
                 </div>
                 <!-- Toy未選択時の通知ダイアログ -->
@@ -279,7 +288,8 @@
                                 center: 'title',
                                 right: 'month agendaWeek agendaDay'
                             },
-                            height: 500,
+                            // TODO カレンダーの高さを自動調整するオプションがないか探す
+//                            height: 500,
                             editable: true,
                             timezone: "local",
                             selectable:true,
@@ -784,14 +794,14 @@
                                 case "every-day":
                                     // ループ種別"毎日"を選択した場合
                                     $("#roop-option-every-day").show();
-                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_DAY_ROOP}))
+                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventBean.erpConst.IS_EVERY_DAY_ROOP}))
                                     break;
                                 case "every-week":
                                     // ループ種別"毎週"を選択した場合
                                     
                                     $("#roop-option-every-week").show();
                                     $("[id*=roop-option-every-week-checker]").show();
-                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_WEEK_ROOP}))
+                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventBean.erpConst.IS_EVERY_WEEK_ROOP}))
                                     
                                     
                                     // 曜日チェックボックス初期化(選択した曜日のチェックボックスにチェックを入れる)
@@ -801,57 +811,57 @@
                                             // 日曜日
                                             $("#roop-option-every-week-checker-sunday").prop("checked", true);
                                             // 日曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SUNDAY}));
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_SUNDAY}));
                                             break;
                                         case 1:
                                             // 月曜日
                                             $("#roop-option-every-week-checker-monday").prop("checked", true);
                                             // 月曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_MONDAY}));
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_MONDAY}));
                                             break;
                                         case 2:
                                             // 火曜日
                                             $("#roop-option-every-week-checker-tuesday").prop("checked", true);
                                             // 火曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_TUESDAY}));
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_TUESDAY}));
                                             break;
                                         case 3:
                                             // 水曜日
                                             $("#roop-option-every-week-checker-wednesday").prop("checked", true);
                                             // 水曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_WEDNESDAY}));
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_WEDNESDAY}));
                                             break;
                                         case 4:
                                             // 木曜日
                                             $("#roop-option-every-week-checker-thursday").prop("checked", true);
                                             // 木曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_THURSDAY}));
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_THURSDAY}));
                                             break;
                                         case 5:
                                             // 金曜日
                                             $("#roop-option-every-week-checker-friday").prop("checked", true);
                                             // 金曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_FRIDAY}));
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_FRIDAY}));
                                             break;
                                         case 6:
                                             // 土曜日
                                             $("#roop-option-every-week-checker-saturday").prop("checked", true);
                                             // 土曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SATURDAY}));
+                                            $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_SATURDAY}));
                                             break;
                                     }
                                     break;   
                                 case "every-mouth":
                                     // ループ種別"毎月"を選択した場合
                                     $("#roop-option-every-mouth").show();
-                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_MOUTH_ROOP}))
+                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventBean.erpConst.IS_EVERY_MOUTH_ROOP}))
                                     $("#roop-standard-default").prop("checked","checked");
-                                    $("#roop-param").val(bitOr($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_STANDARD_DAY}));
+                                    $("#roop-param").val(bitOr($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_STANDARD_DAY}));
                                     break;
                                 case "every-year":
                                     // ループ種別"毎年"を選択した場合
                                     $("#roop-option-every-year").show();
-                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventEditBean.erpConst.IS_EVERY_YEAR_ROOP}))
+                                    $("#roop-param").val(sum($("#roop-param").val(), #{eventBean.erpConst.IS_EVERY_YEAR_ROOP}))
                                     break;
                             }
                             
@@ -859,7 +869,7 @@
                                 // ループ種別"いいえ"以外の時に、ループ共通ブロックの表示
                                 $("#roop-option-share").show();
                                 // ループ有効ビットをONにする
-                                $("#roop-param").val(bitOr($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP}));
+                                $("#roop-param").val(bitOr($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP}));
                                 // ループ間隔の初期化(1を設定する)
                                 $("[id$=roop-interval]").val(1);
                                 $("#roop-param").val(sum($("#roop-param").val(), 1));
@@ -870,7 +880,7 @@
                         // 繰り返し間隔を変更した時の処理
                         $("[id$=roop-interval]").change(function(){
                             // 前選択のパラメータをリセットする(日付間隔定義するビットの位をクリアする)
-                            $("#roop-param").val(bitAnd($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_INTERVAL_BIT}));
+                            $("#roop-param").val(bitAnd($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_INTERVAL_BIT}));
                             // 選択した繰り返し間隔の値を加算する
                             $("#roop-param").val(sum($("#roop-param").val(), $(this).val()));
                             show2_10_16($("#roop-param").val());
@@ -883,43 +893,43 @@
                                     // 日曜日のチェックボックスを変更した場合
                                     
                                     // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SUNDAY}));
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_SUNDAY}));
                                     break;
                                 case "roop-option-every-week-checker-monday":
                                     // 月曜日のチェックボックスを変更した場合
                                     
                                     // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_MONDAY}));
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_MONDAY}));
                                     break;
                                 case "roop-option-every-week-checker-tuesday":
                                     // 火曜日のチェックボックスを変更した場合
                                     
                                     // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_TUESDAY}));
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_TUESDAY}));
                                     break;
                                 case "roop-option-every-week-checker-wednesday":
                                     // 水曜日のチェックボックスを変更した場合
                                     
                                     // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_WEDNESDAY}));
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_WEDNESDAY}));
                                     break;
                                 case "roop-option-every-week-checker-thursday":
                                     // 木曜日のチェックボックスを変更した場合
                                     
                                     // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_THURSDAY}));
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_THURSDAY}));
                                     break;
                                 case "roop-option-every-week-checker-friday":
                                     // 金曜日のチェックボックスを変更した場合
                                     
                                     // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_FRIDAY}));
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_FRIDAY}));
                                     break;
                                 case "roop-option-every-week-checker-saturday":
                                     // 土曜日のチェックボックスを変更した場合
                                     
                                     // 選択した曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SATURDAY}));
+                                    $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_SATURDAY}));
                                     break;
                             }
                             
@@ -941,43 +951,43 @@
 //                                        // 日曜日
 //                                        $("#roop-option-every-week-checker-sunday").prop("checked", true);
 //                                        // 日曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SUNDAY}));
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_SUNDAY}));
 //                                        break;
 //                                    case 1:
 //                                        // 月曜日
 //                                        $("#roop-option-every-week-checker-monday").prop("checked", true);
 //                                        // 月曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_MONDAY}));
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_MONDAY}));
 //                                        break;
 //                                    case 2:
 //                                        // 火曜日
 //                                        $("#roop-option-every-week-checker-tuesday").prop("checked", true);
 //                                        // 火曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_TUESDAY}));
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_TUESDAY}));
 //                                        break;
 //                                    case 3:
 //                                        // 水曜日
 //                                        $("#roop-option-every-week-checker-wednesday").prop("checked", true);
 //                                        // 水曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_WEDNESDAY}));
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_WEDNESDAY}));
 //                                        break;
 //                                    case 4:
 //                                        // 木曜日
 //                                        $("#roop-option-every-week-checker-thursday").prop("checked", true);
 //                                        // 木曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_THURSDAY}));
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_THURSDAY}));
 //                                        break;
 //                                    case 5:
 //                                        // 金曜日
 //                                        $("#roop-option-every-week-checker-friday").prop("checked", true);
 //                                        // 金曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_FRIDAY}));
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_FRIDAY}));
 //                                        break;
 //                                    case 6:
 //                                        // 土曜日
 //                                        $("#roop-option-every-week-checker-saturday").prop("checked", true);
 //                                        // 土曜日に対応するビットフラグをONにする(xor演算のため、既に立っていた場合はOFFになる)
-//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_SATURDAY}));
+//                                        $("#roop-param").val(bitXor($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_SATURDAY}));
 //                                        break;
 //                                }
 //                                $.toast({
@@ -997,11 +1007,11 @@
                         $("[name=roop-standard]:radio").change(function(){
                             
                             //日付基準ビットをクリアする
-                            $("#roop-param").val(bitAnd($("#roop-param").val(), bitNot(#{eventEditBean.erpConst.IS_ROOP_STANDARD_DAY})));
+                            $("#roop-param").val(bitAnd($("#roop-param").val(), bitNot(#{eventBean.erpConst.IS_ROOP_STANDARD_DAY})));
                             
                             if($(this).val() === "date"){
                                 // 日付基準を選択された時のみ、日付基準ビットをONにする
-                                $("#roop-param").val(bitOr($("#roop-param").val(), #{eventEditBean.erpConst.IS_ROOP_STANDARD_DAY}));
+                                $("#roop-param").val(bitOr($("#roop-param").val(), #{eventBean.erpConst.IS_ROOP_STANDARD_DAY}));
                             }
                             show2_10_16($("#roop-param").val());
                         });

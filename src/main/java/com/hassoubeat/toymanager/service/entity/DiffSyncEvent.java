@@ -68,8 +68,8 @@ public class DiffSyncEvent implements Serializable {
     @JoinColumn(name = "toy_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Toy toyId;
-    @OneToMany(mappedBy = "diffSyncEventId")
-    private List<Toy> toyList;
+//    @OneToMany(mappedBy = "diffSyncEventId")
+//    private List<Toy> toyList;
 
     public DiffSyncEvent() {
     }
@@ -148,13 +148,13 @@ public class DiffSyncEvent implements Serializable {
         this.toyId = toyId;
     }
 
-    public List<Toy> getToyList() {
-        return toyList;
-    }
-
-    public void setToyList(List<Toy> toyList) {
-        this.toyList = toyList;
-    }
+//    public List<Toy> getToyList() {
+//        return toyList;
+//    }
+//
+//    public void setToyList(List<Toy> toyList) {
+//        this.toyList = toyList;
+//    }
 
     @Override
     public int hashCode() {

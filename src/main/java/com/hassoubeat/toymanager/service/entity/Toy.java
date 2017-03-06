@@ -20,6 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,6 +38,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Toy.findAll", query = "SELECT t FROM Toy t")
     , @NamedQuery(name = "Toy.findById", query = "SELECT t FROM Toy t WHERE t.id = :id")
     , @NamedQuery(name = "Toy.findByRotNum", query = "SELECT t FROM Toy t WHERE t.rotNum = :rotNum")
+    , @NamedQuery(name = "Toy.findByTyingPassword", query = "SELECT t FROM Toy t WHERE t.tyingPassword = :tyingPassword")
     , @NamedQuery(name = "Toy.findByName", query = "SELECT t FROM Toy t WHERE t.name = :name")
     , @NamedQuery(name = "Toy.findByPictureUrl", query = "SELECT t FROM Toy t WHERE t.pictureUrl = :pictureUrl")
     , @NamedQuery(name = "Toy.findByAccessToken", query = "SELECT t FROM Toy t WHERE t.accessToken = :accessToken")
@@ -59,7 +62,12 @@ public class Toy implements Serializable {
     private int rotNum;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 1, max = 256)
+    @Column(name = "tying_password")
+    private String tyingPassword;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 0, max = 50)
     @Column(name = "name")
     private String name;
     @Size(max = 300)
@@ -97,14 +105,11 @@ public class Toy implements Serializable {
     private List<ToyWebapiAccessFilter> toyWebapiAccessFilterList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "toyId")
     private List<DiffSyncEvent> diffSyncEventList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "toyId")
+    @OneToMany(mappedBy = "toyId")
     private List<Event> eventList;
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     @ManyToOne
     private Account accountId;
-    @JoinColumn(name = "diff_sync_event_id", referencedColumnName = "id")
-    @ManyToOne
-    private DiffSyncEvent diffSyncEventId;
     @JoinColumn(name = "toy_type_id", referencedColumnName = "id")
     @ManyToOne
     private ToyType toyTypeId;
@@ -114,9 +119,6 @@ public class Toy implements Serializable {
     @JoinColumn(name = "toy_voice_type_id", referencedColumnName = "id")
     @ManyToOne
     private ToyVoiceType toyVoiceTypeId;
-    @JoinColumn(name = "toy_webapi_access_filter_id", referencedColumnName = "id")
-    @ManyToOne
-    private ToyWebapiAccessFilter toyWebapiAccessFilterId;
 
     public Toy() {
     }
@@ -125,13 +127,31 @@ public class Toy implements Serializable {
         this.id = id;
     }
 
-    public Toy(Integer id, int rotNum, String name, boolean isDeleted, Date createDate, Date editDate) {
+    public Toy(Integer id, int rotNum, String tyingPassword, String name, boolean isDeleted, Date createDate, Date editDate) {
         this.id = id;
         this.rotNum = rotNum;
+        this.tyingPassword = tyingPassword;
         this.name = name;
         this.isDeleted = isDeleted;
         this.createDate = createDate;
         this.editDate = editDate;
+    }
+    
+    @PrePersist
+    public void prePersist(){
+        // 削除フラグを入力する
+        this.setIsDeleted(false);
+        // 登録日時と更新日時に現在日時を設定する
+        Date now = new Date();
+        this.setCreateDate(now);
+        this.setEditDate(now);
+    }
+    
+    @PreUpdate
+    public void preUpdate(){
+        // 更新日時を更新する
+        Date now = new Date();
+        this.setEditDate(now);
     }
 
     public Integer getId() {
@@ -148,6 +168,14 @@ public class Toy implements Serializable {
 
     public void setRotNum(int rotNum) {
         this.rotNum = rotNum;
+    }
+
+    public String getTyingPassword() {
+        return tyingPassword;
+    }
+
+    public void setTyingPassword(String tyingPassword) {
+        this.tyingPassword = tyingPassword;
     }
 
     public String getName() {
@@ -262,14 +290,6 @@ public class Toy implements Serializable {
         this.accountId = accountId;
     }
 
-    public DiffSyncEvent getDiffSyncEventId() {
-        return diffSyncEventId;
-    }
-
-    public void setDiffSyncEventId(DiffSyncEvent diffSyncEventId) {
-        this.diffSyncEventId = diffSyncEventId;
-    }
-
     public ToyType getToyTypeId() {
         return toyTypeId;
     }
@@ -292,14 +312,6 @@ public class Toy implements Serializable {
 
     public void setToyVoiceTypeId(ToyVoiceType toyVoiceTypeId) {
         this.toyVoiceTypeId = toyVoiceTypeId;
-    }
-
-    public ToyWebapiAccessFilter getToyWebapiAccessFilterId() {
-        return toyWebapiAccessFilterId;
-    }
-
-    public void setToyWebapiAccessFilterId(ToyWebapiAccessFilter toyWebapiAccessFilterId) {
-        this.toyWebapiAccessFilterId = toyWebapiAccessFilterId;
     }
 
     @Override

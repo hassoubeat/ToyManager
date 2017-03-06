@@ -42,7 +42,7 @@ public class ToyVersion implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "version")
-    private Integer version;
+    private Double version;
     @Size(max = 1000)
     @Column(name = "update_note")
     private String updateNote;
@@ -69,22 +69,22 @@ public class ToyVersion implements Serializable {
     public ToyVersion() {
     }
 
-    public ToyVersion(Integer version) {
+    public ToyVersion(double version) {
         this.version = version;
     }
 
-    public ToyVersion(Integer version, boolean isDeleted, Date createDate, Date editDate) {
+    public ToyVersion(double version, boolean isDeleted, Date createDate, Date editDate) {
         this.version = version;
         this.isDeleted = isDeleted;
         this.createDate = createDate;
         this.editDate = editDate;
     }
 
-    public Integer getVersion() {
+    public double getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
+    public void setVersion(double version) {
         this.version = version;
     }
 

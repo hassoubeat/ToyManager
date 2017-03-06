@@ -26,6 +26,8 @@ public enum MessageConst {
     SUCCESS_EVENT_EDIT("MIR_01000013", "イベントの更新が完了しました。"),
     SUCCESS_EVENT_LOGIC_REMOVE("MIR_01000014", "イベントの論理削除が完了しました。"),
     SUCCESS_EVENT_REMOVE("MIR_01000015", "イベントの削除が完了しました。"),
+    SUCCESS_TOY_ACCOUNT_TYING("MIR_01000016", "アカウントにToyの紐付けを完了しました。"),
+    SUCCESS_TOY_ACCOUNT_TYING_CANCEL("MIR_01000017", "アカウントからToyの紐付けを解除しました。"),
     
     // MER(ToyManager側で発生する想定内エラー系)
     ALREADY_REGISTED_USER("MER_01000001", "入力したメールアドレスは既に登録されています。"),
@@ -42,6 +44,9 @@ public enum MessageConst {
     INVALID_CHECK_PASSWORD("MER_01000012", "確認用パスワードが誤っています。"),
     ALREADY_REMOVE_EVENT("MER_10000013", "選択したイベントは既に存在しません。"),
     DATE_CONTRADICTION("MER_10000014", "終了日付より開始日付の方が過去の値が設定されています。"),
+    INVALID_ROT_NUMBER_OR_PASSWORD("MER_10000015", "入力されたロットナンバー/パスワードのどちらかが誤っています。"),
+    ALREADY_TYING_ROT_NUMBER("MER_10000016", "入力されたロットナンバーは既に別のアカウントに登録されています。"),
+    
     
     // MCR(ToyManager側で発生する想定外エラー系)
     SYSTEM_ERROR("MCR_01000001", "システムエラーが発生しました。お手数ですが、操作をやりなおしてください。"),

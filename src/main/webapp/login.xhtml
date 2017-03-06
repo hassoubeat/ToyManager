@@ -57,9 +57,6 @@
                                         <input class="btn btn-primary" type="submit" value="パスワード再発行" id="signup" jsf:action="#{accountBean.remind()}"/>
                                     </form>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -80,18 +77,6 @@
                         </div>
                     </ui:fragment>
                 </div>
-            </ui:define>
-            <ui:define name="js">
-                <script type="text/javascript">
-                    $(window).load(function () {
-//                        $("#login-btn").click(function(){
-//                            var localStorageKey = $("#userName").val();
-//                            var localStorage = window.localStorage.getItem(localStorageKey);
-//                            // ウェブストレージから前回選択していたToyIdを取得してhiddenフォームにセットする
-//                            $("#selected-toy-id").val(localStorage[selectedToyId]);
-//                        });
-                    });
-                </script>
             </ui:define>
         </ui:composition>        
     </body>

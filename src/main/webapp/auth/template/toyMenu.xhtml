@@ -30,9 +30,18 @@
                             <tbody class="text-center">
                                 <tr>
                                     <td>
-                                        <h:outputText class="label label-default" value="#{item.lastSyncDate}" >
-                                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm"/>
-                                        </h:outputText>
+                                        <ui:fragment  rendered="#{item.lastSyncDate != null}">
+                                            <!-- 最終同期時刻が存在した場合 -->
+                                            <h:outputText class="label label-default" value="#{item.lastSyncDate}" >
+                                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm"/>
+                                            </h:outputText>
+                                        </ui:fragment>
+                                        <ui:fragment  rendered="#{item.lastSyncDate == null}">
+                                            <!-- 最終同期時刻が存在しなかった場合(一度も同期したことがなかった場合) -->
+                                            <label class="label label-default">
+                                                no data
+                                            </label>
+                                        </ui:fragment>
                                     </td>
                                     <td>
                                         <ui:fragment  rendered="#{item.diffSyncEventList.size() == 0}">
@@ -54,10 +63,8 @@
                         
                         <form jsf:id="toy-select-form" id="toy-select-form-#{item.id}">
                             <button class="btn btn-success" id="select-toy-#{item.id}" jsf:action="#{toyMenuBean.selectToy(item.id)}" style="margin-right: 5px;">選択</button>
-                            <a class="btn btn-primary" jsf:outcome="/auth/toy/status">ステータス</a>
                         </form>
                         
-
                     </div>
                 </div>
             </ui:repeat>
@@ -76,16 +83,16 @@
                     // 現在選択中のToyにマーカを付ける
                     $("#toy-item-#{sessionBean.selectedToyId}").addClass("toy-selected");
                     
-//                    // 選択ボタン押下時、ローカルストレージに選択したToyIDを格納する
-//                    $("[id^=select-toy]").click(function(){
-//                        
-//                        var strList = $(this).attr("id").split("-");
-//                        var toyId = strList[strList.length - 1];
-//                        
-//                        var accountMap = new Array();
-//                        accountMap["selectedToyId"] = toyId;
-//                        window.localStorage.setItem("#{sessionBean.userId}", accountMap);
-//                    });
+                    $("#toy-item-register").hover(
+                        function(){
+                            // マウスホバー時の処理(背景色の変更, 枠線の変更)
+                           $(this).css("background-color","#d4d4d4");
+                        },
+                        function(){
+                            // マウスブラー時の処理
+                           $(this).css("background-color","");
+                        }
+                    );
                 }); 
                 
             </script>

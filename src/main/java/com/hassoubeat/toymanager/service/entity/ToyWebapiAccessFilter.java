@@ -68,8 +68,8 @@ public class ToyWebapiAccessFilter implements Serializable {
     @JoinColumn(name = "toy_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Toy toyId;
-    @OneToMany(mappedBy = "toyWebapiAccessFilterId")
-    private List<Toy> toyList;
+//    @OneToMany(mappedBy = "toyWebapiAccessFilterId")
+//    private List<Toy> toyList;
 
     public ToyWebapiAccessFilter() {
     }
@@ -134,13 +134,13 @@ public class ToyWebapiAccessFilter implements Serializable {
         this.toyId = toyId;
     }
 
-    public List<Toy> getToyList() {
-        return toyList;
-    }
-
-    public void setToyList(List<Toy> toyList) {
-        this.toyList = toyList;
-    }
+//    public List<Toy> getToyList() {
+//        return toyList;
+//    }
+//
+//    public void setToyList(List<Toy> toyList) {
+//        this.toyList = toyList;
+//    }
 
     @Override
     public int hashCode() {

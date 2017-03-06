@@ -1,12 +1,100 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:head>
-        <title>Facelet Title</title>
-    </h:head>
-    <h:body>
-        Hello from Facelets
-    </h:body>
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
+    <body>
+        <ui:composition template="/auth/template/template.xhtml">
+            <ui:define name="content">
+                <h1 class="text-center text-muted">Toyの登録</h1>
+                <br/>
+                <div class="container">
+                    <div class="col-xs-6">
+                        <img class="" src="resources/img/toymanager.png"/>
+                    </div>
+                    <div class="col-xs-6 well">
+                        <form jsf:id="toy-create-form">
+                            <div class="form-group">
+                                <label>ロットナンバー</label>
+                                <input type="text" class="form-control" jsf:id="rot-number" placeholder="Toyに記載されているN桁のロットナンバーを入力してください。" jsf:value="#{toyBean.toyRotNumber}"/>
+                                <h:message class="label label-danger" for="rot-number"/>
+                            </div>
+                            <div class="form-group">
+                                <label>パスワード</label>
+                                <input type="password" class="form-control" jsf:id="toy-password" placeholder="Toyに記載されているパスワードを入力してください。" jsf:value="#{toyBean.toyPassword}"/>
+                                <h:message class="label label-danger" for="toy-password"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Toyの名前</label>
+                                <input type="text" class="form-control" jsf:id="toy-name" placeholder="Toyに付ける名前をご自由に入力してください。" jsf:value="#{toyBean.toyName}"/>
+                                <h:message class="label label-danger" for="toy-name"/>
+                            </div>
+                            <h:commandButton class="btn btn-primary" id="toy-create" action="#{toyBean.accountTying()}" value="新規登録" style="margin-right: 5px;">
+                                <f:ajax execute="@form" render="toy-create-form" onevent="accountTyingAfter" resetValues="true"/>
+                            </h:commandButton>
+                            <!-- Toy登録成功フラグの判定 -->
+                            <ui:fragment rendered="#{facesContext.getMessageList('toy-account-tying-success').size() > 0}">
+                                <!-- ajaxの実行結果を格納するフォーム(バッキングビーンに送信するが、使わない) -->
+                                <input type="hidden" id="is-toy-account-tying-success" value="true" style="display:none;"/>
+                            </ui:fragment>
+                        </form>
+                    </div>
+                </div>
+            </ui:define>
+            <ui:define name="css">
+                <!-- jQueryToaster CSS -->
+                <link jsf:library="css" jsf:name="jquery.toast.css"/>
+            </ui:define>
+            <ui:define name="js">
+                <!-- jQueryToaster JS -->
+                <script jsf:library="js" jsf:name="jquery.toast.js"/>
+                <script type="text/javascript">
+                    $(window).load(function () {
+                        // ナビゲーションバーのactiveを変更
+                        $("#toy").addClass("active");
+                    });
+                    
+                    function accountTyingAfter(e) {
+                        if(e.status === "success"){
+                            if ($("#is-toy-account-tying-success").val() === "true") {
+                                // Toyの紐付けに成功した場合
+
+                                // 入力値のクリア処理
+                                $("[id$=rot-number]").val("");
+                                $("[id$=toy-password]").val("");
+                                $("[id$=toy-name]").val("");
+
+                                // 紐付けが成功した旨を表示するトースターを表示する
+                                $.toast({
+                                    heading: "Toyの登録が完了しました。",
+                                    showHideTransition: "slide",
+                                    icon: "info",
+                                    position: "bottom-right",
+                                    stack: "1"
+                                });
+                            } else {
+                                // Toyの紐付けに失敗した場合
+                                // 紐付けが成功した旨を表示するトースターを表示する
+                                $.toast({
+                                    heading: "Toyの登録が失敗しました。",
+                                    text: "入力値を確認してください。",
+                                    showHideTransition: "slide",
+                                    icon: "error",
+                                    position: "bottom-right",
+                                    stack: "1"
+                                });
+                            }
+                        }
+                    }
+                    
+                </script>
+            </ui:define>
+        </ui:composition>        
+    </body>
 </html>
 

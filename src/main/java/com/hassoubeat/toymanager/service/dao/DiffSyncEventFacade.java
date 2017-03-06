@@ -5,11 +5,9 @@
  */
 package com.hassoubeat.toymanager.service.dao;
 
-import com.hassoubeat.toymanager.service.entity.Account;
 import com.hassoubeat.toymanager.service.entity.DiffSyncEvent;
 import com.hassoubeat.toymanager.service.entity.DiffSyncEvent_;
 import com.hassoubeat.toymanager.service.entity.Event;
-import com.hassoubeat.toymanager.service.entity.Event_;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
