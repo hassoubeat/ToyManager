@@ -179,8 +179,8 @@
                                             </div>
                                             <div id="roop-option-share" style="display:none;">
                                                 繰り返しの終了日時<a data-toggle="tooltip" title="繰り返しが終了する日付を設定します"><span class="glyphicon glyphicon-question-sign" /></a>：
-                                                <input id="roop-end-event-date" class="input-date" placeholder="繰り返し終了日時" type="text" jsf:value="#{eventBean.roopEndDate}">
-                                                    <f:convertDateTime pattern="yyyy/MM/dd HH:mm:dd"/>
+                                                <input id="roop-end-event-date" jsf:id="roop-end-event-date" class="input-date" placeholder="繰り返し終了日時" type="text" jsf:value="#{eventBean.roopEndDate}">
+                                                    <f:convertDateTime type="both"/>
                                                 </input>
                                             </div>
                                             <input type="hidden" jsf:id="roop-param" id="roop-param" jsf:value="#{eventBean.roop}"/>
@@ -323,6 +323,7 @@
                                     
                                 });
                             },
+//                            events: "http://52.196.234.137:8080/ToyManager/webapi/events/0.1/callenderEvents",
                             events: "http://localhost:8080/ToyManager/webapi/events/0.1/callenderEvents",
                             //日付ドラッグ時処理
                             select: function(start, end) {

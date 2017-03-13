@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.hassoubeat.toymanager.rest.resouces;
+package com.hassoubeat.toymanager.rest.resources;
 
 import java.util.Set;
 import javax.ws.rs.core.Application;
@@ -29,7 +29,9 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(com.hassoubeat.toymanager.rest.resouces.EventREST.class);
+        resources.add(com.hassoubeat.toymanager.rest.resources.EventResource.class);
+        resources.add(com.hassoubeat.toymanager.rest.resources.exception.AccessFilterUnApprovalExceptionMapper.class);
+        resources.add(com.hassoubeat.toymanager.rest.resources.exception.AccessTokenExpiredExceptionMapper.class);
     }
     
 }

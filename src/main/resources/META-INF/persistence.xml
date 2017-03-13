@@ -3,6 +3,10 @@
   <persistence-unit name="com.hassoubeat_ToyManager_war_1.0-SNAPSHOTPU" transaction-type="JTA">
     <jta-data-source>java:app/toy_manager</jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
-    <properties/>
+    <properties>
+      <property name="eclipselink.logging.level.sql" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.logging.logger" value="org.eclipse.persistence.logging.DefaultSessionLog"/>
+    </properties>
   </persistence-unit>
 </persistence>

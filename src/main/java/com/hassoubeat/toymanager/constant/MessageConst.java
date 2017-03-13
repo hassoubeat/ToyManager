@@ -52,7 +52,19 @@ public enum MessageConst {
     SYSTEM_ERROR("MCR_01000001", "システムエラーが発生しました。お手数ですが、操作をやりなおしてください。"),
     FAILED_SEND_MAIL("MCR_01000002", "メールの送信に失敗しました。"),
     FAILED_SEND_AUTH_CODE_MAIL("MCR_01000003", "認証コード通知メールの送信に失敗しました。"),
-    FAILED_SEND_REMIND_PASSWORD_MAIL("MCR_01000004", "パスワードリマインド通知メールの送信に失敗しました。")
+    FAILED_SEND_REMIND_PASSWORD_MAIL("MCR_01000004", "パスワードリマインド通知メールの送信に失敗しました。"),
+    
+    // MRIR(ToyManagerのRESTAPIで発生するインフォメーションメッセージ)
+    REST_SUCCESS_WEB_API_ACCESS_FILTER_CREATE("MRIR_01000001", "アクセスフィルターを新規登録しました。"),
+    
+    // MRER(ToyManagerのRESTAPIで発生する想定内エラー系)
+    REST_INVALID_PARAM("MRER_01000001", "不正な認証情報が送信されました。"),
+    REST_ACCESS_FILTER_UN_APPROVAL("MRER_01000002", "アクセスフィルターが未承認です。"),
+    REST_ACCESS_TOKEN_EXPIRED("MRER_01000003", "アクセストークンの有効期限切れです。"),
+    REST_FAILED_AUTHORIZATION("MRER_01000004", "認証に失敗しました。"),
+    
+    // MRCR(ToyManagerのRESTAPIで発生する想定外エラー系)
+    REST_SYSTEM_ERROR("MRCR_01000001", "システムエラーが発生しました。")
     ;
     
     private final String id;

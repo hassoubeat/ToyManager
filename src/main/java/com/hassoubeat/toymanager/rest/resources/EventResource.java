@@ -3,35 +3,50 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.hassoubeat.toymanager.rest.resouces;
+package com.hassoubeat.toymanager.rest.resources;
 
+import com.hassoubeat.toymanager.rest.resources.entity.RestCallenderEvent;
 import com.hassoubeat.toymanager.annotation.AuthGeneralInterceptor;
 import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
+import com.hassoubeat.toymanager.annotation.LogInterceptor;
+import com.hassoubeat.toymanager.rest.resources.entity.RestEvent;
+import com.hassoubeat.toymanager.rest.resources.logic.RestEventLogic;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.dao.EventFacade;
 import com.hassoubeat.toymanager.service.dao.ToyFacade;
+import com.hassoubeat.toymanager.service.dao.ToyWebapiAccessFilterFacade;
 import com.hassoubeat.toymanager.service.entity.Event;
+import com.hassoubeat.toymanager.service.entity.Toy;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.slf4j.Logger;
 
 /**
  *
  * @author hassoubeat
  */
-@Stateless
+@RequestScoped
 @Path("events")
-public class EventREST {
+public class EventResource {
+    
+    @Inject
+    Logger logger;
     
     @Inject
     SessionBean sessionBean;
+    
+    @Inject
+    RestEventLogic restEventLogic;
     
     @EJB
     AccountFacade accountFacade;
@@ -42,11 +57,17 @@ public class EventREST {
     @EJB
     ToyFacade toyFacade;
     
+    @EJB
+    ToyWebapiAccessFilterFacade toyWebapiAccessFilterFacade;
+    
+    
+    
     @GET
     @Path("0.1/callenderEvents")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @AuthGeneralInterceptor
     @ErrorInterceptor
+    @LogInterceptor
     public List<RestCallenderEvent> fetchEventForCallender() {
         // TODO 本格的にREST API周りの実装を行う時、他の設計をあわせて実装を見直す
         // TODO SessionBeanの値がなかったらトップに戻す(インターセプター？)
@@ -116,9 +137,57 @@ public class EventREST {
             
         }
         
+        // TODO ファセットに紐づくイベントの取得
+        
         return responseList;
     }
-
+    
+    /**
+     * Toyに紐づく全イベントを取得する
+     * @param header ヘッダー情報
+     * @return 
+     */
+    @GET
+    @Path("0.1/events")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @LogInterceptor
+    public List<RestEvent> fetchAllEvents(@Context HttpHeaders header) {
+//        RestEventLogic restEventLogic = new RestEventLogic();        
+        restEventLogic.RestAuthorization(header);
+        Toy toy = toyFacade.findByRotNumber(Integer.parseInt(header.getHeaderString("rotNum")));
+        
+        List<RestEvent> responseList = new ArrayList();
+        
+        // アカウントに紐づくイベントの取得
+        for (Event accountEvent :eventFacade.findByAccountId(toy.getAccountId())) {
+            // 取得したイベントリストをREST用エンティティに詰め替える
+            RestEvent rcEvent = new RestEvent();
+            rcEvent.setId(accountEvent.getId());
+            rcEvent.setName(accountEvent.getName());
+            rcEvent.setContent(accountEvent.getContent());
+            rcEvent.setStartDate(accountEvent.getStartDate());
+            rcEvent.setEndDate(accountEvent.getEndDate());
+            rcEvent.setRoop(accountEvent.getRoop());
+            responseList.add(rcEvent);
+        }
+        
+        // Toyに紐づくイベントの取得
+        for (Event toyEvent : toy.getEventList()) {
+            // 取得したイベントリストをREST用エンティティに詰め替える
+            RestEvent rcEvent = new RestEvent();
+            rcEvent.setId(toyEvent.getId());
+            rcEvent.setName(toyEvent.getName());
+            rcEvent.setContent(toyEvent.getContent());
+            rcEvent.setStartDate(toyEvent.getStartDate());
+            rcEvent.setEndDate(toyEvent.getEndDate());
+            rcEvent.setRoop(toyEvent.getRoop());
+            responseList.add(rcEvent);
+        }
+        
+        // TODO ファセットに紐づくイベントの取得
+        return responseList;
+    }
+    
 //    @POST
 //    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 //    public void create(Event entity) {

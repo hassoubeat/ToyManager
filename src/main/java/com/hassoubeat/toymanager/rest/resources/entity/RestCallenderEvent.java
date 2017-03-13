@@ -1,5 +1,5 @@
 
-package com.hassoubeat.toymanager.rest.resouces;
+package com.hassoubeat.toymanager.rest.resources.entity;
 
 import java.util.Date;
 import java.util.List;

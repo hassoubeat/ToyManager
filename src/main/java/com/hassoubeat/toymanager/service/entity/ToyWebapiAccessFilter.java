@@ -19,6 +19,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -84,6 +86,23 @@ public class ToyWebapiAccessFilter implements Serializable {
         this.isAuthenticated = isAuthenticated;
         this.createDate = createDate;
         this.editDate = editDate;
+    }
+    
+    @PrePersist
+    public void prePersist(){
+        // 未認証で初期化して登録する
+        this.setIsAuthenticated(false);
+        // 登録日時と更新日時に現在日時を設定する
+        Date now = new Date();
+        this.setCreateDate(now);
+        this.setEditDate(now);
+    }
+    
+    @PreUpdate
+    public void preUpdate(){
+        // 更新日時を更新する
+        Date now = new Date();
+        this.setEditDate(now);
     }
 
     public Integer getId() {

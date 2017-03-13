@@ -75,8 +75,14 @@ public class ToyFacade extends AbstractFacade<Toy> {
         query.setFirstResult(0);
         query.setMaxResults(0);
         
+        Toy entity = (Toy) query.getSingleResult();
         
-        return (Toy) query.getSingleResult();
+        // 既に永続性コンテキスト(キャッシュ)にエンティティが存在した場合、キャッシュをDBから取得した値で更新する (更新後に再度ページを確認しようとすると、前のキャッシュを読んでしまうため)
+        if (this.isEntityCached(entity)) {
+            this.refresh(entity);
+        }
+        
+        return entity;
     }
     
     
