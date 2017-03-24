@@ -46,8 +46,9 @@
                                             <thead>
                                                 <tr>
                                                     <th>前回の同期日時</th>
-                                                    <th>同期状態</th>
-                                                    <th>前回同期からの差分イベント</th>
+                                                    <!-- TODO 差分イベント同期機能が実装された際に解禁 -->
+<!--                                                    <th>同期状態</th>
+                                                    <th>前回同期からの差分イベント</th>-->
                                                 </tr>
                                             </thead>
                                             <tbody class="text-center">
@@ -66,41 +67,43 @@
                                                             </label>
                                                         </ui:fragment>
                                                     </td>
-                                                    <td>
+                                                    <!-- TODO 差分イベント同期機能が実装された際に解禁 -->
+<!--                                                    <td>
                                                         <ui:fragment  rendered="#{toyStatusBean.targetToy.diffSyncEventList.size() == 0}">
                                                             <label class="label label-success">
-                                                                <!-- 未同期のイベントが存在しない場合 -->
+                                                                 未同期のイベントが存在しない場合 
                                                                 sync
                                                             </label>
                                                         </ui:fragment>
                                                         <ui:fragment  rendered="#{toyStatusBean.targetToy.diffSyncEventList.size() > 0}">
                                                             <label class="label label-danger">
-                                                                <!-- 未同期のイベントが一件以上存在した場合 -->
+                                                                 未同期のイベントが一件以上存在した場合 
                                                                 unsync
                                                             </label>
                                                         </ui:fragment>
                                                     </td>
                                                     <td>
                                                         <ui:fragment  rendered="#{toyStatusBean.targetToy.diffSyncEventList.size() == 0}">
-                                                            <!-- 未同期のイベントが存在しない場合 -->
+                                                             未同期のイベントが存在しない場合 
                                                             <label class="label label-default">
                                                                 no data
                                                             </label>
                                                         </ui:fragment>
                                                         <ui:fragment  rendered="#{toyStatusBean.targetToy.diffSyncEventList.size() > 0}">
-                                                            <!-- 未同期のイベントが一件以上存在した場合 -->
+                                                             未同期のイベントが一件以上存在した場合 
                                                             <a class="label label-info" data-toggle="collapse" data-target="#diff-event-table">
                                                                 <span class="glyphicon glyphicon-link"/> #{toyStatusBean.targetToy.diffSyncEventList.size()}件
                                                             </a>
                                                         </ui:fragment>
-                                                    </td>
+                                                    </td>-->
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </td>
                                 </tr>
-                                <ui:fragment  rendered="#{toyStatusBean.targetToy.diffSyncEventList.size() > 0}">
-                                <!-- 未同期のイベントが一件以上存在した場合 -->
+                                <!-- TODO 差分イベント同期機能が実装された際に解禁 -->
+<!--                                <ui:fragment  rendered="#{toyStatusBean.targetToy.diffSyncEventList.size() > 0}">
+                                 未同期のイベントが一件以上存在した場合 
                                     <tr>
                                         <th colspan="2" style="border-top-style:none;">
                                             <div id="diff-event-table" class="collapse">
@@ -118,27 +121,27 @@
                                                             <tr>
                                                                 <td>
                                                                     <ui:fragment  rendered="#{item.methodType == 'ADD'}">
-                                                                        <!-- 次回同期時追加するイベントだった場合、追加アイコンを表示する -->
+                                                                         次回同期時追加するイベントだった場合、追加アイコンを表示する 
                                                                         <span class="glyphicon glyphicon-plus"/>
                                                                     </ui:fragment>
                                                                     <ui:fragment  rendered="#{item.methodType == 'UPDATE'}">
-                                                                        <!-- 次回同期時変更するイベントだった場合、変更アイコンを表示する -->
+                                                                         次回同期時変更するイベントだった場合、変更アイコンを表示する 
                                                                         <span class="glyphicon glyphicon-edit"/>
                                                                     </ui:fragment>
                                                                     <ui:fragment  rendered="#{item.methodType == 'REMOVE'}">
-                                                                        <!-- 次回同期時削除するイベントだった場合、削除アイコンを表示する -->
+                                                                         次回同期時削除するイベントだった場合、削除アイコンを表示する 
                                                                         <span class="glyphicon glyphicon-minus"/>
                                                                     </ui:fragment>
                                                                     <ui:fragment  rendered="#{item.eventId.accountId != null}">
-                                                                        <!-- アカウント共有イベントだった場合、共有アイコンを表示する -->
+                                                                         アカウント共有イベントだった場合、共有アイコンを表示する 
                                                                         <span class="glyphicon glyphicon-user"/>
                                                                     </ui:fragment>
                                                                     <ui:fragment  rendered="#{item.eventId.isTalking}">
-                                                                        <!-- ToyTalk属性イベントだった場合、トーキングアイコンを表示する -->
+                                                                         ToyTalk属性イベントだった場合、トーキングアイコンを表示する 
                                                                         <span class="glyphicon glyphicon-volume-up"/>
                                                                     </ui:fragment>
                                                                     <ui:fragment  rendered="#{item.eventId.roop != 0}">
-                                                                        <!-- 繰り返しイベントだった場合、ループアイコンを表示する -->
+                                                                         繰り返しイベントだった場合、ループアイコンを表示する 
                                                                         <span class="glyphicon glyphicon-repeat"/>
                                                                     </ui:fragment>
                                                                 </td>
@@ -172,7 +175,7 @@
                                             </div>
                                         </th>
                                     </tr>
-                                </ui:fragment>
+                                </ui:fragment>-->
                                 <tr>
                                     <th>Toyの音声タイプ</th>
                                     <td>
@@ -207,15 +210,39 @@
                                 <tr>
                                     <th>アクセストークン</th>
                                     <td>
-                                        #{toyStatusBean.targetToy.accessToken}
+                                        <div id="access-token">#{toyStatusBean.targetToy.accessToken}</div>
+                                        <p/>
+                                        <div class="pull-right">
+                                            <button id="clipboard-copy" class="btn-sm btn-info" data-clipboard-target="#access-token" style="margin-right: 5px;"><span class="glyphicon glyphicon-file"/> クリップボードにコピー</button>
+                                            <form jsf:id="access-token-regenerate" style="display: inline;">
+                                                <button class="btn-sm btn-warning" jsf:id="access-token-regenerate" jsf:action="#{toyStatusBean.accessTokenRegenerate()}" style="margin-right: 5px;"><span class="glyphicon glyphicon-export"/> アクセストークンの再生成</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th>アクセストークン有効期限</th>
+                                    <th>
+                                        アクセストークン有効期限
+                                        <!-- アクセストークン有効期限が切れていた場合 -->
+                                        <ui:fragment  rendered="#{utilLogicBean.isExistAccessTokenExpired(toyStatusBean.targetToy)}">
+                                            <div class="label label-danger">有効期限切れ</div>
+                                        </ui:fragment>
+                                    </th>
+                                    
                                     <td>
-                                        <h:outputText class="label label-default" value="#{toyStatusBean.targetToy.accessTokenLifecycle}" >
-                                            <f:convertDateTime pattern="yyyy/MM/dd HH:mm"/>
-                                        </h:outputText>
+                                        <!-- アクセストークン有効期限が切れていた場合 -->
+                                        <ui:fragment  rendered="#{utilLogicBean.isExistAccessTokenExpired(toyStatusBean.targetToy)}">
+                                            <h:outputText class="label label-danger" value="#{toyStatusBean.targetToy.accessTokenLifecycle}" >
+                                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm"/>
+                                            </h:outputText>
+                                            <u>【アクセストークンの再生成】ボタンを押下して、アクセストークンを再発行してください。</u>
+                                        </ui:fragment>
+                                        <!-- アクセストークン有効期限が切れていなかった場合 -->
+                                        <ui:fragment  rendered="#{!utilLogicBean.isExistAccessTokenExpired(toyStatusBean.targetToy)}">
+                                            <h:outputText value="#{toyStatusBean.targetToy.accessTokenLifecycle}" >
+                                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm"/>
+                                            </h:outputText>
+                                        </ui:fragment>
                                     </td>
                                 </tr>
                                 <tr>
@@ -224,9 +251,58 @@
                                         ver #{toyStatusBean.targetToy.toyVersionId.version}
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th>アクセスフィルター</th>
+                                    <td>
+                                        
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Macアドレスハッシュ</th>
+                                                    <th>状態</th>
+                                                    <th>アクション</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ui:repeat var="item" value="#{toyStatusBean.targetToy.toyWebapiAccessFilterList}" varStatus="status">
+                                                    <tr>
+                                                        <td>
+                                                            #{item.macAddress}
+                                                        </td>
+                                                        <td>
+                                                            <!-- 未認証の場合 -->
+                                                            <ui:fragment  rendered="#{!item.isAuthenticated}">
+                                                                <h4><span class="label label-warning"><span class="glyphicon glyphicon-unchecked"/> 認証待ち</span></h4>
+                                                            </ui:fragment>
+                                                            <!-- 認証済の場合 -->
+                                                            <ui:fragment  rendered="#{item.isAuthenticated}">
+                                                                <h4><span class="label label-success"><span class="glyphicon glyphicon-check"/> 認証済み</span></h4>
+                                                            </ui:fragment>
+                                                            
+                                                        </td>
+                                                        <td>
+                                                            <form jsf:id="web-api-access-filter-form">
+                                                                <!-- 未認証の場合 -->
+                                                                <ui:fragment  rendered="#{!item.isAuthenticated}">
+                                                                    <button class="btn-sm btn-success" jsf:id="web-api-access-filter-approval" jsf:action="#{toyStatusBean.webApiAccessFilterApproval(item)}" style="margin-right: 5px;">承認</button>
+                                                                    <button class="btn-sm btn-danger" jsf:id="web-api-access-filter-reject1" jsf:action="#{toyStatusBean.webApiAccessFilterReject(item)}" style="margin-right: 5px;">拒否</button>
+                                                                </ui:fragment>
+                                                                <!-- 認証済の場合 -->
+                                                                <ui:fragment  rendered="#{item.isAuthenticated}">
+                                                                    <button class="btn-sm btn-danger" jsf:id="web-api-access-filter-reject2" jsf:action="#{toyStatusBean.webApiAccessFilterReject(item)}" style="margin-right: 5px;">拒否</button>
+                                                                </ui:fragment>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                </ui:repeat>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <div class="btn btn-danger" id="toy-account-tying-cancel-modal-switch" data-toggle="modal" href="#toy-account-tying-cancel-modal">Toyの紐付け解除</div>
+                        
                         
                     </div>
 <!--                    <div class="modal fade" id="last-time-sync-diff-modal" tabindex="-1">
@@ -378,6 +454,8 @@
             <ui:define name="js">
                 <!-- jQueryToaster JS -->
                 <script jsf:library="js" jsf:name="jquery.toast.js"/>
+                <!-- Clipboard JS -->
+                <script jsf:library="js" jsf:name="clipboard.js"/>
                 <script type="text/javascript">
                     $(window).load(function () {
                         // Toy選択済チェック
@@ -386,6 +464,30 @@
                             $("#not-selected-toy-modal").modal();
                         }
                         
+                        // クリップボードにコピーボタンの設定
+                        var clipboard = new Clipboard('#clipboard-copy');
+                        clipboard.on('success', function(e) {
+                            // コピー成功時
+                            e.clearSelection();
+                            $.toast({
+                                heading: "コピーしました。",
+                                showHideTransition: "slide",
+                                icon: "info",
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                        });
+                        clipboard.on('error', function(e) {
+                            // コピー失敗時
+                            $.toast({
+                                heading: "コピーに失敗しました。",
+                                showHideTransition: "slide",
+                                icon: "info",
+                                position: "bottom-right",
+                                stack: "1"
+                            });    
+                        });
+                        
                         $("#toy-account-tying-cancel-modal-switch").click(function() {
                             if(#{sessionBean.selectedToyId} === 0) {
                                 // Toyが未選択だった場合、選択を促すダイアログを表示する
@@ -393,6 +495,44 @@
                                 return false;
                             }
                         });
+                        
+                        if (#{facesContext.getMessageList('access-token-regenerate').size() > 0}) {
+                            // Toyのアクセストークンの再生成が完了した後、再生成をしたことを表示するダイアログを表示する
+                            $.toast({
+                                heading: "アクセストークンを更新しました。",
+                                text: "現在利用しているToyにアクセストークンの再設定を行って下さい。",
+                                showHideTransition: "slide",
+                                hideAfter : 7000, 
+                                icon: "info",
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                        }
+                        
+                        if (#{facesContext.getMessageList('access-filter-approval').size() > 0}) {
+                            // アクセスフィルターの承認が行われた後、承認が行われたことを表示するダイアログを表示する
+                            $.toast({
+                                heading: "アクセスを承認しました。",
+                                text: "Toyからアクセスが行えるようになりました。",
+                                showHideTransition: "slide",
+                                hideAfter : 5000, 
+                                icon: "info",
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                        }
+                        
+                        if (#{facesContext.getMessageList('access-filter-reject').size() > 0}) {
+                            // アクセスフィルターの拒否が行われた後、拒否が行われたことを表示するダイアログを表示する
+                            $.toast({
+                                heading: "アクセスを拒否しました。",
+                                showHideTransition: "slide",
+                                hideAfter : 4000, 
+                                icon: "info",
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                        }
                         
                         // ナビゲーションバーのactiveを変更
                         $("#toy").addClass("active");

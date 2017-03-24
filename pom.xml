@@ -78,6 +78,7 @@
         <profile>
             <id>local</id>
             <properties>
+                <host.path>http://localhost:8080/</host.path>
                 <resources.url>http://localhost:8080/ToyManager/resources/</resources.url>
                 <resources.absolute.path>/Users/hassoubeat/NetBeansProjects/ToyManager/target/ToyManager-1.0-SNAPSHOT/resources</resources.absolute.path>
                 <!-- ログ出力用の変数 -->
@@ -111,6 +112,7 @@
         <profile>
             <id>aws</id>
             <properties>
+                <host.path>http://52.196.234.137:8080/</host.path>
                 <resources.url>http://52.196.234.137:8080/ToyManager/resources/</resources.url>
                 <resources.absolute.path>/usr/local/glassfish4/glassfish/domains/domain1/applications/ToyManager/resources</resources.absolute.path>
                 <!-- ログ出力用の変数 -->

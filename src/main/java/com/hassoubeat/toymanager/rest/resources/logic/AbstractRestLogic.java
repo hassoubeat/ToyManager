@@ -5,6 +5,7 @@
  */
 package com.hassoubeat.toymanager.rest.resources.logic;
 
+import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.constant.MessageConst;
 import com.hassoubeat.toymanager.rest.resources.exception.AccessFilterUnApprovalException;
 import com.hassoubeat.toymanager.service.dao.ToyFacade;
@@ -17,7 +18,6 @@ import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.core.HttpHeaders;
 import org.slf4j.Logger;
 
 /**
@@ -36,22 +36,22 @@ public abstract class AbstractRestLogic {
     ToyWebapiAccessFilterFacade toyWebapiAccessFilterFacade;
     
     /**
-     * RestAPI実行時にアクセス認証を実施するメソッド
-     * @param header 
+     * RestAPI実行時にアクセス認証を実施するメソッド 
+     * @param rotNumStr
+     * @param accessToken
+     * @param macAddress
      */
-    public void RestAuthorization(HttpHeaders header) {
-        // ヘッダから認可情報の取得
-        String rotNumStr = header.getHeaderString("rotNum");
-        String accessToken = header.getHeaderString("authorication");
-        String macAddress = header.getHeaderString("macAddress");
+    @LogInterceptor
+    public void RestAuthorization(String rotNumStr, String accessToken, String macAddress) {
         
         Toy targetToy = new Toy();
         
         try {
             int rotNum = Integer.parseInt(rotNumStr);
             targetToy = toyFacade.findByRotNumber(rotNum);
-        } catch (NumberFormatException | EJBException ex) {
+        } catch (NullPointerException | NumberFormatException | EJBException ex) {
             // リクエスト不備エラーを返す
+            // TODO 本来起こり得ない状況のため、扱いをどうするか検討する
             logger.warn("{}:{}, ROT_NUMBER:{}, ACCESS_TOKEN:{}, MAC_ADDRESS:{} {}.{}", MessageConst.REST_INVALID_PARAM.getId(), MessageConst.REST_INVALID_PARAM.getMessage(), rotNumStr, accessToken, macAddress,this.getClass().getName(), this.getClass());
             throw new BadRequestException(MessageConst.REST_INVALID_PARAM.getMessage(), ex);
         }
@@ -98,7 +98,7 @@ public abstract class AbstractRestLogic {
             // アクセストークンの有効期限が切れている場合
             
             // アクセスフィルター有効期限切れログを出力
-            logger.warn("{}:{}, ROT_NUMBER{}, ACCESS_TOKEN:{}, ACCESS_TOKEN_LIFE_CYCLE:{} {}.{}", MessageConst.REST_ACCESS_TOKEN_EXPIRED.getId(), MessageConst.REST_ACCESS_TOKEN_EXPIRED.getMessage(), rotNumStr, targetToy.getAccessToken(), targetToy.getAccessTokenLifecycle().toString(), this.getClass().getName(), this.getClass());
+            logger.warn("{}:{}, ROT_NUMBER:{}, ACCESS_TOKEN:{}, ACCESS_TOKEN_LIFE_CYCLE:{} {}.{}", MessageConst.REST_ACCESS_TOKEN_EXPIRED.getId(), MessageConst.REST_ACCESS_TOKEN_EXPIRED.getMessage(), rotNumStr, targetToy.getAccessToken(), targetToy.getAccessTokenLifecycle().toString(), this.getClass().getName(), this.getClass());
             
             // TODO アクセストークン期限切れExceptionの発行(独自実装する必要があるかも？)
         }
@@ -106,7 +106,7 @@ public abstract class AbstractRestLogic {
         if(!targetToy.getAccessToken().equals(accessToken)) {
             // アクセストークンの認証が失敗した場合
             
-            logger.warn("{}:{}, AUTH_TARGET_TOY_ID:{}, ROT_NUMBER{}, ACCESS_TOKEN:{} {}.{}", MessageConst.REST_FAILED_AUTHORIZATION.getId(), MessageConst.REST_FAILED_AUTHORIZATION.getMessage(), targetToy.getId().toString(), rotNumStr, targetToy.getAccessToken(), this.getClass().getName(), this.getClass());
+            logger.warn("{}:{}, AUTH_TARGET_TOY_ID:{}, AUTH_TARGET_TOY_ROT_NUMBER:{}, AUTH_TARGET_TOY_ACCESS_TOKEN:{}, ROT_NUMBER:{}, ACCESS_TOKEN:{} {}.{}", MessageConst.REST_FAILED_AUTHORIZATION.getId(), MessageConst.REST_FAILED_AUTHORIZATION.getMessage(), targetToy.getId().toString(), targetToy.getRotNum(), targetToy.getAccessToken(), rotNumStr, accessToken, this.getClass().getName(), this.getClass());
             // 認証失敗例外の発行
             throw new NotAuthorizedException(MessageConst.REST_FAILED_AUTHORIZATION.getMessage());
         } 

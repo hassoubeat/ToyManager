@@ -92,5 +92,4 @@ public class ToyMenuBean {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         return request.getPathInfo() + "?faces-redirect=true";
     }
-    
 }

@@ -12,7 +12,10 @@ import com.hassoubeat.toymanager.constant.MessageConst;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.entity.Toy;
 import com.hassoubeat.toymanager.service.dao.ToyFacade;
+import com.hassoubeat.toymanager.service.dao.ToyWebapiAccessFilterFacade;
+import com.hassoubeat.toymanager.service.entity.ToyWebapiAccessFilter;
 import com.hassoubeat.toymanager.service.logic.ToyLogic;
+import com.hassoubeat.toymanager.service.logic.ToyWebApiAccessFilterLogic;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.Serializable;
 import javax.ejb.EJB;
@@ -21,6 +24,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -48,6 +52,9 @@ public class ToyStatusBean implements Serializable{
     @EJB
     ToyLogic toyLogic;
     
+    @EJB
+    ToyWebApiAccessFilterLogic toyWebApiAccessFilterLogic;
+    
     @Getter
     @Setter
     private Toy targetToy;
@@ -73,6 +80,7 @@ public class ToyStatusBean implements Serializable{
     
     /**
      * Toyのアカウント紐付けを解除するメソッド
+     * @return 遷移先
      */
     @ErrorInterceptor
     @AuthGeneralInterceptor
@@ -91,6 +99,75 @@ public class ToyStatusBean implements Serializable{
         
         // 元の画面に戻る
         return "";
+    }
+    
+    /**
+     * Toyのアクセストークンを再生成するメソッド
+     * @return 遷移先
+     */
+    @ErrorInterceptor
+    @AuthGeneralInterceptor
+    @LogInterceptor
+    public String accessTokenRegenerate() {
+        if (sessionBean.getSelectedToyId() != 0) {
+            Toy accessTokenReGenerateToy = toyLogic.accessTokenGen(toyFacade.find(sessionBean.getSelectedToyId()));
+            toyLogic.edit(accessTokenReGenerateToy);
+            
+            // 紐付け解除完了のメッセージをリダイレクト先で表示するように、フラッシュメッセージに格納する
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            facesContext.addMessage("access-token-regenerate", new FacesMessage(MessageConst.SUCCESS_ACCESS_TOKEN_GENERATE.getMessage()));
+            facesContext.getExternalContext().getFlash().setKeepMessages(true);
+        }
+        
+        // 元の画面にリダイレクトして遷移する(bookmarkableを動作させる)
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        return request.getPathInfo() + "?faces-redirect=true";
+    }
+    
+    /**
+     * アクセスフィルターを承認するメソッド
+     * @param targetToyWebapiAccessFilter
+     * @return 
+     */
+    @ErrorInterceptor
+    @AuthGeneralInterceptor
+    @LogInterceptor
+    public String webApiAccessFilterApproval(ToyWebapiAccessFilter targetToyWebapiAccessFilter) {
+        if (sessionBean.getSelectedToyId() != 0) {
+            toyWebApiAccessFilterLogic.approval(targetToyWebapiAccessFilter);
+            
+            // 紐付け解除完了のメッセージをリダイレクト先で表示するように、フラッシュメッセージに格納する
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            facesContext.addMessage("access-filter-approval", new FacesMessage(MessageConst.SUCCESS_ACCESS_FILTER_APPROVAL.getMessage()));
+            facesContext.getExternalContext().getFlash().setKeepMessages(true);
+        }
+        
+        // 元の画面にリダイレクトして遷移する(bookmarkableを動作させる)
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        return request.getPathInfo() + "?faces-redirect=true";
+    }
+    
+    /**
+     * アクセスフィルターを拒否するメソッド
+     * @param targetToyWebapiAccessFilter
+     * @return 
+     */
+    @ErrorInterceptor
+    @AuthGeneralInterceptor
+    @LogInterceptor
+    public String webApiAccessFilterReject(ToyWebapiAccessFilter targetToyWebapiAccessFilter) {
+        if (sessionBean.getSelectedToyId() != 0) {
+            toyWebApiAccessFilterLogic.reject(targetToyWebapiAccessFilter);
+            
+            // 紐付け解除完了のメッセージをリダイレクト先で表示するように、フラッシュメッセージに格納する
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            facesContext.addMessage("access-filter-reject", new FacesMessage(MessageConst.SUCCESS_ACCESS_FILTER_REJECT.getMessage()));
+            facesContext.getExternalContext().getFlash().setKeepMessages(true);
+        }
+        
+        // 元の画面にリダイレクトして遷移する(bookmarkableを動作させる)
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        return request.getPathInfo() + "?faces-redirect=true";
     }
     
     @ErrorInterceptor

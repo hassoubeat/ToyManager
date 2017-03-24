@@ -16,15 +16,16 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <img class="thumnail_50" src="http://localhost:8080/ToyManager/resources/img/toymanager.png" style="margin-left: 5px;"/>
+                            <img class="thumnail_50" src="#{appPropetiesBean.HOST_PATH}ToyManager/resources/img/toymanager.png" style="margin-left: 5px;"/>
 <!--                            <img class="thumnail_50" src="#{item.pictureUrl}" style="margin-left: 5px;"/>-->
                             <b>#{item.name}</b>
                         </div>
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>最後の同期時刻</th>
-                                    <th>同期状態</th>
+                                    <th style="text-align: center;">最後の同期時刻</th>
+                                    <!-- TODO 差分イベント同期機能が実装された際に解禁 -->
+<!--                                    <th>同期状態</th>-->
                                 </tr>
                             </thead>
                             <tbody class="text-center">
@@ -43,28 +44,47 @@
                                             </label>
                                         </ui:fragment>
                                     </td>
-                                    <td>
+                                    <!-- TODO 差分イベント同期機能が実装された際に解禁 -->
+<!--                                    <td>
                                         <ui:fragment  rendered="#{item.diffSyncEventList.size() == 0}">
                                             <label class="label label-success">
-                                                <!-- 未同期のイベントが存在しない場合 -->
+                                                 未同期のイベントが存在しない場合 
                                                 sync
                                             </label>
                                         </ui:fragment>
                                         <ui:fragment  rendered="#{item.diffSyncEventList.size() > 0}">
                                             <label class="label label-danger">
-                                                <!-- 未同期のイベントが一件以上存在した場合 -->
+                                                 未同期のイベントが一件以上存在した場合 
                                                 unsync
                                             </label>
                                         </ui:fragment>
-                                    </td>
+                                    </td>-->
                                 </tr>
                             </tbody>
                         </table>
                         
-                        <form jsf:id="toy-select-form" id="toy-select-form-#{item.id}">
+                        
+                        <form jsf:id="toy-select-form" id="toy-select-form-#{item.id}" style="display: inline;">
                             <button class="btn btn-success" id="select-toy-#{item.id}" jsf:action="#{toyMenuBean.selectToy(item.id)}" style="margin-right: 5px;">選択</button>
                         </form>
-                        
+                        <!-- 未承認のアクセスフィルターがあった場合表示する -->
+                        <ui:fragment  rendered="#{utilLogicBean.isExistUnapprovedAccess(item)}">
+                            <ui:fragment rendered="#{sessionBean.selectedToyId == item.id}">
+                                <div class="pull-right"><span class="label label-warning"><a jsf:outcome="/auth/toy/status"><span class="glyphicon glyphicon-alert"/>　未承認のToyからアクセスがあります。</a></span></div>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{sessionBean.selectedToyId != item.id}">
+                                <div class="pull-right"><span class="label label-warning"><span class="glyphicon glyphicon-alert"/>　未承認のToyからアクセスがあります。</span></div>
+                            </ui:fragment>
+                        </ui:fragment>
+                        <!-- アクセストークンの有効期限が切れていた場合表示する -->
+                        <ui:fragment  rendered="#{utilLogicBean.isExistAccessTokenExpired(item)}">
+                            <ui:fragment rendered="#{sessionBean.selectedToyId == item.id}">
+                                <div class="pull-right"><span class="label label-danger"><a jsf:outcome="/auth/toy/status"><span class="glyphicon glyphicon-alert"/>　アクセストークンの有効期限が切れています。</a></span></div>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{sessionBean.selectedToyId != item.id}">
+                                <div class="pull-right"><span class="label label-danger"><span class="glyphicon glyphicon-alert"/>　アクセストークンの有効期限が切れています。</span></div>
+                            </ui:fragment>
+                        </ui:fragment>
                     </div>
                 </div>
             </ui:repeat>

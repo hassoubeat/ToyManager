@@ -7,6 +7,8 @@ package com.hassoubeat.toymanager.rest.resources.logic;
 
 import javax.enterprise.context.RequestScoped;
 
+
+
 /**
  *
  * @author hassoubeat

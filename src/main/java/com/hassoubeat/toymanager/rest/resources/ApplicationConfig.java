@@ -32,6 +32,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.hassoubeat.toymanager.rest.resources.EventResource.class);
         resources.add(com.hassoubeat.toymanager.rest.resources.exception.AccessFilterUnApprovalExceptionMapper.class);
         resources.add(com.hassoubeat.toymanager.rest.resources.exception.AccessTokenExpiredExceptionMapper.class);
+        resources.add(com.hassoubeat.toymanager.rest.resources.filter.RestAuthorization.class);
     }
     
 }

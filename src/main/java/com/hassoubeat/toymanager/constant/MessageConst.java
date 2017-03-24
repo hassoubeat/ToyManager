@@ -28,6 +28,10 @@ public enum MessageConst {
     SUCCESS_EVENT_REMOVE("MIR_01000015", "イベントの削除が完了しました。"),
     SUCCESS_TOY_ACCOUNT_TYING("MIR_01000016", "アカウントにToyの紐付けを完了しました。"),
     SUCCESS_TOY_ACCOUNT_TYING_CANCEL("MIR_01000017", "アカウントからToyの紐付けを解除しました。"),
+    SUCCESS_ACCESS_TOKEN_GENERATE("MIR_01000018", "アクセストークンの生成を実施しました。"),
+    SUCCESS_TOY_EDIT("MIR_01000019", "Toyの更新が完了しました。"),
+    SUCCESS_ACCESS_FILTER_APPROVAL("MIR_01000020", "アクセスフィルターを承認しました。"),
+    SUCCESS_ACCESS_FILTER_REJECT("MIR_01000021", "アクセスフィルターを拒否しました。"),
     
     // MER(ToyManager側で発生する想定内エラー系)
     ALREADY_REGISTED_USER("MER_01000001", "入力したメールアドレスは既に登録されています。"),

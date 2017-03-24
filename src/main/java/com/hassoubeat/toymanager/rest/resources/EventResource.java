@@ -60,30 +60,13 @@ public class EventResource {
     @EJB
     ToyWebapiAccessFilterFacade toyWebapiAccessFilterFacade;
     
-    
-    
     @GET
     @Path("0.1/callenderEvents")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @AuthGeneralInterceptor
     @ErrorInterceptor
     @LogInterceptor
-    public List<RestCallenderEvent> fetchEventForCallender() {
-        // TODO 本格的にREST API周りの実装を行う時、他の設計をあわせて実装を見直す
-        // TODO SessionBeanの値がなかったらトップに戻す(インターセプター？)
-        
-//        boolean test = true;
-//        Account targetAccount = accountFacade.find(sessionBean.getUserId());
-//        for(Toy toy:targetAccount.getToyList()) {
-//            if (Objects.equals(toy.getId(), sessionBean.getSelectedToyId())) {
-//                test = false;
-//            }
-//        } 
-//        
-//        if (test) {
-//            return null;
-//        }
-        
+    public List<RestCallenderEvent> fetchEventForCallender() {        
         List<RestCallenderEvent> responseList = new ArrayList();
         // アカウントに紐づくイベントの取得
         for(Event event : eventFacade.findByAccountId(accountFacade.find(sessionBean.getId()))) {
@@ -151,25 +134,21 @@ public class EventResource {
     @Path("0.1/events")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @LogInterceptor
+//    @RestAuth TODO うまくフィルターが働かず、全リソースに適応されてしまう
     public List<RestEvent> fetchAllEvents(@Context HttpHeaders header) {
-//        RestEventLogic restEventLogic = new RestEventLogic();        
-        restEventLogic.RestAuthorization(header);
+        // ヘッダから認可情報の取得
+        String rotNumStr = header.getHeaderString("rotNum");
+        String accessToken = header.getHeaderString("authorication");
+        String macAddress = header.getHeaderString("macAddress");
+        
+        // 実行前チェック
+        restEventLogic.RestAuthorization(rotNumStr, accessToken, macAddress);
+        
         Toy toy = toyFacade.findByRotNumber(Integer.parseInt(header.getHeaderString("rotNum")));
         
         List<RestEvent> responseList = new ArrayList();
         
-        // アカウントに紐づくイベントの取得
-        for (Event accountEvent :eventFacade.findByAccountId(toy.getAccountId())) {
-            // 取得したイベントリストをREST用エンティティに詰め替える
-            RestEvent rcEvent = new RestEvent();
-            rcEvent.setId(accountEvent.getId());
-            rcEvent.setName(accountEvent.getName());
-            rcEvent.setContent(accountEvent.getContent());
-            rcEvent.setStartDate(accountEvent.getStartDate());
-            rcEvent.setEndDate(accountEvent.getEndDate());
-            rcEvent.setRoop(accountEvent.getRoop());
-            responseList.add(rcEvent);
-        }
+        // TODO 現在日時より古いイベントは取得しない
         
         // Toyに紐づくイベントの取得
         for (Event toyEvent : toy.getEventList()) {
@@ -181,6 +160,21 @@ public class EventResource {
             rcEvent.setStartDate(toyEvent.getStartDate());
             rcEvent.setEndDate(toyEvent.getEndDate());
             rcEvent.setRoop(toyEvent.getRoop());
+            rcEvent.setToyId(toyEvent.getToyId().getId());
+            responseList.add(rcEvent);
+        }
+        
+        // アカウントに紐づくイベントの取得
+        for (Event accountEvent :eventFacade.findByAccountId(toy.getAccountId())) {
+            // 取得したイベントリストをREST用エンティティに詰め替える
+            RestEvent rcEvent = new RestEvent();
+            rcEvent.setId(accountEvent.getId());
+            rcEvent.setName(accountEvent.getName());
+            rcEvent.setContent(accountEvent.getContent());
+            rcEvent.setStartDate(accountEvent.getStartDate());
+            rcEvent.setEndDate(accountEvent.getEndDate());
+            rcEvent.setRoop(accountEvent.getRoop());
+            rcEvent.setAccountId(accountEvent.getAccountId().getId());
             responseList.add(rcEvent);
         }
         

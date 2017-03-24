@@ -107,50 +107,17 @@ public class ToyLogic{
         targetAccount.setLastSelectedToyId(0);
         accountFacade.edit(targetAccount);
         
-        
-        
         logger.info("{}:{}, USER_ID:{}, TOY_ID:{}, {}", MessageConst.SUCCESS_TOY_ACCOUNT_TYING_CANCEL.getId(), MessageConst.SUCCESS_TOY_ACCOUNT_TYING_CANCEL.getMessage(), sessionBean.getUserId(), toy.getId(), this.getClass().getName() + "." + this.getClass());
         
     }
     
     /**
-     * イベントの変更処理を実行する
-     * 
-     * @param event 変更するイベントエンティティ
+     * Toyの変更処理を実行する
+     * @param toy
      */
-    public void edit(Event event) {        
-//        // 日付間隔/曜日設定のチェック(指定なしの時に値を初期化する)
-//        if (bitLogic.bitCheck(event.getRoop(), erpConst.IS_ROOP) ) {
-//            // ループが有効な場合、ループ値のチェックを行う
-//            event = this.eventCheck(event);
-//        }
-//        
-//        // イベントの登録
-//        Event editEvent = eventFacade.edit(event);
-//        
-//        
-//        // TODO 差分イベント登録処理
-//        
-//        // 既に今回変更したイベントIDのカラムがあった場合は、変更カウントで数える
-//        // TODO 変更前通常イベント→変更後アカウント共有イベント
-//        // TODO 変更前アカウント共有イベント→変更後通常イベント
-//        // TODO countByEventIdメソッドではアカウント共有イベントを特定できないため、合わせてToyIDも利用して検索する処理を設定する
-//        int count = diffSyncEventFacade.countByEventId(editEvent);
-//        DiffSyncEvent editDiffEvent = new DiffSyncEvent();
-//        if (count > 0) {
-//            // Diffイベントがあった場合(新しく作成したEventがまだToy側に同期されていなかった場合)
-//            editDiffEvent = diffSyncEventFacade.findByEventId(event).get(0);
-//        } else {
-//            // Diffイベントがなかった(既にToy側に同期されていた場合)
-//            // 差分イベントの登録
-//            DiffSyncEvent diffEvent = new DiffSyncEvent();
-//            diffEvent.setToyId(toyFacade.find(sessionBean.getSelectedToyId()));
-//            diffEvent.setEventId(editEvent);
-//            diffEvent.setMethodType(MethodTypeConst.UPDATE.toString());
-//            editDiffEvent  = diffSyncEventFacade.create(diffEvent);
-//        }
-//        
-//        logger.info("{} : USER_ID:{}, EVENT_ID:{}, DIFF_SYNC_EVENT_ID:{} {}.{}", MessageConst.SUCCESS_EVENT_EDIT.getId() + ":" + MessageConst.SUCCESS_EVENT_EDIT.getMessage(), sessionBean.getUserId(), editEvent.getId(), editDiffEvent.getId(),this.getClass().getName() + "." + this.getClass());
+    public void edit(Toy toy) {        
+        toyFacade.edit(toy);
+        logger.info("{}:{}, USER_ID:{}, TOY_ID:{}, {}", MessageConst.SUCCESS_TOY_EDIT.getId(), MessageConst.SUCCESS_TOY_EDIT.getMessage(), sessionBean.getUserId(), toy.getId(), this.getClass().getName() + "." + this.getClass());
     }
     
     /**
@@ -201,8 +168,10 @@ public class ToyLogic{
     /**
      * 引数で受けとったToyにアクセストークンを生成、セットして返却するメソッド
      * 
+     * @param toy アクセストークンをセットするToyエンティティ
+     * @return アクセストークンをセットしたToyエンティティ
      */
-    private Toy accessTokenGen(Toy toy) {
+    public Toy accessTokenGen(Toy toy) {
         
         String accessTokenPlane = "";
         accessTokenPlane += toy.getAccountId().getId().toString();
@@ -218,6 +187,8 @@ public class ToyLogic{
         toy.setAccessToken(accessTokenHashed);
         toy.setAccessTokenSalt(salt);
         toy.setAccessTokenLifecycle(Date.from(now.plusYears(1).atZone(ZoneId.systemDefault()).toInstant())); // 一年後の日時をセット
+        
+        logger.info("{}:{}, USER_ID:{}, TOY_ID:{}, {}", MessageConst.SUCCESS_ACCESS_TOKEN_GENERATE.getId(), MessageConst.SUCCESS_ACCESS_TOKEN_GENERATE.getMessage(), sessionBean.getUserId(), toy.getId(), this.getClass().getName() + "." + this.getClass());
         
         return toy;
     }
