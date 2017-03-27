@@ -48,7 +48,7 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "Event.findByIsDeleted", query = "SELECT e FROM Event e WHERE e.isDeleted = :isDeleted")
     , @NamedQuery(name = "Event.findByCreateDate", query = "SELECT e FROM Event e WHERE e.createDate = :createDate")
     , @NamedQuery(name = "Event.findByEditDate", query = "SELECT e FROM Event e WHERE e.editDate = :editDate")})
-public class Event implements Serializable {
+public class Event implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -307,5 +307,12 @@ public class Event implements Serializable {
     public String toString() {
         return "com.hassoubeat.toymanager.service.entity.Event[ id=" + id + " ]";
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone(); //To change body of generated methods, choose Tools | Templates.
+    }
     
+    
+
 }

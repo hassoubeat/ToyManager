@@ -5,11 +5,12 @@
  */
 package com.hassoubeat.toymanager.rest.resources;
 
-import com.hassoubeat.toymanager.rest.resources.entity.RestCallenderEvent;
 import com.hassoubeat.toymanager.annotation.AuthGeneralInterceptor;
-import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
+import com.hassoubeat.toymanager.rest.resources.entity.RestCalenderEvent;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
+import com.hassoubeat.toymanager.constant.EventRoopParamConst;
 import com.hassoubeat.toymanager.rest.resources.entity.RestEvent;
+import com.hassoubeat.toymanager.rest.resources.logic.RestCalenderEventLogic;
 import com.hassoubeat.toymanager.rest.resources.logic.RestEventLogic;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.dao.EventFacade;
@@ -17,15 +18,22 @@ import com.hassoubeat.toymanager.service.dao.ToyFacade;
 import com.hassoubeat.toymanager.service.dao.ToyWebapiAccessFilterFacade;
 import com.hassoubeat.toymanager.service.entity.Event;
 import com.hassoubeat.toymanager.service.entity.Toy;
+import com.hassoubeat.toymanager.util.BitLogic;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -45,8 +53,17 @@ public class EventResource {
     @Inject
     SessionBean sessionBean;
     
-    @Inject
+    @EJB
+    RestCalenderEventLogic restCalenderEventLogic;
+    
+    @EJB
     RestEventLogic restEventLogic;
+    
+    @Inject
+    EventRoopParamConst erpConst;
+    
+    @EJB
+    BitLogic bitLogic;
     
     @EJB
     AccountFacade accountFacade;
@@ -60,69 +77,39 @@ public class EventResource {
     @EJB
     ToyWebapiAccessFilterFacade toyWebapiAccessFilterFacade;
     
+    /**
+     * FullCalenderのイベント取得用のRESTAPI
+     * ※ 他のAPIと異なり、ToyManager利用中でのみ実行することができるAPI
+     * @param startDate 
+     * @param endDate 
+     * @param test 
+     * @return 
+     */
     @GET
-    @Path("0.1/callenderEvents")
+    @Path("0.1/calenderEvents")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @AuthGeneralInterceptor
-    @ErrorInterceptor
     @LogInterceptor
-    public List<RestCallenderEvent> fetchEventForCallender() {        
-        List<RestCallenderEvent> responseList = new ArrayList();
-        // アカウントに紐づくイベントの取得
-        for(Event event : eventFacade.findByAccountId(accountFacade.find(sessionBean.getId()))) {
-            // 取得したイベントリストをREST用エンティティに詰め替える
-            RestCallenderEvent rcEvent = new RestCallenderEvent();
-            rcEvent.setId(event.getId());
-            rcEvent.setTitle(event.getName());
-            rcEvent.setStart(event.getStartDate());
-            rcEvent.setEnd(event.getEndDate());
-            rcEvent.setColor(event.getColorCode());
-            
-            List<String> eventType = new ArrayList();
-            eventType.add("account-share");
-            if (event.getRoop() > 0) {
-                eventType.add("roop");
-            }
-            if (event.getIsTalking()) {
-                eventType.add("is-toy-talk");
-            }
-            if (event.getIsDeleted()) {
-                eventType.add("is-event-deleted");
-            }
-            rcEvent.setClassName(eventType);
-            responseList.add(rcEvent);
-            
-        }
-        // Toyに紐づくイベントの取得
-        for (Event event:eventFacade.findByToyId(toyFacade.find(sessionBean.getSelectedToyId()))){
-            
-            // 取得したイベントリストをREST用エンティティに詰め替える
-            RestCallenderEvent rcEvent = new RestCallenderEvent();
-            rcEvent.setId(event.getId());
-            rcEvent.setTitle(event.getName());
-            rcEvent.setStart(event.getStartDate());
-            rcEvent.setEnd(event.getEndDate());
-            rcEvent.setColor(event.getColorCode());
-            List<String> eventType = new ArrayList();
-            if (event.getRoop() > 0) {
-                eventType.add("roop");
-            }
-            if (event.getIsTalking()) {
-                eventType.add("is-toy-talk");
-            }
-            if (event.getIsDeleted()) {
-                eventType.add("is-event-deleted");
-            }
-            rcEvent.setClassName(eventType);
-            responseList.add(rcEvent);
-
-            System.out.println("event.title:" + event.getName());
-            
-        }
+    @AuthGeneralInterceptor
+    public List<RestCalenderEvent> fetchEventForCalender(@QueryParam("start") String startDateStr, @QueryParam("end") String endDateStr) {  
         
-        // TODO ファセットに紐づくイベントの取得
+        // TODO 日付形式のパラメータでなかった場合、(変換した時にparseExceptionが出た時にはBadRequestを返却する
         
-        return responseList;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = null;
+        Date endDate = null;
+        try {
+            startDate = formatter.parse(startDateStr);
+            endDate = formatter.parse(endDateStr);
+        } catch (ParseException ex) {
+            // 日付型に合致しないデータだった場合、リクエスト不備として返却する
+            throw new BadRequestException(ex);
+        }
+        return restCalenderEventLogic.fetchCalenderEvent(startDate, endDate);
+//        List<RestCalenderEvent> restCalnderEventList = ;
+//        for (int index = 0; index <= restCalnderEventList.size(); index++) {
+//            RestCalenderEvent item = restCalnderEventList.get(index);
+//             if (item.getStart().compareTo());
+//        }
     }
     
     /**
@@ -134,7 +121,7 @@ public class EventResource {
     @Path("0.1/events")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @LogInterceptor
-//    @RestAuth TODO うまくフィルターが働かず、全リソースに適応されてしまう
+//    @RestAuth TODO うまくフィルターが働かず、全リソースに適応されてしまうやむなしで実行前チェックメソッドを手動呼び出し
     public List<RestEvent> fetchAllEvents(@Context HttpHeaders header) {
         // ヘッダから認可情報の取得
         String rotNumStr = header.getHeaderString("rotNum");

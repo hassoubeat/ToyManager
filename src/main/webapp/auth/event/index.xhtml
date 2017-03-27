@@ -16,14 +16,17 @@
                     <f:viewAction action="#{eventBean.bookmarkable()}" onPostback="false"></f:viewAction>
                 </f:metadata>
                 <div class ="loadingWrap">
-                    <!-- ローディング画像 -->
+                     ローディング画像 
                     <img src="#{appPropetiesBean.HOST_PATH}ToyManager/resources/img/loading.gif"/>
                 </div>
                 <div class="row">
                     <div class="col-xs-3 toy-side-menu">
                         <ui:include src="/auth/template/toyMenu.xhtml"/>
                     </div>
-                    <div class="col-xs-9">    
+                    <div class="col-xs-9">
+<!--                        <div class="event-loading">
+                            <img src="#{appPropetiesBean.HOST_PATH}ToyManager/resources/img/calender_loading.gif"/>
+                        </div>-->
                         <div id="calendar"></div>
                         <p/>
                         <div class="well">
@@ -324,8 +327,10 @@
                                     }
                                     
                                 });
+                                // ローディング画像の非表示
+                                $(".loadingWrap").fadeOut();
                             },
-                            events: "${appPropetiesBean.HOST_PATH}ToyManager/webapi/events/0.1/callenderEvents",
+                            events: "${appPropetiesBean.HOST_PATH}ToyManager/webapi/events/0.1/calenderEvents",
                             //日付ドラッグ時処理
                             select: function(start, end) {
                                 // Toyが未選択なら、エラーのトースター表示
@@ -380,22 +385,31 @@
                                     });
                                 }                                
                             },
-                            eventDragStop: function(event, jsEvent, ui, view ){ //カレンダー上にドラッグし終わったときに実行
-                                console.log("ドラッグ:" + event.start.format("YYYY/MM/DD HH:mm:ss"));
-                                console.log("ドラッグ:" + event.end.format("YYYY/MM/DD HH:mm:ss"));
-                                console.log("ドラッグ:" + view.intervalStart.format("YYYY/MM/DD HH:mm:ss"));
-                                console.log("ドラッグ:" + view.intervalEnd.format("YYYY/MM/DD HH:mm:ss"));
-//                                console.log("ドラッグ2:" + start.format("YYYY/MM/DD HH:mm:ss"));
-                                // TODO
-                                // primefacesでドラッグ時の処理をBean側に定義する。
-                                // エンドが設定されている
-                            }
+                            loading: function( isLoading, view ) {
+                                if(isLoading) {
+                                    // ローディング画像の表示
+                                    $(".loadingWrap").fadeIn();
+                                } else {
+                                    // ローディング画像の非表示
+                                    $(".loadingWrap").fadeOut();
+                                }
+                            },
+//                            eventDragStop: function(event, jsEvent, ui, view ){ //カレンダー上にドラッグし終わったときに実行
+//                                console.log("ドラッグ:" + event.start.format("YYYY/MM/DD HH:mm:ss"));
+//                                console.log("ドラッグ:" + event.end.format("YYYY/MM/DD HH:mm:ss"));
+//                                console.log("ドラッグ:" + view.intervalStart.format("YYYY/MM/DD HH:mm:ss"));
+//                                console.log("ドラッグ:" + view.intervalEnd.format("YYYY/MM/DD HH:mm:ss"));
+////                                console.log("ドラッグ2:" + start.format("YYYY/MM/DD HH:mm:ss"));
+//                                // TODO
+//                                // primefacesでドラッグ時の処理をBean側に定義する。
+//                                // エンドが設定されている
+//                            }
                         });
                         
                         eventFormSetup();
                         
                         // ローディング画像の非表示
-                        $(".loadingWrap").fadeOut();
+//                        $(".loadingWrap").fadeOut();
                     });
                     
                     // 入力フォームの値をクリアする

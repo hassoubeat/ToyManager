@@ -12,7 +12,7 @@ import lombok.Setter;
  * @author hassoubeat
  */
 @XmlRootElement
-public class RestCallenderEvent {
+public class RestCalenderEvent {
     
     @Getter
     @Setter
@@ -43,9 +43,16 @@ public class RestCallenderEvent {
     private List<String> className;
     
 
-    public RestCallenderEvent() {
+    public RestCalenderEvent() {
         this.borderColor = "#b1b1b1";
     }
+
+    @Override
+    public String toString() {
+        return "RestCallenderEvent{" + "id=" + id + ", title=" + title + ", start=" + start + ", end=" + end + ", color=" + color + ", borderColor=" + borderColor + ", className=" + className + '}';
+    }
+    
+    
 
     
     

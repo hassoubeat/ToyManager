@@ -5,19 +5,21 @@
  */
 package com.hassoubeat.toymanager.rest.resources.logic;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 
 
 
 /**
- *
+ * RestEventに関するLogicクラス
  * @author hassoubeat
  */
 
-@RequestScoped
+@Stateless
 public class RestEventLogic extends AbstractRestLogic {
 
     public RestEventLogic() {
     }
+    
+    
     
 }
