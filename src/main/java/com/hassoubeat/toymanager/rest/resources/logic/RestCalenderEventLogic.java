@@ -10,7 +10,9 @@ import com.hassoubeat.toymanager.rest.resources.entity.RestCalenderEvent;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.dao.EventFacade;
 import com.hassoubeat.toymanager.service.dao.ToyFacade;
+import com.hassoubeat.toymanager.service.entity.Account;
 import com.hassoubeat.toymanager.service.entity.Event;
+import com.hassoubeat.toymanager.service.entity.Toy;
 import com.hassoubeat.toymanager.service.exception.ToyManagerException;
 import com.hassoubeat.toymanager.util.BitLogic;
 import com.hassoubeat.toymanager.util.UtilLogic;
@@ -73,20 +75,22 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
      */
     public List<RestCalenderEvent> fetchCalenderEvent (Date startDate, Date endDate) {
         List<RestCalenderEvent> responseList = new ArrayList();
+        Toy targetToy = toyFacade.find(sessionBean.getSelectedToyId());
         // Toyのイベント
-        responseList.addAll(fetchToyEvent(startDate, endDate));
+        responseList.addAll(fetchToyEvent(targetToy, startDate, endDate));
         // アカウントのイベント
-        responseList.addAll(fetchAccountEvent(startDate, endDate));
+        responseList.addAll(fetchAccountEvent(targetToy.getAccountId(), startDate, endDate));
         // TODO ファセットのイベント
         
         return responseList;
     }
     
-    private List<RestCalenderEvent> fetchToyEvent(Date startDate, Date endDate) {
+    private List<RestCalenderEvent> fetchToyEvent(Toy targetToy, Date startDate, Date endDate) {
         List<Event> convertList = new ArrayList();
         List<RestCalenderEvent> responseList = new ArrayList();
-        convertList.addAll(eventFacade.findStandardEventByToyId(toyFacade.find(sessionBean.getSelectedToyId()), startDate, endDate));
-        convertList.addAll(eventFacade.findRoopEventByToyId(toyFacade.find(sessionBean.getSelectedToyId()), startDate));
+        
+        convertList.addAll(eventFacade.findStandardEventByToyId(targetToy, startDate, endDate));
+        convertList.addAll(eventFacade.findRoopEventByToyId(targetToy, startDate));
         for(Event toyEvent : convertList) {
             if (!bitLogic.bitCheck(toyEvent.getRoop(), erpConst.IS_ROOP) || toyEvent.getRoopEndDate() == null) {
                 // ループなしの場合(ループ終了日時が設定されていない時も同様
@@ -112,17 +116,17 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
             }
         }
         
-        for (RestCalenderEvent item: responseList) {
-            logger.debug(item.toString());
-        }
+//        for (RestCalenderEvent item: responseList) {
+//            logger.debug(item.toString());
+//        }
         return responseList;
     }
     
-    private List<RestCalenderEvent> fetchAccountEvent(Date startDate, Date endDate) {
+    private List<RestCalenderEvent> fetchAccountEvent(Account targetAccount, Date startDate, Date endDate) {
         List<Event> convertList = new ArrayList();
         List<RestCalenderEvent> responseList = new ArrayList();
-        convertList.addAll(eventFacade.findStandardEventByAccountId(accountFacade.find(sessionBean.getId()), startDate, endDate));
-        convertList.addAll(eventFacade.findRoopEventByAccountId(accountFacade.find(sessionBean.getId()), startDate));
+        convertList.addAll(eventFacade.findStandardEventByAccountId(targetAccount, startDate, endDate));
+        convertList.addAll(eventFacade.findRoopEventByAccountId(targetAccount, startDate));
         for(Event accountEvent : convertList) {
             if (!bitLogic.bitCheck(accountEvent.getRoop(), erpConst.IS_ROOP) || accountEvent.getRoopEndDate() == null) {
                 // ループなしの場合(ループ終了日時が設定されていない時も同様
@@ -148,9 +152,9 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
             }
         }
         
-        for (RestCalenderEvent item: responseList) {
-            logger.debug(item.toString());
-        }
+//        for (RestCalenderEvent item: responseList) {
+//            logger.debug(item.toString());
+//        }
         return responseList;
     }
     

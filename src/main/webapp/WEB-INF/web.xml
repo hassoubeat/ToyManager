@@ -21,6 +21,10 @@
         <session-timeout>
             30
         </session-timeout>
+        <!-- cookieを利用する(セッションIDのURL埋めこみを利用しない) -->
+        <tracking-mode>
+            COOKIE
+        </tracking-mode>
     </session-config>
     <welcome-file-list>
         <welcome-file>faces/login.xhtml</welcome-file>

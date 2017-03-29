@@ -46,6 +46,8 @@ public abstract class AbstractRestLogic {
         
         Toy targetToy = new Toy();
         
+        // TODO Toyのバージョンアップデート
+        
         try {
             int rotNum = Integer.parseInt(rotNumStr);
             targetToy = toyFacade.findByRotNumber(rotNum);
