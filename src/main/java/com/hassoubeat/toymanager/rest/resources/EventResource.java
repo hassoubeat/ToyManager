@@ -16,7 +16,6 @@ import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.dao.EventFacade;
 import com.hassoubeat.toymanager.service.dao.ToyFacade;
 import com.hassoubeat.toymanager.service.dao.ToyWebapiAccessFilterFacade;
-import com.hassoubeat.toymanager.service.entity.Event;
 import com.hassoubeat.toymanager.service.entity.Toy;
 import com.hassoubeat.toymanager.util.BitLogic;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
@@ -124,7 +123,7 @@ public class EventResource {
     public List<RestEvent> fetchAllEvents(@Context HttpHeaders header, @QueryParam("start") String startDateStr, @QueryParam("end") String endDateStr) {
         
         // 日付形式のパラメータでなかった場合、(変換した時にparseExceptionが出た時にはBadRequestを返却する
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fetchStartDate = null;
         Date fetchEndDate = null;
         try {

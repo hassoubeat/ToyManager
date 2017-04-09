@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
+    <body>
+        <ui:composition template="/auth/template/template.xhtml">
+            <ui:define name="content">
+                <f:metadata>
+                    <f:viewAction action="#{facetManagementBean.bookmarkable()}" onPostback="false"></f:viewAction>
+                </f:metadata>
+                <div class="container">
+                    <div class="well">
+                        <div class="container">
+                            <h2>ファセット編集機能へようこそ！</h2>
+                            <p>ファセットの新規作成/アップデート/削除を行うことができます。</p>
+                            <p>
+                                <a class="btn btn-success" jsf:outcome="/auth/management/facet/create">ファセットの新規作成</a>
+                                <a class="btn btn-primary" jsf:outcome="/auth/management/index" style="margin-left: 5px;">ToyManager管理画面トップに戻る</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <table id="facet-table" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>No.</th><th>ID</th><th>Name</th><th>FacetVersion</th><th>Release</th><th>Deleted</th><th>CreateDate</th><th>EditDate</th><th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ui:repeat var="item" value="#{facetManagementBean.facetList}" varStatus="status">
+                            <tr>
+                                <td>#{status.index + 1}</td>
+                                <td>#{item.id}</td>
+                                <td>#{item.name}</td>
+                                <td>#{item.facetVersion}</td>
+                                <td>
+                                    <ui:fragment rendered="#{item.isRelease}">
+                                        <span class="label label-success">Released</span>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{!item.isRelease}">
+                                        <span class="label label-warning">Not Released</span>
+                                    </ui:fragment>
+                                </td>
+                                <td>
+                                    <ui:fragment rendered="#{item.isDeleted}">
+                                        <span class="label label-danger">Deleted</span>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{!item.isDeleted}">
+                                        <span class="label label-success">Not Deleted</span>
+                                    </ui:fragment>
+                                </td>
+                                <td>
+                                    <h:outputText value="#{item.createDate}">
+                                        <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss"/>
+                                    </h:outputText>
+                                </td>
+                                <td>
+                                    <h:outputText value="#{item.editDate}">
+                                        <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss"/>
+                                    </h:outputText>
+                                </td>
+                                <td>
+                                    <a class="btn-sm btn-success" jsf:outcome="/auth/management/facet/edit?id=#{item.id}">edit</a>
+                                </td>
+                            </tr>
+                        </ui:repeat>
+                    </tbody>
+                </table>
+            </ui:define>
+            <ui:define name="css">
+                <!-- jQueryDataTables CSS -->
+                <link jsf:library="css" jsf:name="jquery.dataTables.css"/>
+                <!-- jQueryToaster CSS -->
+                <link jsf:library="css" jsf:name="jquery.toast.css"/>
+            </ui:define>
+            <ui:define name="js">
+                <!-- jQueryDataTables JS -->
+                <script jsf:library="js" jsf:name="jquery.dataTables.js"/>
+                <!-- jQueryToaster JS -->
+                <script jsf:library="js" jsf:name="jquery.toast.js"/>
+                <script type="text/javascript">
+                    $(window).load(function () {
+                        // ナビゲーションバーのactiveを変更
+                        $("#management").addClass("active");
+                        
+                        // DataTableの日本語化
+                        $.extend( $.fn.dataTable.defaults, { 
+                            language: {
+                                url: "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Japanese.json"
+                            } 
+                        }); 
+                        
+                        // データテーブルの適応
+                        $("#facet-table").dataTable();
+                        
+                        if (#{facesContext.getMessageList('toy-account-tying-cancel').size() > 0}) {
+                            // Toyのアカウント紐付け解除後にリダイレクトで遷移してきた時、紐付け完了メッセージを表示する
+                            $.toast({
+                                heading: "Toyのアカウント紐付けを解除しました。",
+                                showHideTransition: "slide",
+                                icon: "info",
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                        }
+                    });
+                </script>
+            </ui:define>
+        </ui:composition>        
+    </body>
+</html>
+

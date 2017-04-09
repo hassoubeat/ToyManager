@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
+    <body>
+        <ui:composition template="/auth/template/template.xhtml">
+            <ui:define name="content">
+                <f:metadata>
+                    <f:viewAction action="#{facetManagementCreateBean.bookmarkable()}" onPostback="false"></f:viewAction>
+                </f:metadata>
+                <div class="container">
+                    <div class="well">
+                        <h3>ファセットの新規登録</h3>
+                        <a class="btn-sm btn-primary" jsf:outcome="/auth/management/facet/index" style="margin-bottom: 5px;">ファセット一覧に戻る</a>
+                    </div>
+                    
+                    <form jsf:id="facet-form" enctype="multipart/form-data">
+                        <table class="table table-condensed ">
+                            <tbody>
+                                <tr>
+                                    <th>* ファセット名 <span id="facet-name-help" class="glyphicon glyphicon-question-sign"/></th>
+                                    <td>
+                                        <input type="text" id="facet-name" jsf:id="facet-name" class="form-control" placeholder="ファセット名を【50文字以内】で入力してください。" jsf:value="#{facetManagementCreateBean.facet.name}"/>
+                                        <h:message class="label label-danger" for="facet-name"/><br/>
+                                        <span class="label label-warning">※ ファセット名は登録後、変更することができません。</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>* ファセットバージョン <span id="facet-version-help" class="glyphicon glyphicon-question-sign"/></th>
+                                    <td>
+                                        <input type="number" step="0.1" id="facet-version" jsf:id="facet-version" class="form-control" placeholder="ファセットバージョンを入力してください。" jsf:value="#{facetManagementCreateBean.facet.facetVersion}"/>
+                                        <h:message class="label label-danger" for="facet-version"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>ファセットの概要 <span id="facet-note-help" class="glyphicon glyphicon-question-sign"/></th>
+                                    <td>
+                                        <textarea id="facet-note" class="form-control" jsf:id="facet-note" placeholder="ファセットの概要を【200文字以内】で入力してください。" jsf:value="#{facetManagementCreateBean.facet.note}"/>
+                                        <h:message class="label label-danger" for="facet-note"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>ファセットの要件 <span id="facet-requirement-help" class="glyphicon glyphicon-question-sign"/></th>
+                                    <td>
+                                        <textarea id="facet-requirement" class="form-control" jsf:id="facet-requirement" placeholder="ファセットの要件を【600文字以内】で入力してください。" jsf:value="#{facetManagementCreateBean.facet.requirement}"/>
+                                        <h:message class="label label-danger" for="facet-requirement"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>オリジナルファセットのアップロード <span id="facet-program-upload-help" class="glyphicon glyphicon-question-sign"/><br/><a href="#">※ オリジナルファセット作成のルール</a></th>
+                                    <td>
+                                        <input type="file" accept=".jar" id="facet-program-upload" jsf:id="facet-program-upload" jsf:value="#{facetManagementCreateBean.facetProgram}"/><p/>
+                                        <h:message class="label label-danger" for="facet-program-upload"/><br/>
+                                        <span class="label label-warning">※ アップロードするファイル名は上項目の【ファセット名】.jarとなるように指定してください。</span>     
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <h:commandButton class="btn btn-primary" id="add-facet" action="#{facetManagementCreateBean.create()}" value="ファセットの登録" style="margin-right: 5px;"/>
+                    </form>
+                </div>
+                
+                
+            </ui:define>
+            <ui:define name="css">
+                <!-- jQueryToaster CSS -->
+                <link jsf:library="css" jsf:name="jquery.toast.css"/>
+            </ui:define>
+            <ui:define name="js">
+                <!-- jQueryToaster JS -->
+                <script jsf:library="js" jsf:name="jquery.toast.js"/>
+                <!-- jQueryBalloon JS -->
+                <script jsf:library="js" jsf:name="jquery.balloon.js"/>
+                <script type="text/javascript">
+                    $(window).load(function () {
+                        // ナビゲーションバーのactiveを変更
+                        $("#management").addClass("active");
+                        
+                        $("#facet-name-help").balloon({
+                            contents:"Toyのカスタマイズ画面で表示されるファセット名の名前です"
+                        });
+                        
+                        $("#facet-version-help").balloon({
+                            contents:"Toyのバージョンです"
+                        });
+                        
+                        $("#facet-note-help").balloon({
+                            contents:"Toyのカスタマイズ画面で表示されるファセットの概要です"
+                        });
+                        
+                        $("#facet-requirement-help").balloon({
+                            contents:"Toyのカスタマイズ画面で表示されるファセットの要件です(ネットワーク接続の有無などの非システム要件を記載してください)"
+                        });
+                        
+                        $("#facet-program-upload-help").balloon({
+                            contents:"独自に開発したプログラムを登録します(本項目を設定しなかった場合は、後に設定するファセットイベントで登録した内容がToyTalkされる仕様となります。)"
+                        });
+                    });
+                </script>
+            </ui:define>
+        </ui:composition>        
+    </body>
+</html>
+

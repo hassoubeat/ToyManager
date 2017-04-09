@@ -7,7 +7,6 @@ package com.hassoubeat.toymanager.service.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,11 +17,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -30,11 +29,13 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "toy_facet")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "ToyFacet.findAll", query = "SELECT t FROM ToyFacet t")
     , @NamedQuery(name = "ToyFacet.findById", query = "SELECT t FROM ToyFacet t WHERE t.id = :id")
     , @NamedQuery(name = "ToyFacet.findByCreateDate", query = "SELECT t FROM ToyFacet t WHERE t.createDate = :createDate")
-    , @NamedQuery(name = "ToyFacet.findByEditDate", query = "SELECT t FROM ToyFacet t WHERE t.editDate = :editDate")})
+    , @NamedQuery(name = "ToyFacet.findByEditDate", query = "SELECT t FROM ToyFacet t WHERE t.editDate = :editDate")
+    , @NamedQuery(name = "ToyFacet.findByFacetVersion", query = "SELECT t FROM ToyFacet t WHERE t.facetVersion = :facetVersion")})
 public class ToyFacet implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -53,14 +54,16 @@ public class ToyFacet implements Serializable {
     @Column(name = "edit_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date editDate;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "facet_version")
+    private double facetVersion;
     @JoinColumn(name = "facet_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Facet facetId;
     @JoinColumn(name = "toy_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Toy toyId;
-    @OneToMany(mappedBy = "toyFacetId")
-    private List<Event> eventList;
 
     public ToyFacet() {
     }
@@ -69,10 +72,11 @@ public class ToyFacet implements Serializable {
         this.id = id;
     }
 
-    public ToyFacet(Integer id, Date createDate, Date editDate) {
+    public ToyFacet(Integer id, Date createDate, Date editDate, double facetVersion) {
         this.id = id;
         this.createDate = createDate;
         this.editDate = editDate;
+        this.facetVersion = facetVersion;
     }
 
     public Integer getId() {
@@ -99,6 +103,14 @@ public class ToyFacet implements Serializable {
         this.editDate = editDate;
     }
 
+    public double getFacetVersion() {
+        return facetVersion;
+    }
+
+    public void setFacetVersion(double facetVersion) {
+        this.facetVersion = facetVersion;
+    }
+
     public Facet getFacetId() {
         return facetId;
     }
@@ -113,14 +125,6 @@ public class ToyFacet implements Serializable {
 
     public void setToyId(Toy toyId) {
         this.toyId = toyId;
-    }
-
-    public List<Event> getEventList() {
-        return eventList;
-    }
-
-    public void setEventList(List<Event> eventList) {
-        this.eventList = eventList;
     }
 
     @Override
@@ -147,5 +151,5 @@ public class ToyFacet implements Serializable {
     public String toString() {
         return "com.hassoubeat.toymanager.service.entity.ToyFacet[ id=" + id + " ]";
     }
-
+    
 }

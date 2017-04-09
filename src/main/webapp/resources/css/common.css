@@ -44,6 +44,12 @@
     border-color: #ccc;
 }
 
+/* ToyMenu(ToyManager管理) */
+.toy-menu-management {
+    background-color: #F3F781;
+    border-color: #ccc;
+}
+
 /* Toy選択状態 */
 .toy-selected {
     background-color: #9acfea;

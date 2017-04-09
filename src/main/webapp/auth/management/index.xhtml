@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
+    <body>
+        <ui:composition template="/auth/template/template.xhtml">
+            <ui:define name="content">
+                <f:metadata>
+                    <f:viewAction action="#{managementBean.bookmarkable()}" onPostback="false"></f:viewAction>
+                </f:metadata>
+                <div class="row">
+                    <div class="container">
+                        <div class="jumbotron">
+                            <div class="container">
+                                <h2>ToyManager管理機能へようこそ！</h2>
+                                <p>ファセットの編集などが行えます。<br/>トップに戻る場合はこちらから</p>
+                                <p><a class="btn-lg btn-primary" jsf:outcome="/auth/index">トップに戻る</a></p>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <b>ファセットの編集</b>
+                                </div>
+                                <div class="panel-body">
+                                    ファセットの新規登録/アップデート/削除などが行なえます。<p/>
+                                    <a class="btn btn-primary" id="toy-management-menu-facet-edit" jsf:outcome="/auth/management/facet/index" >ファセット編集画面にアクセスする</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+            <ui:define name="css">
+                <!-- jQueryToaster CSS -->
+                <link jsf:library="css" jsf:name="jquery.toast.css"/>
+            </ui:define>
+            <ui:define name="js">
+                <!-- jQueryToaster JS -->
+                <script jsf:library="js" jsf:name="jquery.toast.js"/>
+                <script type="text/javascript">
+                    $(window).load(function () {
+                        // ナビゲーションバーのactiveを変更
+                        $("#management").addClass("active");
+                        
+                        if (#{facesContext.getMessageList('toy-account-tying-cancel').size() > 0}) {
+                            // Toyのアカウント紐付け解除後にリダイレクトで遷移してきた時、紐付け完了メッセージを表示する
+                            $.toast({
+                                heading: "Toyのアカウント紐付けを解除しました。",
+                                showHideTransition: "slide",
+                                icon: "info",
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                        }
+                    });
+                </script>
+            </ui:define>
+        </ui:composition>        
+    </body>
+</html>
+

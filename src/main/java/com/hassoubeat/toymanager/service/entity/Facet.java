@@ -15,16 +15,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,15 +34,23 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "facet")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Facet.findAll", query = "SELECT f FROM Facet f")
     , @NamedQuery(name = "Facet.findById", query = "SELECT f FROM Facet f WHERE f.id = :id")
     , @NamedQuery(name = "Facet.findByName", query = "SELECT f FROM Facet f WHERE f.name = :name")
+    , @NamedQuery(name = "Facet.findByFacetVersion", query = "SELECT f FROM Facet f WHERE f.facetVersion = :facetVersion")
     , @NamedQuery(name = "Facet.findByNote", query = "SELECT f FROM Facet f WHERE f.note = :note")
     , @NamedQuery(name = "Facet.findByRequirement", query = "SELECT f FROM Facet f WHERE f.requirement = :requirement")
+    , @NamedQuery(name = "Facet.findByProgramPath", query = "SELECT f FROM Facet f WHERE f.programPath = :programPath")
+    , @NamedQuery(name = "Facet.findByIsRelease", query = "SELECT f FROM Facet f WHERE f.isRelease = :isRelease")
+    , @NamedQuery(name = "Facet.findByIsDeleted", query = "SELECT f FROM Facet f WHERE f.isDeleted = :isDeleted")
     , @NamedQuery(name = "Facet.findByCreateDate", query = "SELECT f FROM Facet f WHERE f.createDate = :createDate")
     , @NamedQuery(name = "Facet.findByEditDate", query = "SELECT f FROM Facet f WHERE f.editDate = :editDate")})
 public class Facet implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "facetId")
+    private List<ToyFacet> toyFacetList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -53,12 +63,27 @@ public class Facet implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "name")
     private String name;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "facet_version")
+    private double facetVersion;
     @Size(max = 200)
     @Column(name = "note")
     private String note;
     @Size(max = 600)
     @Column(name = "requirement")
     private String requirement;
+    @Size(max = 500)
+    @Column(name = "program_path")
+    private String programPath;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "is_release")
+    private boolean isRelease;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
     @Basic(optional = false)
     @NotNull
     @Column(name = "create_date")
@@ -71,19 +96,6 @@ public class Facet implements Serializable {
     private Date editDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "facetId")
     private List<FacetEvent> facetEventList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "facetId")
-    private List<ToyFacet> toyFacetList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "facetId")
-    private List<FacetProgram> facetProgramList;
-    @JoinColumn(name = "facet_event_id", referencedColumnName = "id")
-    @ManyToOne
-    private FacetEvent facetEventId;
-    @JoinColumn(name = "facet_type_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private FacetType facetTypeId;
-    @JoinColumn(name = "facet_program_id", referencedColumnName = "id")
-    @ManyToOne
-    private FacetProgram facetProgramId;
 
     public Facet() {
     }
@@ -92,11 +104,33 @@ public class Facet implements Serializable {
         this.id = id;
     }
 
-    public Facet(Integer id, String name, Date createDate, Date editDate) {
+    public Facet(Integer id, String name, double facetVersion, boolean isRelease, boolean isDeleted, Date createDate, Date editDate) {
         this.id = id;
         this.name = name;
+        this.facetVersion = facetVersion;
+        this.isRelease = isRelease;
+        this.isDeleted = isDeleted;
         this.createDate = createDate;
         this.editDate = editDate;
+    }
+    
+    @PrePersist
+    public void prePersist(){
+        // 公開フラグを入力する
+        this.setIsRelease(false);
+        // 削除フラグを入力する
+        this.setIsDeleted(false);
+        // 登録日時と更新日時に現在日時を設定する
+        Date now = new Date();
+        this.setCreateDate(now);
+        this.setEditDate(now);
+    }
+    
+    @PreUpdate
+    public void preUpdate(){
+        // 更新日時を更新する
+        Date now = new Date();
+        this.setEditDate(now);
     }
 
     public Integer getId() {
@@ -115,6 +149,14 @@ public class Facet implements Serializable {
         this.name = name;
     }
 
+    public double getFacetVersion() {
+        return facetVersion;
+    }
+
+    public void setFacetVersion(double facetVersion) {
+        this.facetVersion = facetVersion;
+    }
+
     public String getNote() {
         return note;
     }
@@ -129,6 +171,30 @@ public class Facet implements Serializable {
 
     public void setRequirement(String requirement) {
         this.requirement = requirement;
+    }
+
+    public String getProgramPath() {
+        return programPath;
+    }
+
+    public void setProgramPath(String programPath) {
+        this.programPath = programPath;
+    }
+
+    public boolean getIsRelease() {
+        return isRelease;
+    }
+
+    public void setIsRelease(boolean isRelease) {
+        this.isRelease = isRelease;
+    }
+
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public Date getCreateDate() {
@@ -147,52 +213,13 @@ public class Facet implements Serializable {
         this.editDate = editDate;
     }
 
+    @XmlTransient
     public List<FacetEvent> getFacetEventList() {
         return facetEventList;
     }
 
     public void setFacetEventList(List<FacetEvent> facetEventList) {
         this.facetEventList = facetEventList;
-    }
-
-    public List<ToyFacet> getToyFacetList() {
-        return toyFacetList;
-    }
-
-    public void setToyFacetList(List<ToyFacet> toyFacetList) {
-        this.toyFacetList = toyFacetList;
-    }
-
-    public List<FacetProgram> getFacetProgramList() {
-        return facetProgramList;
-    }
-
-    public void setFacetProgramList(List<FacetProgram> facetProgramList) {
-        this.facetProgramList = facetProgramList;
-    }
-
-    public FacetEvent getFacetEventId() {
-        return facetEventId;
-    }
-
-    public void setFacetEventId(FacetEvent facetEventId) {
-        this.facetEventId = facetEventId;
-    }
-
-    public FacetType getFacetTypeId() {
-        return facetTypeId;
-    }
-
-    public void setFacetTypeId(FacetType facetTypeId) {
-        this.facetTypeId = facetTypeId;
-    }
-
-    public FacetProgram getFacetProgramId() {
-        return facetProgramId;
-    }
-
-    public void setFacetProgramId(FacetProgram facetProgramId) {
-        this.facetProgramId = facetProgramId;
     }
 
     @Override
@@ -218,6 +245,15 @@ public class Facet implements Serializable {
     @Override
     public String toString() {
         return "com.hassoubeat.toymanager.service.entity.Facet[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public List<ToyFacet> getToyFacetList() {
+        return toyFacetList;
+    }
+
+    public void setToyFacetList(List<ToyFacet> toyFacetList) {
+        this.toyFacetList = toyFacetList;
     }
     
 }

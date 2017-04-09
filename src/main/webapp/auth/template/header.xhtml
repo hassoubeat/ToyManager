@@ -33,6 +33,9 @@
                                     <li><a href="" data-toggle="modal" data-target="#logout-modal" ><span class="glyphicon glyphicon-log-out"/> ログアウト</a></li>
                                 </ul>
                             </li>
+                            <ui:fragment rendered="#{sessionBean.isManagerRole()}">
+                                <li id="management" role="presentation"><a jsf:outcome="/auth/management/index"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 管理機能</a></li>
+                            </ui:fragment>
                           </ul>
                         </nav>
                     </div>

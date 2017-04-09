@@ -53,6 +53,17 @@
                                 </div>
                             </div>
                         </div>
+                        <ui:fragment rendered="#{sessionBean.isManagerRole()}">
+                            <div class="col-xs-6">
+                                <div class="panel toy-menu-management" id="view-status">
+                                    <div class="panel-body">
+                                        <h2><span class="glyphicon glyphicon-cog"/> ToyManager管理機能</h2>
+                                        <h3 class="small">ToyManagerの管理機能にアクセスします。</h3>
+                                        <a class="btn btn-primary" id="toy-menu-status" jsf:outcome="/auth/management/index">管理機能にアクセスする</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </ui:fragment>
                     </div>
                 </div>
             </ui:define>

@@ -7,7 +7,6 @@ package com.hassoubeat.toymanager.service.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,12 +17,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -31,6 +32,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "facet_event")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "FacetEvent.findAll", query = "SELECT f FROM FacetEvent f")
     , @NamedQuery(name = "FacetEvent.findById", query = "SELECT f FROM FacetEvent f WHERE f.id = :id")
@@ -42,7 +44,8 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "FacetEvent.findByColorCode", query = "SELECT f FROM FacetEvent f WHERE f.colorCode = :colorCode")
     , @NamedQuery(name = "FacetEvent.findByRoop", query = "SELECT f FROM FacetEvent f WHERE f.roop = :roop")
     , @NamedQuery(name = "FacetEvent.findByRoopEndDate", query = "SELECT f FROM FacetEvent f WHERE f.roopEndDate = :roopEndDate")
-    , @NamedQuery(name = "FacetEvent.findByCrontab", query = "SELECT f FROM FacetEvent f WHERE f.crontab = :crontab")
+    , @NamedQuery(name = "FacetEvent.findByIsTalking", query = "SELECT f FROM FacetEvent f WHERE f.isTalking = :isTalking")
+    , @NamedQuery(name = "FacetEvent.findByIsDeleted", query = "SELECT f FROM FacetEvent f WHERE f.isDeleted = :isDeleted")
     , @NamedQuery(name = "FacetEvent.findByCreateDate", query = "SELECT f FROM FacetEvent f WHERE f.createDate = :createDate")
     , @NamedQuery(name = "FacetEvent.findByEditDate", query = "SELECT f FROM FacetEvent f WHERE f.editDate = :editDate")})
 public class FacetEvent implements Serializable {
@@ -80,9 +83,14 @@ public class FacetEvent implements Serializable {
     @Column(name = "roop_end_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date roopEndDate;
-    @Size(max = 100)
-    @Column(name = "crontab")
-    private String crontab;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "is_talking")
+    private boolean isTalking;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
     @Basic(optional = false)
     @NotNull
     @Column(name = "create_date")
@@ -96,8 +104,6 @@ public class FacetEvent implements Serializable {
     @JoinColumn(name = "facet_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Facet facetId;
-    @OneToMany(mappedBy = "facetEventId")
-    private List<Facet> facetList;
 
     public FacetEvent() {
     }
@@ -106,12 +112,31 @@ public class FacetEvent implements Serializable {
         this.id = id;
     }
 
-    public FacetEvent(Integer id, String name, Date startDate, Date createDate, Date editDate) {
+    public FacetEvent(Integer id, String name, Date startDate, boolean isTalking, boolean isDeleted, Date createDate, Date editDate) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
+        this.isTalking = isTalking;
+        this.isDeleted = isDeleted;
         this.createDate = createDate;
         this.editDate = editDate;
+    }
+    
+    @PrePersist
+    public void prePersist(){
+        // 削除フラグを入力する
+        this.setIsDeleted(false);
+        // 登録日時と更新日時に現在日時を設定する
+        Date now = new Date();
+        this.setCreateDate(now);
+        this.setEditDate(now);
+    }
+    
+    @PreUpdate
+    public void preUpdate(){
+        // 更新日時を更新する
+        Date now = new Date();
+        this.setEditDate(now);
     }
 
     public Integer getId() {
@@ -186,12 +211,20 @@ public class FacetEvent implements Serializable {
         this.roopEndDate = roopEndDate;
     }
 
-    public String getCrontab() {
-        return crontab;
+    public boolean getIsTalking() {
+        return isTalking;
     }
 
-    public void setCrontab(String crontab) {
-        this.crontab = crontab;
+    public void setIsTalking(boolean isTalking) {
+        this.isTalking = isTalking;
+    }
+
+    public boolean getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public Date getCreateDate() {
@@ -216,14 +249,6 @@ public class FacetEvent implements Serializable {
 
     public void setFacetId(Facet facetId) {
         this.facetId = facetId;
-    }
-
-    public List<Facet> getFacetList() {
-        return facetList;
-    }
-
-    public void setFacetList(List<Facet> facetList) {
-        this.facetList = facetList;
     }
 
     @Override

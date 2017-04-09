@@ -32,6 +32,14 @@ public enum MessageConst {
     SUCCESS_TOY_EDIT("MIR_01000019", "Toyの更新が完了しました。"),
     SUCCESS_ACCESS_FILTER_APPROVAL("MIR_01000020", "アクセスフィルターを承認しました。"),
     SUCCESS_ACCESS_FILTER_REJECT("MIR_01000021", "アクセスフィルターを拒否しました。"),
+    SUCCESS_FACET_CREATE("MIR_01000022", "ファセットの登録が完了しました。"),
+    SUCCESS_FACET_EDIT("MIR_01000023", "ファセットの変更が完了しました。"),
+    SUCCESS_FACET_REMOVE("MIR_01000024", "ファセットの削除が完了しました。"),
+    SUCCESS_S3_OBJECT_UPLOAD("MIR_01000025", "AmazonS3へオブジェクトをアップロードしました。"),
+    SUCCESS_S3_OBJECT_REMOVE("MIR_01000026", "AmazonS3のオブジェクトを削除しました。"),
+    SUCCESS_FACET_EVENT_CREATE("MIR_01000027", "ファセットイベントの登録が完了しました。"),
+    SUCCESS_FACET_EVENT_EDIT("MIR_01000028", "ファセットイベントの変更が完了しました。"),
+    SUCCESS_FACET_EVENT_REMOVE("MIR_01000029", "ファセットイベントの削除が完了しました。"),
     
     // MER(ToyManager側で発生する想定内エラー系)
     ALREADY_REGISTED_USER("MER_01000001", "入力したメールアドレスは既に登録されています。"),
@@ -50,6 +58,9 @@ public enum MessageConst {
     DATE_CONTRADICTION("MER_10000014", "終了日付より開始日付の方が過去の値が設定されています。"),
     INVALID_ROT_NUMBER_OR_PASSWORD("MER_10000015", "入力されたロットナンバー/パスワードのどちらかが誤っています。"),
     ALREADY_TYING_ROT_NUMBER("MER_10000016", "入力されたロットナンバーは既に別のアカウントに登録されています。"),
+    S3_FILE_UPLOAD_FAILED("MER_10000017", "AmazonS3へのファイルアップロードに失敗しました。"),
+    MISMATCH_FACET_NAME("MER_01000018", "ファセット名とファセットプログラムの名前が一致しません。"),
+    ALREADY_USED_FACET_NAME("MER_01000019", "ファセット名は既に利用されています。"),
     
     
     // MCR(ToyManager側で発生する想定外エラー系)

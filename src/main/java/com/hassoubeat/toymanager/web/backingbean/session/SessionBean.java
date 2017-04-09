@@ -7,9 +7,11 @@ package com.hassoubeat.toymanager.web.backingbean.session;
 
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.service.entity.Account;
+import com.hassoubeat.toymanager.util.RoleLogic;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,9 @@ import lombok.Setter;
 @Named(value = "sessionBean")
 @SessionScoped
 public class SessionBean implements Serializable {
+    
+    @EJB
+    RoleLogic roleLogic;
     
     @Getter
     Integer id = null;
@@ -81,6 +86,22 @@ public class SessionBean implements Serializable {
         roleAuthority = 0;
         isAuth = false;
         selectedToyId = 0;
+    }
+    
+    /**
+     * ログイン中のアカウントがManager権限以上であるかをチェックする
+     * @return 
+     */
+    public boolean isManagerRole() {
+        return roleLogic.isManagerRole(roleAuthority);
+    }
+    
+    /**
+     * ログイン中のアカウントがAdmin権限以上であるかをチェックする
+     * @return 
+     */
+    public boolean isAdminRole() {
+        return roleLogic.isManagerRole(roleAuthority);
     }
     
 }

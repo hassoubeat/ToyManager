@@ -1,0 +1,498 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
+    <body>
+        <ui:composition template="/auth/template/template.xhtml">
+            <ui:define name="content">
+                <f:metadata>
+                    <f:viewParam name="id" value="#{facetManagementEditBean.id}"></f:viewParam>
+                    <f:viewAction action="#{facetManagementEditBean.bookmarkable()}" onPostback="false"></f:viewAction>
+                </f:metadata>
+                <div class="container">
+                    <div class="well">
+                        <h3>ファセットの変更</h3>
+                        <a class="btn-sm btn-primary" jsf:outcome="/auth/management/facet/index" style="margin-bottom: 5px;">ファセット一覧に戻る</a>
+                    </div>
+                        
+                    <form jsf:id="facet-form" enctype="multipart/form-data">
+                        <table class="table table-condensed ">
+                            <tbody>
+                                <tr>
+                                    <th>* ファセット名 <span id="facet-name-help" class="glyphicon glyphicon-question-sign"/></th>
+                                    <td>
+                                        #{facetManagementEditBean.facet.name}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>* ファセットバージョン <span id="facet-version-help" class="glyphicon glyphicon-question-sign"/></th>
+                                    <td>
+                                        <input type="number" step="0.1" id="facet-version" jsf:id="facet-version" class="form-control" placeholder="ファセットバージョンを入力してください。" jsf:value="#{facetManagementEditBean.facet.facetVersion}"/>
+                                        <h:message class="label label-danger" for="facet-version"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>ファセットの概要 <span id="facet-note-help" class="glyphicon glyphicon-question-sign"/></th>
+                                    <td>
+                                        <textarea id="facet-note" class="form-control" jsf:id="facet-note" placeholder="ファセットの概要を【200文字以内】で入力してください。" jsf:value="#{facetManagementEditBean.facet.note}"/>
+                                        <h:message class="label label-danger" for="facet-note"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>ファセットの要件 <span id="facet-requirement-help" class="glyphicon glyphicon-question-sign"/></th>
+                                    <td>
+                                        <textarea id="facet-requirement" class="form-control" jsf:id="facet-requirement" placeholder="ファセットの要件を【600文字以内】で入力してください。" jsf:value="#{facetManagementEditBean.facet.requirement}"/>
+                                        <h:message class="label label-danger" for="facet-requirement"/>
+                                    </td>
+                                </tr>
+                                <tr class="test">
+                                    <ui:fragment rendered="#{facetManagementEditBean.facet.programPath.length() == 0 || facetManagementEditBean.facet.programPath == null}">
+                                        <!-- ファセットアップロードは、ファセットプログラムが指定されていない時のみ表示する -->
+                                        <th>オリジナルファセットのアップロード <span id="facet-program-upload-help" class="glyphicon glyphicon-question-sign"/><br/><a href="#">※ オリジナルファセット作成のルール</a></th>
+                                        <td>
+                                            <input type="file" accept=".jar" id="facet-program-upload" jsf:id="facet-program-upload" jsf:value="#{facetManagementEditBean.facetProgram}"/><p/>
+                                            <h:message class="label label-danger" for="facet-program-upload"/>
+                                            <span class="label label-warning">※ アップロードするファイル名は上項目の【ファセット名】.jarとなるように指定してください。</span>
+                                        </td>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{facetManagementEditBean.facet.programPath.length() > 0}">
+                                        <!-- ファセットプログラム編集は、既にファセットプログラムがアップロードされている場合のみ表示する -->
+                                        <th>プログラムのアップデート <span id="facet-program-upload-help" class="glyphicon glyphicon-question-sign"/><br/><a href="#">※ オリジナルファセット作成のルール</a></th>
+                                        <td>
+                                            URL:<a href="#{facetManagementEditBean.facet.programPath}">#{facetManagementEditBean.facet.programPath}</a>
+                                            <input type="file" accept=".jar" id="facet-program-update" jsf:id="facet-program-update" jsf:value="#{facetManagementEditBean.facetProgram}"/><p/>
+                                            <h:message class="label label-danger" for="facet-program-update"/>
+                                            <span class="label label-warning">※ アップデートするファイル名は現在登録されている【ファセット名】.jarとなるように指定してください。</span><br/>
+                                            <span class="label label-warning">※ ファセットプログラムのアップデート後、ファセットバージョンを変更しなければToyTalkでファセットプログラムの更新が行われません。</span><br/>
+                                            <p/>
+                                            <h:commandButton class="btn-sm btn-danger" id="facet-program-remove-button" action="#{facetManagementEditBean.removeFacetProgram}" value="ファセットプログラムの削除" style="margin-right: 5px;"/>
+                                        </td>
+                                    </ui:fragment>
+                                </tr>
+                                <tr>
+                                    <th>公開状態 <span id="facet-viewing-help" class="glyphicon glyphicon-question-sign"/></th>
+                                    <td>
+                                        <ui:fragment rendered="#{facetManagementEditBean.facet.isRelease}">
+                                            <span class="label label-success" style="margin-right: 5px;">公開済</span>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{!facetManagementEditBean.facet.isRelease}">
+                                            <span class="label label-warning" style="margin-right: 5px;">未公開</span>
+                                        </ui:fragment>
+                                        <input type="checkbox" jsf:id="facet-viewing" jsf:value="#{facetManagementEditBean.facet.isRelease}"/>
+                                        <h:message class="label label-danger" for="facet-viewing"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>ファセットイベント <span id="facet-event-help" class="glyphicon glyphicon-question-sign"/></th>
+                                    <td>
+                                        <ui:fragment rendered="#{facetManagementEditBean.facet.facetEventList.size() > 0}">
+                                            <!-- イベントが未登録の場合は非表示 -->
+                                            <table class="table table-condensed ">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th><th>イベント名</th><th>開始日時</th><th>終了日時</th><th>ループ</th><th>ループ終了日時</th><th>Talkフラグ</th><th>論理削除フラグ</th><th>変更</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <ui:repeat var="item" value="#{facetManagementEditBean.facet.facetEventList}" varStatus="status">
+                                                        <tr>
+                                                            <td>#{status.index + 1}</td>
+                                                            <td>#{item.name}</td>
+                                                            <td>
+                                                                <h:outputText value="#{item.startDate}">
+                                                                    <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss"/>
+                                                                </h:outputText>
+                                                            </td>
+                                                            <td>
+                                                                <h:outputText value="#{item.endDate}">
+                                                                    <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss"/>
+                                                                </h:outputText>
+                                                            </td>
+                                                            <td>
+                                                                <ui:fragment rendered="#{item.roop > 0}">
+                                                                    <span class="label label-primary"><span class="glyphicon glyphicon-repeat"/> ループ有</span>
+                                                                </ui:fragment>
+                                                                <ui:fragment rendered="#{item.roop == 0}">
+                                                                    <span class="label label-default">ループ無</span>
+                                                                </ui:fragment>
+                                                            </td>
+                                                            <td>
+                                                                <h:outputText value="#{item.roopEndDate}">
+                                                                    <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss"/>
+                                                                </h:outputText>
+                                                            </td>
+                                                            <td>
+                                                                <ui:fragment rendered="#{item.isTalking}">
+                                                                    <span class="label label-primary"><span class="glyphicon glyphicon-volume-up"/> Talk ON</span>
+                                                                </ui:fragment>
+                                                                <ui:fragment rendered="#{!item.isTalking}">
+                                                                    <span class="label label-default"> Talk OFF</span>
+                                                                </ui:fragment>
+                                                            </td>
+                                                            <td>
+                                                                <ui:fragment rendered="#{item.isDeleted}">
+                                                                    <span class="label label-danger"> 削除済</span>
+                                                                </ui:fragment>
+                                                                <ui:fragment rendered="#{!item.isTalking}">
+                                                                    <span class="label label-primary"> 公開済</span>
+                                                                </ui:fragment>
+                                                            </td>
+                                                            <td>
+                                                                <!-- 選択したファセットイベントを取得する -->
+                                                                <h:commandButton class="btn btn-success" id="select-facet-event" action="#{facetManagementEditBean.facetEventSelect(item.id)}" value="Edit" style="margin-right: 5px;">
+                                                                    <f:ajax execute="@this" render="facet-event-form" onevent="selectFacetEventAfter" resetValues="true"/>
+                                                                </h:commandButton>
+                                                            </td>    
+                                                        </tr>
+                                                    </ui:repeat>
+
+                                                </tbody>
+                                            </table>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{facetManagementEditBean.facet.facetEventList.size() == 0}">
+                                            <!-- ファセットイベントが未登録の場合に表示する -->
+                                            <div class="bs-callout bs-callout-danger">
+                                                <h4>ファセットイベントが未登録です。</h4>
+                                                <p class="small">ファセットイベントが未登録では、このファセットを追加することによって追加される機能がないことと同義です。</p>
+                                            </div>
+                                        </ui:fragment>
+                                        <a id="show-facet-event-edit-modal" class="btn btn-primary" href="#" data-toggle="modal" data-target="#facet-event-edit-modal"><span class="glyphicon glyphicon-plus"/> ファセットイベントの追加</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h:commandButton class="btn btn-success" id="edit-facet" action="#{facetManagementEditBean.edit()}" value="ファセットの変更" style="margin-right: 5px;"/>
+                        <h:commandButton class="btn btn-danger" id="remove-facet" action="#{facetManagementEditBean.remove()}" value="ファセットの削除" style="margin-right: 5px;"/>
+                    </form>
+                </div>
+                <!-- ファセットイベント編集ダイアログ -->
+                <div class="modal fade" id="facet-event-edit-modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                <h4 class="modal-title"><span class="glyphicon glyphicon-calendar"/> ファセットイベントの編集</h4>
+                            </div>
+                            <div class="modal-body">
+                                <h:form id="facet-event-form">
+                                    <div class="well">
+                                        <textarea id="event-note" class="form-control" jsf:id="event-note" placeholder="Toyのカスタマイズ画面で表示されるイベントの説明文を【400】文字以内で入力してください" jsf:value="#{facetManagementEditBean.facetEvent.note}"/>
+                                        <h:message class="label label-danger" for="event-note"/>
+                                        <input type="text" id="event-title" jsf:id="event-title" class="form-control" placeholder="イベントのタイトルを【30】文字以内で入力してください" jsf:value="#{facetManagementEditBean.facetEvent.name}"/>
+                                        <h:message class="label label-danger" for="event-title"/>
+                                        <textarea id="event-content" class="form-control" jsf:id="event-content" placeholder="Toyが読み上げる内容を【200】文字以内で入力してください" jsf:value="#{facetManagementEditBean.facetEvent.content}"/>
+                                        <h:message class="label label-danger" for="event-content"/>
+                                        <input id="start-event-date" jsf:id="start-event-date" class="input-date"  placeholder="開始日時" type="text" jsf:value="#{facetManagementEditBean.facetEvent.startDate}">
+                                            <f:convertDateTime type="both" />
+                                        </input>
+                                        <h:message class="label label-danger" for="start-event-date"/>
+                                        〜
+                                        <input id="end-event-date" jsf:id="end-event-date" class="input-date" placeholder="終了日時" type="text" jsf:value="#{facetManagementEditBean.facetEvent.endDate}">
+                                            <f:convertDateTime type="both" />
+                                        </input>
+                                        <h:message class="label label-danger" for="end-event-date"/>
+                                        <table>
+                                            <tr>
+                                                <th>イベントカラー<a data-toggle="tooltip" title="カレンダーに表示するイベントの色を選択します"><span class="glyphicon glyphicon-question-sign" /></a>:</th>
+                                                <td>
+                                                    <div>
+                                                        <div class="block-sm #3a87b2" id="event-colorset-#3a87b2" style="background-color:#3a87b2;"></div>
+                                                        <div class="block-sm #375a7f" id="event-colorset-#375a7f" style="background-color:#375a7f;"></div>
+                                                        <div class="block-sm #5484ed" id="event-colorset-#5484ed" style="background-color:#5484ed;"></div>
+                                                        <div class="block-sm #a4bdfc" id="event-colorset-#a4bdfc" style="background-color:#a4bdfc;"></div>
+                                                        <div class="block-sm #e43725" id="event-colorset-#e43725" style="background-color:#e43725;"></div>
+                                                        <div class="block-sm #ff887c" id="event-colorset-#ff887c" style="background-color:#ff887c;"></div>
+                                                        <div class="block-sm #51b749" id="event-colorset-#51b749" style="background-color:#51b749;"></div>
+                                                        <div class="block-sm #fbd75b" id="event-colorset-#fbd75b" style="background-color:#fbd75b;"></div>
+                                                        <div class="block-sm #dbadff" id="event-colorset-#dbadff" style="background-color:#dbadff;"></div>
+                                                        <div class="block-sm #e1e1e1" id="event-colorset-#e1e1e1" style="background-color:#e1e1e1;"></div>
+                                                        <input type="hidden" id="event-color-code" jsf:value="#{facetManagementEditBean.facetEvent.colorCode}"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Toyに喋らせる？<a data-toggle="tooltip" title="ToyTalkに読み上げさせるイベントにします"><span class="glyphicon glyphicon-question-sign" /></a>:</th>
+                                                <td><input type="checkbox" id="is-talking" jsf:value="#{facetManagementEditBean.facetEvent.isTalking}"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th>ループパラメータ:</th>
+                                                <td><input type="number" jsf:id="roop-param" id="roop-param" placeholder="ループパラメータを入力してください。(ループが不要の場合は0を入力してください)" jsf:value="#{facetManagementEditBean.facetEvent.roop}"/></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <p/>
+
+                                    <h:commandButton class="btn btn-primary" id="add-facet-event" action="#{facetManagementEditBean.addFacetEvent()}" value="イベントの追加" style="margin-right: 5px;">
+<!--                                        <f:ajax execute="@form" render="facet-event-form" onevent="addFacetEventAfter" resetValues="true"/>-->
+                                    </h:commandButton>
+                                    <h:commandButton class="btn btn-success" id="update-facet-event" action="#{facetManagementEditBean.editFacetEvent()}" value="イベントの修正" style="margin-right: 5px;">
+<!--                                        <f:ajax execute="@form" render="facet-event-form" onevent="editFacetEventAfter" resetValues="true"/>-->
+                                    </h:commandButton>
+                                    <h:commandButton class="btn btn-danger" id="remove-facet-event" action="#{facetManagementEditBean.removeFacetEvent()}" value="イベントの削除" style="margin-right: 5px;">
+<!--                                        <f:ajax execute="@form" render="facet-event-form" onevent="removeFacetEventAfter" resetValues="true"/>-->
+                                    </h:commandButton>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+            <ui:define name="css">
+                <!-- jQueryDataTables CSS -->
+                <link jsf:library="css" jsf:name="jquery.dataTables.css"/>
+                <!-- jQueryToaster CSS -->
+                <link jsf:library="css" jsf:name="jquery.toast.css"/>
+                <!-- jQeury-DataTimePicker CSS -->
+                <link jsf:library="css" jsf:name="jquery.datetimepicker.css"/>
+            </ui:define>
+            <ui:define name="js">
+                <!-- jQueryDataTables JS -->
+                <script jsf:library="js" jsf:name="jquery.dataTables.js"/>
+                <!-- jQueryToaster JS -->
+                <script jsf:library="js" jsf:name="jquery.toast.js"/>
+                <!-- jQueryBalloon JS -->
+                <script jsf:library="js" jsf:name="jquery.balloon.js"/>
+                <!-- jQeury-DataTimePicker JS -->
+                <script jsf:library="js" jsf:name="jquery.datetimepicker.full.js"/>
+                <!-- RGBColor.JS -->
+                <script jsf:library="js" jsf:name="rgbcolor.js"/>
+                <script type="text/javascript">
+                    $(window).load(function () {
+                        // ナビゲーションバーのactiveを変更
+                        $("#management").addClass("active");
+                        
+                        $("#facet-name-help").balloon({
+                            contents:"Toyのカスタマイズ画面で表示されるファセット名の名前です"
+                        });
+                        
+                        $("#facet-version-help").balloon({
+                            contents:"Toyのバージョンです"
+                        });
+                        
+                        $("#facet-note-help").balloon({
+                            contents:"Toyのカスタマイズ画面で表示されるファセットの概要です"
+                        });
+                        
+                        $("#facet-requirement-help").balloon({
+                            contents:"Toyのカスタマイズ画面で表示されるファセットの要件です(ネットワーク接続の有無などの非システム要件を記載してください)"
+                        });
+                        
+                        $("#facet-program-upload-help").balloon({
+                            contents:"独自に開発したプログラムを登録します(本項目を設定しなかった場合は、後に設定するファセットイベントで登録した内容がToyTalkされる仕様となります。)"
+                        });
+                        
+                        $("#facet-viewing-help").balloon({
+                            contents:"Toyのカスタマイズ画面への公開状態です"
+                        });
+                        
+                        $("#facet-event-help").balloon({
+                            contents:"ファセットを追加したクライアントに追加されるイベントです。ファセットプログラムを定義している場合はイベント発生時にオリジナルファセットの処理が実行されます。",
+                            position: "right"
+                            
+                        });
+                        
+                        if (#{facesContext.getMessageList('facet-create-success').size() > 0}) {
+                            // ファセットの作成後にリダイレクトで遷移してきた時、登録完了メッセージを表示する
+                            $.toast({
+                                heading: "ファセットの作成が完了しました。",
+                                text:"ファセットはまだ公開されていません。公開する場合は【公開状態】にチェックを入れて変更ボタンを押下してください。",
+                                showHideTransition: "slide",
+                                icon: "info",
+                                hideAfter : 15000,
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                        }
+                        
+                        if (#{facesContext.getMessageList('facet-edit-success').size() > 0}) {
+                            // ファセットの更新後にリダイレクトで遷移してきた時、更新完了メッセージを表示する
+                            $.toast({
+                                heading: "ファセットの更新が完了しました。",
+                                text:"ファセットプログラム・ファセットイベントはファセットバージョンを更新しないと、クライアント側に更新の通知が行われません。",
+                                showHideTransition: "slide",
+                                icon: "info",
+                                hideAfter : 15000,
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                        }
+                        
+                        if (#{facesContext.getMessageList('add-facet-event-success').size() > 0}) {
+                            // ファセットプログラム登録後にリダイレクトで遷移してきた時にメッセージを表示する
+                            $.toast({
+                                heading: "ファセットプログラムの登録が完了しました。",
+                                text:"ファセットプログラム・ファセットイベントはファセットバージョンを更新しないと、クライアント側に更新の通知が行われません。",
+                                showHideTransition: "slide",
+                                icon: "info",
+                                hideAfter : 15000,
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                        }
+                        
+                        if (#{facesContext.getMessageList('edit-facet-event-success').size() > 0}) {
+                            // ファセットプログラム変更後にリダイレクトで遷移してきた時にメッセージを表示する
+                            $.toast({
+                                heading: "ファセットプログラムの更新が完了しました。",
+                                text:"ファセットプログラム・ファセットイベントはファセットバージョンを更新しないと、クライアント側に更新の通知が行われません。",
+                                showHideTransition: "slide",
+                                icon: "info",
+                                hideAfter : 15000,
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                        }
+                        
+                        if (#{facesContext.getMessageList('remove-facet-event-success').size() > 0}) {
+                            // ファセットプログラム削除後にリダイレクトで遷移してきた時にメッセージを表示する
+                            $.toast({
+                                heading: "ファセットプログラムの削除が完了しました。",
+                                text:"ファセットプログラム・ファセットイベントはファセットバージョンを更新しないと、クライアント側に更新の通知が行われません。",
+                                showHideTransition: "slide",
+                                icon: "info",
+                                hideAfter : 15000,
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+                        }
+                        
+                        // ファセットイベントの追加の場合は、変更と削除ボタンをdisabledにする
+                        $("#show-facet-event-edit-modal").click(function(){
+                            $("[id$=update-facet-event]").prop("disabled", true);
+                            $("[id$=remove-facet-event]").prop("disabled", true);
+                        });
+                        
+                        // イベントファセットフォーム内のイベントを適応する
+                        eventFacetFormSetup();
+                    });
+                    
+                    // イベント選択時のコールバックメソッド
+                    function selectFacetEventAfter (e) {
+                        if(e.status === "success"){
+                            // ajaxで剥げたイベントの再設定
+                            eventFacetFormSetup();
+
+                            $.toast({
+                                heading: "イベントの読込が完了しました。",
+                                text: "イベントの編集/削除が行えます。",
+                                showHideTransition: "slide",
+                                icon: "info",
+                                position: "bottom-right",
+                                stack: "1"
+                            });
+
+                            colorBlockSetup();
+                            $("#facet-event-edit-modal").modal();
+                        }
+                    }
+                    
+//                    // イベント登録時のコールバックメソッド
+//                    function addFacetEventAfter(e) {
+//                        if(e.status === "success"){
+//                            // ajaxで剥げたイベントの再設定
+//                            eventFacetFormSetup();
+//
+//                            $.toast({
+//                                heading: "イベントの登録が完了しました",
+//                                showHideTransition: "slide",
+//                                icon: "info",
+//                                position: "bottom-right",
+//                                stack: "1"
+//                            });
+//
+//                            colorBlockSetup();
+//                            $("#facet-event-edit-modal").modal("hide");
+//                        }
+//                    }
+//                    
+//                    // イベント変更時のコールバックメソッド
+//                    function editFacetEventAfter(e) {
+//                        if(e.status === "success"){
+//                            // ajaxで剥げたイベントの再設定
+//                            eventFacetFormSetup();
+//
+//                            $.toast({
+//                                heading: "イベントの更新が完了しました",
+//                                showHideTransition: "slide",
+//                                icon: "info",
+//                                position: "bottom-right",
+//                                stack: "1"
+//                            });
+//
+//                            colorBlockSetup();
+//                            $("#facet-event-edit-modal").modal("hide");
+//                        }
+//                    }
+//                    
+//                    // イベント削除時のコールバックメソッド
+//                    function removeFacetEventAfter(e) {
+//                        if(e.status === "success"){
+//                            // ajaxで剥げたイベントの再設定
+//                            eventFacetFormSetup();
+//
+//                            $.toast({
+//                                heading: "イベントの削除が完了しました",
+//                                showHideTransition: "slide",
+//                                icon: "info",
+//                                position: "bottom-right",
+//                                stack: "1"
+//                            });
+//
+//                            colorBlockSetup();
+//                            $("#facet-event-edit-modal").modal("hide");
+//                        }
+//                    }   
+                    
+                    // カラーコードを参照してカラーブロックを設定する
+                    function colorBlockSetup() {
+                        // カラーコードが設定されていた場合は、チェックを入れる
+                        var colorCode = $("#event-color-code").val();
+                        if (colorCode !== "") {
+                            $("[id$=" + colorCode.substr(1) + "]").addClass("block-sm-checked");
+                        }
+                    }
+                    
+                    // event-facet-form内のイベントを適応する
+                    function eventFacetFormSetup() {
+                        // 日付入力エリアにDataTimePickerの適応
+                        $.datetimepicker.setLocale("ja");
+                        $(".input-date").datetimepicker({
+                            format:"Y/m/d H:i:00",
+                            step:15
+                        });
+
+                        // カラーセットマウスホバー/ブラーの処理
+                        $("[id^=event-colorset]").hover(
+                            function(){
+                                // マウスホバー時の処理(枠線の変更)
+                               $(this).addClass("block-sm-hover");
+                            },
+                            function(){
+                                // マウスブラー時の処理
+                               $(this).removeClass("block-sm-hover")
+                            }
+                        );
+                    
+                        $("[id^=event-colorset]").click(function(){
+                            // 他の選択を初期化する
+                            $("[id^=event-colorset]").removeClass("block-sm-checked");
+                            
+                            // 色コードを持つhidden要素に選択した色コードを16進数に変換して代入
+                            var color = new RGBColor($(this).css("background-color"));
+                            $("#event-color-code").val(color.toHex());
+                            // 選択した要素のclassに.block-sm-checkedを付与する
+                            $(this).addClass("block-sm-checked");
+                        });
+                    }
+                </script>
+            </ui:define>
+        </ui:composition>        
+    </body>
+</html>
+
