@@ -13,12 +13,11 @@ import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.constant.MessageConst;
 import com.hassoubeat.toymanager.service.dao.FacetEventFacade;
 import com.hassoubeat.toymanager.service.dao.FacetFacade;
-import com.hassoubeat.toymanager.service.entity.Account;
-import com.hassoubeat.toymanager.service.entity.Event;
 import com.hassoubeat.toymanager.service.entity.Facet;
 import com.hassoubeat.toymanager.service.entity.FacetEvent;
 import com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException;
 import com.hassoubeat.toymanager.util.S3Logic;
+import com.hassoubeat.toymanager.util.ToastMessage;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.Serializable;
 import javax.ejb.EJB;
@@ -123,8 +122,13 @@ public class FacetManagementEditBean implements Serializable{
         logger.info("{}.{} USER_ID:{}, FACET_ID:{}", MessageConst.SUCCESS_FACET_EDIT.getId(), MessageConst.SUCCESS_FACET_EDIT.getMessage(), sessionBean.getUserId(), editedFacet.getId());
         
         // 自画面にリダイレクトで遷移する
+        ToastMessage toastMessage = new ToastMessage();
+        toastMessage.setRender(true);
+        toastMessage.setHeading(MessageConst.SUCCESS_FACET_EDIT.getMessage());
+        toastMessage.setText("ファセットプログラム・ファセットイベントはファセットバージョンを更新しないと、クライアント側に更新の通知が行われません。");
+        toastMessage.setHideAfter(15000);
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        facesContext.addMessage("facet-edit-success", new FacesMessage(MessageConst.SUCCESS_FACET_EDIT.getMessage()));
+        facesContext.addMessage("", new FacesMessage(toastMessage.genList()));
         facesContext.getExternalContext().getFlash().setKeepMessages(true);
         return "edit?faces-redirect=true&id=" + editedFacet.getId();
     }
@@ -143,8 +147,12 @@ public class FacetManagementEditBean implements Serializable{
         logger.info("{}.{} USER_ID:{}, FACET_ID:{}", MessageConst.SUCCESS_FACET_REMOVE.getId(), MessageConst.SUCCESS_FACET_REMOVE.getMessage(), sessionBean.getUserId(), removeFacet.getId());
         
         // ファセット一覧画面にリダイレクトで遷移する
+        ToastMessage toastMessage = new ToastMessage();
+        toastMessage.setRender(true);
+        toastMessage.setHeading(MessageConst.SUCCESS_FACET_REMOVE.getMessage());
+        toastMessage.setHideAfter(15000);
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        facesContext.addMessage("facet-remove-success", new FacesMessage(MessageConst.SUCCESS_FACET_REMOVE.getMessage()));
+        facesContext.addMessage("", new FacesMessage(toastMessage.genList()));
         facesContext.getExternalContext().getFlash().setKeepMessages(true);
         return "index?faces-redirect=true";
     }
@@ -207,8 +215,13 @@ public class FacetManagementEditBean implements Serializable{
         
         logger.info("{}.{} USER_ID:{} FACET_EVENT_ID", MessageConst.SUCCESS_FACET_EVENT_CREATE.getId(), MessageConst.SUCCESS_FACET_EVENT_CREATE.getMessage(), sessionBean.getId(), createFacetEvent.getId());
         
-        FacesMessage message = new FacesMessage(MessageConst.SUCCESS_FACET_EVENT_CREATE.getMessage());
-        context.addMessage("add-facet-event-success", message);
+        ToastMessage toastMessage = new ToastMessage();
+        toastMessage.setRender(true);
+        toastMessage.setHeading(MessageConst.SUCCESS_FACET_EVENT_CREATE.getMessage());
+        toastMessage.setText("ファセットプログラム・ファセットイベントはファセットバージョンを更新しないと、クライアント側に更新の通知が行われません。");
+        toastMessage.setHideAfter(15000);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.addMessage("", new FacesMessage(toastMessage.genList()));
         context.getExternalContext().getFlash().setKeepMessages(true);
         return "edit?faces-redirect=true&id=" + facet.getId();
     }
@@ -239,8 +252,13 @@ public class FacetManagementEditBean implements Serializable{
 
         logger.info("{}.{} USER_ID:{} FACET_EVENT_ID", MessageConst.SUCCESS_FACET_EVENT_EDIT.getId(), MessageConst.SUCCESS_FACET_EVENT_EDIT.getMessage(), sessionBean.getId(), editFacetEvent.getId());
 
-        FacesMessage message = new FacesMessage(MessageConst.SUCCESS_FACET_EVENT_EDIT.getMessage());
-        context.addMessage("edit-facet-event-success", message);
+        ToastMessage toastMessage = new ToastMessage();
+        toastMessage.setRender(true);
+        toastMessage.setHeading(MessageConst.SUCCESS_FACET_EVENT_EDIT.getMessage());
+        toastMessage.setText("ファセットプログラム・ファセットイベントはファセットバージョンを更新しないと、クライアント側に更新の通知が行われません。");
+        toastMessage.setHideAfter(15000);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.addMessage("", new FacesMessage(toastMessage.genList()));
         context.getExternalContext().getFlash().setKeepMessages(true);
         return "edit?faces-redirect=true&id=" + facet.getId();
     }
@@ -257,8 +275,13 @@ public class FacetManagementEditBean implements Serializable{
 
         logger.info("{}.{} USER_ID:{} FACET_EVENT_ID", MessageConst.SUCCESS_FACET_EVENT_REMOVE.getId(), MessageConst.SUCCESS_FACET_EVENT_REMOVE.getMessage(), sessionBean.getId(), removeFacetEvent.getId());
 
-        FacesMessage message = new FacesMessage(MessageConst.SUCCESS_FACET_EVENT_REMOVE.getMessage());
-        context.addMessage("remove-facet-event-success", message);
+        ToastMessage toastMessage = new ToastMessage();
+        toastMessage.setRender(true);
+        toastMessage.setHeading(MessageConst.SUCCESS_FACET_EVENT_REMOVE.getMessage());
+        toastMessage.setText("ファセットプログラム・ファセットイベントはファセットバージョンを更新しないと、クライアント側に更新の通知が行われません。");
+        toastMessage.setHideAfter(15000);
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.addMessage("", new FacesMessage(toastMessage.genList()));
         context.getExternalContext().getFlash().setKeepMessages(true);
         return "edit?faces-redirect=true&id=" + facet.getId();
     }

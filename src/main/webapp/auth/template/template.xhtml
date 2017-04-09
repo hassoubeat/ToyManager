@@ -12,6 +12,8 @@
         <link href="/ToyManager/resources/css/non-responsive.css" rel="stylesheet"/>
         <!-- ブートストラップ風コメントを実装するCSS -->
         <link href="/ToyManager/resources/css/bs-callout.css" rel="stylesheet"/>
+        <!-- トースター風メッセージを実装するCSS -->
+        <link href="/ToyManager/resources/css/jquery.toast.css" rel="stylesheet"/>
         <!-- 汎用CSS -->
         <link href="/ToyManager/resources/css/common.css" rel="stylesheet"/>
         <title>ToyManager</title>
@@ -39,11 +41,44 @@
         <script src="/ToyManager/resources/js/moment.min.js"/>
         <script src="/ToyManager/resources/js/jquery-1.12.4.js"/>
         <script src="/ToyManager/resources/js/bootstrap.js"/>
+        <script src="/ToyManager/resources/js/jquery.toast.js"/>
         <script src="/ToyManager/resources/js/common.js"/>
         
         <!-- 外部JS定義/読込用エリア -->
         <div id="js">
             <ui:insert name="js">
+            </ui:insert>
+        </div>
+        
+        <!-- メッセージ出力エリア -->
+        <div id="message">
+            <ui:insert name="message">
+                <!-- 共通メッセージ出力処理 -->
+                <ui:fragment rendered="#{facesContext.getMessageList().size() > 0}">
+                    <script type="text/javascript">
+                        $(window).load(function () {
+                            if (#{facesContext.getMessageList().size() > 0}) {
+                                for (var index = 0; #{facesContext.getMessageList().size()} > index; index++) {
+                                    var msg = "#{facesContext.getMessageList().get(index).getSummary()}";
+                                    var msgList = msg.split(",");
+                                    // 描画フラグがtrueの時のみトースターを表示する
+                                    if (msgList[0] === "true") {
+                                        $.toast({
+                                            heading: msgList[1],
+                                            text:msgList[2],
+                                            showHideTransition: msgList[3],
+                                            icon: msgList[4],
+                                            hideAfter : msgList[5],
+                                            position: msgList[6],
+                                            stack: "10"
+                                        });
+                                    }
+                                    
+                                }
+                            }
+                        });
+                    </script>
+                </ui:fragment>
             </ui:insert>
         </div>
     </body>

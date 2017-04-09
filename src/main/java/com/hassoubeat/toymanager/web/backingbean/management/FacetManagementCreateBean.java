@@ -14,6 +14,7 @@ import com.hassoubeat.toymanager.constant.MessageConst;
 import com.hassoubeat.toymanager.service.dao.FacetFacade;
 import com.hassoubeat.toymanager.service.entity.Facet;
 import com.hassoubeat.toymanager.util.S3Logic;
+import com.hassoubeat.toymanager.util.ToastMessage;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.Serializable;
 import javax.ejb.EJB;
@@ -115,8 +116,13 @@ public class FacetManagementCreateBean implements Serializable{
         logger.info("{}.{} USER_ID:{}, FACET_ID:{}", MessageConst.SUCCESS_FACET_CREATE.getId(), MessageConst.SUCCESS_FACET_CREATE.getMessage(), sessionBean.getUserId(), createFacet.getId());
         
         // ファセット編集画面にリダイレクトで遷移する
+        ToastMessage toastMessage = new ToastMessage();
+        toastMessage.setRender(true);
+        toastMessage.setHeading(MessageConst.SUCCESS_FACET_CREATE.getMessage());
+        toastMessage.setText("ファセットはまだ公開されていません。公開する場合は【公開状態】にチェックを入れて変更ボタンを押下してください。");
+        toastMessage.setHideAfter(15000);
         FacesContext facesContext = FacesContext.getCurrentInstance();
-        facesContext.addMessage("facet-create-success", new FacesMessage(MessageConst.SUCCESS_FACET_CREATE.getMessage()));
+        facesContext.addMessage("", new FacesMessage(toastMessage.genList()));
         facesContext.getExternalContext().getFlash().setKeepMessages(true);
         return "edit?faces-redirect=true&id=" + createFacet.getId();
         

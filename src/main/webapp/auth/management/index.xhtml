@@ -48,17 +48,6 @@
                     $(window).load(function () {
                         // ナビゲーションバーのactiveを変更
                         $("#management").addClass("active");
-                        
-                        if (#{facesContext.getMessageList('toy-account-tying-cancel').size() > 0}) {
-                            // Toyのアカウント紐付け解除後にリダイレクトで遷移してきた時、紐付け完了メッセージを表示する
-                            $.toast({
-                                heading: "Toyのアカウント紐付けを解除しました。",
-                                showHideTransition: "slide",
-                                icon: "info",
-                                position: "bottom-right",
-                                stack: "1"
-                            });
-                        }
                     });
                 </script>
             </ui:define>

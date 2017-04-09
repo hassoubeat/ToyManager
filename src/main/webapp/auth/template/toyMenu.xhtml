@@ -11,8 +11,7 @@
             <ui:repeat var="item" value="#{toyMenuBean.toyList}" varStatus="status">
                 <div class="panel panel-primary" id="toy-item-#{item.id}" style="margin-right: -15px; margin-bottom: 1px;">
                     <div class="panel-heading">
-                        Toy_#{status.index}
-                        <div class="pull-right"><span class="glyphicon glyphicon-trash"/></div>
+                        Toy_#{status.index + 1}
                     </div>
                     <div class="panel-body">
                         <div class="row">

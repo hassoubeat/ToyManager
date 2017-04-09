@@ -458,11 +458,22 @@
                 <script jsf:library="js" jsf:name="clipboard.js"/>
                 <script type="text/javascript">
                     $(window).load(function () {
+                        // ナビゲーションバーのactiveを変更
+                        $("#toy").addClass("active");
+                        
                         // Toy選択済チェック
                         if(#{sessionBean.selectedToyId} === 0) {
                             // Toyが未選択だった場合、選択を促すダイアログを表示する
                             $("#not-selected-toy-modal").modal();
                         }
+                        
+                        $("#toy-account-tying-cancel-modal-switch").click(function() {
+                            if(#{sessionBean.selectedToyId} === 0) {
+                                // Toyが未選択だった場合、選択を促すダイアログを表示する
+                                $("#not-selected-toy-modal").modal();
+                                return false;
+                            }
+                        });
                         
                         // クリップボードにコピーボタンの設定
                         var clipboard = new Clipboard('#clipboard-copy');
@@ -488,54 +499,7 @@
                             });    
                         });
                         
-                        $("#toy-account-tying-cancel-modal-switch").click(function() {
-                            if(#{sessionBean.selectedToyId} === 0) {
-                                // Toyが未選択だった場合、選択を促すダイアログを表示する
-                                $("#not-selected-toy-modal").modal();
-                                return false;
-                            }
-                        });
                         
-                        if (#{facesContext.getMessageList('access-token-regenerate').size() > 0}) {
-                            // Toyのアクセストークンの再生成が完了した後、再生成をしたことを表示するダイアログを表示する
-                            $.toast({
-                                heading: "アクセストークンを更新しました。",
-                                text: "現在利用しているToyにアクセストークンの再設定を行って下さい。",
-                                showHideTransition: "slide",
-                                hideAfter : 7000, 
-                                icon: "info",
-                                position: "bottom-right",
-                                stack: "1"
-                            });
-                        }
-                        
-                        if (#{facesContext.getMessageList('access-filter-approval').size() > 0}) {
-                            // アクセスフィルターの承認が行われた後、承認が行われたことを表示するダイアログを表示する
-                            $.toast({
-                                heading: "アクセスを承認しました。",
-                                text: "Toyからアクセスが行えるようになりました。",
-                                showHideTransition: "slide",
-                                hideAfter : 5000, 
-                                icon: "info",
-                                position: "bottom-right",
-                                stack: "1"
-                            });
-                        }
-                        
-                        if (#{facesContext.getMessageList('access-filter-reject').size() > 0}) {
-                            // アクセスフィルターの拒否が行われた後、拒否が行われたことを表示するダイアログを表示する
-                            $.toast({
-                                heading: "アクセスを拒否しました。",
-                                showHideTransition: "slide",
-                                hideAfter : 4000, 
-                                icon: "info",
-                                position: "bottom-right",
-                                stack: "1"
-                            });
-                        }
-                        
-                        // ナビゲーションバーのactiveを変更
-                        $("#toy").addClass("active");
                     });
                 </script>
             </ui:define>

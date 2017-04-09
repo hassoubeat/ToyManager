@@ -12,10 +12,10 @@ import com.hassoubeat.toymanager.constant.MessageConst;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.entity.Toy;
 import com.hassoubeat.toymanager.service.dao.ToyFacade;
-import com.hassoubeat.toymanager.service.dao.ToyWebapiAccessFilterFacade;
 import com.hassoubeat.toymanager.service.entity.ToyWebapiAccessFilter;
 import com.hassoubeat.toymanager.service.logic.ToyLogic;
 import com.hassoubeat.toymanager.service.logic.ToyWebApiAccessFilterLogic;
+import com.hassoubeat.toymanager.util.ToastMessage;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.Serializable;
 import javax.ejb.EJB;
@@ -91,8 +91,11 @@ public class ToyStatusBean implements Serializable{
             toyLogic.accountTyingCancel(toyFacade.find(sessionBean.getSelectedToyId()));
             
             // 紐付け解除完了のメッセージをリダイレクト先で表示するように、フラッシュメッセージに格納する
+            ToastMessage toastMessage = new ToastMessage();
+            toastMessage.setRender(true);
+            toastMessage.setHeading(MessageConst.SUCCESS_TOY_ACCOUNT_TYING_CANCEL.getMessage());
             FacesContext facesContext = FacesContext.getCurrentInstance();
-            facesContext.addMessage("toy-account-tying-cancel", new FacesMessage(MessageConst.SUCCESS_TOY_ACCOUNT_TYING_CANCEL.getMessage()));
+            facesContext.addMessage("", new FacesMessage(toastMessage.genList()));
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
             return "/auth/index?faces-redirect=true";
         }
@@ -114,8 +117,13 @@ public class ToyStatusBean implements Serializable{
             toyLogic.edit(accessTokenReGenerateToy);
             
             // 紐付け解除完了のメッセージをリダイレクト先で表示するように、フラッシュメッセージに格納する
+            ToastMessage toastMessage = new ToastMessage();
+            toastMessage.setRender(true);
+            toastMessage.setHeading(MessageConst.SUCCESS_ACCESS_TOKEN_GENERATE.getMessage());
+            toastMessage.setText("現在利用しているToyにアクセストークンの再設定を行って下さい。");
+            toastMessage.setHideAfter(7000);
             FacesContext facesContext = FacesContext.getCurrentInstance();
-            facesContext.addMessage("access-token-regenerate", new FacesMessage(MessageConst.SUCCESS_ACCESS_TOKEN_GENERATE.getMessage()));
+            facesContext.addMessage("", new FacesMessage(toastMessage.genList()));
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
         }
         
@@ -137,8 +145,13 @@ public class ToyStatusBean implements Serializable{
             toyWebApiAccessFilterLogic.approval(targetToyWebapiAccessFilter);
             
             // 紐付け解除完了のメッセージをリダイレクト先で表示するように、フラッシュメッセージに格納する
+            ToastMessage toastMessage = new ToastMessage();
+            toastMessage.setRender(true);
+            toastMessage.setHeading(MessageConst.SUCCESS_ACCESS_FILTER_APPROVAL.getMessage());
+            toastMessage.setText("Toyからアクセスが行えるようになりました。");
+            toastMessage.setHideAfter(5000);
             FacesContext facesContext = FacesContext.getCurrentInstance();
-            facesContext.addMessage("access-filter-approval", new FacesMessage(MessageConst.SUCCESS_ACCESS_FILTER_APPROVAL.getMessage()));
+            facesContext.addMessage("", new FacesMessage(toastMessage.genList()));
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
         }
         
@@ -160,8 +173,12 @@ public class ToyStatusBean implements Serializable{
             toyWebApiAccessFilterLogic.reject(targetToyWebapiAccessFilter);
             
             // 紐付け解除完了のメッセージをリダイレクト先で表示するように、フラッシュメッセージに格納する
+            ToastMessage toastMessage = new ToastMessage();
+            toastMessage.setRender(true);
+            toastMessage.setHeading(MessageConst.SUCCESS_ACCESS_FILTER_REJECT.getMessage());
+            toastMessage.setHideAfter(5000);
             FacesContext facesContext = FacesContext.getCurrentInstance();
-            facesContext.addMessage("access-filter-reject", new FacesMessage(MessageConst.SUCCESS_ACCESS_FILTER_REJECT.getMessage()));
+            facesContext.addMessage("access-filter-reject", new FacesMessage(toastMessage.genList()));
             facesContext.getExternalContext().getFlash().setKeepMessages(true);
         }
         

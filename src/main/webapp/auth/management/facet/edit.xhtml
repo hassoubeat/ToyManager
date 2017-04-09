@@ -71,7 +71,7 @@
                                             <span class="label label-warning">※ アップデートするファイル名は現在登録されている【ファセット名】.jarとなるように指定してください。</span><br/>
                                             <span class="label label-warning">※ ファセットプログラムのアップデート後、ファセットバージョンを変更しなければToyTalkでファセットプログラムの更新が行われません。</span><br/>
                                             <p/>
-                                            <h:commandButton class="btn-sm btn-danger" id="facet-program-remove-button" action="#{facetManagementEditBean.removeFacetProgram}" value="ファセットプログラムの削除" style="margin-right: 5px;"/>
+                                            <h:commandButton class="btn-sm btn-danger" id="facet-program-remove-button" action="#{facetManagementEditBean.removeFacetProgram()}" value="ファセットプログラムの削除" style="margin-right: 5px;"/>
                                         </td>
                                     </ui:fragment>
                                 </tr>
@@ -168,7 +168,7 @@
                             </tbody>
                         </table>
                         <h:commandButton class="btn btn-success" id="edit-facet" action="#{facetManagementEditBean.edit()}" value="ファセットの変更" style="margin-right: 5px;"/>
-                        <h:commandButton class="btn btn-danger" id="remove-facet" action="#{facetManagementEditBean.remove()}" value="ファセットの削除" style="margin-right: 5px;"/>
+                        <div class="btn btn-danger" id="facet-remove-modal-switch" data-toggle="modal" href="#facet-remove-modal">ファセットの削除</div>
                     </form>
                 </div>
                 <!-- ファセットイベント編集ダイアログ -->
@@ -242,6 +242,27 @@
                         </div>
                     </div>
                 </div>
+                <!-- ファセット削除前の警告モーダルダイアログ -->
+                <div class="modal fade" id="facet-remove-modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                <h4 class="modal-title">ファセット「#{facetManagementEditBean.facet.name}」の削除を実施しますか？</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="bs-callout bs-callout-danger">
+                                    <h4>ファセットを削除した場合、以下の処理が実施されます。</h4>
+                                    <h5 class="small">・ファセットに紐づくファセットイベントの削除</h5>
+                                    <h5 class="small">・現在、このファセットを利用しているクライアントのファセットイベントの削除</h5>
+                                </div>
+                                <form jsf:id="facet-remove-form">
+                                    <h:commandButton class="btn btn-danger" id="remove-facet" action="#{facetManagementEditBean.remove()}" value="ファセットの削除" style="margin-right: 5px;"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </ui:define>
             <ui:define name="css">
                 <!-- jQueryDataTables CSS -->
@@ -296,71 +317,6 @@
                             position: "right"
                             
                         });
-                        
-                        if (#{facesContext.getMessageList('facet-create-success').size() > 0}) {
-                            // ファセットの作成後にリダイレクトで遷移してきた時、登録完了メッセージを表示する
-                            $.toast({
-                                heading: "ファセットの作成が完了しました。",
-                                text:"ファセットはまだ公開されていません。公開する場合は【公開状態】にチェックを入れて変更ボタンを押下してください。",
-                                showHideTransition: "slide",
-                                icon: "info",
-                                hideAfter : 15000,
-                                position: "bottom-right",
-                                stack: "1"
-                            });
-                        }
-                        
-                        if (#{facesContext.getMessageList('facet-edit-success').size() > 0}) {
-                            // ファセットの更新後にリダイレクトで遷移してきた時、更新完了メッセージを表示する
-                            $.toast({
-                                heading: "ファセットの更新が完了しました。",
-                                text:"ファセットプログラム・ファセットイベントはファセットバージョンを更新しないと、クライアント側に更新の通知が行われません。",
-                                showHideTransition: "slide",
-                                icon: "info",
-                                hideAfter : 15000,
-                                position: "bottom-right",
-                                stack: "1"
-                            });
-                        }
-                        
-                        if (#{facesContext.getMessageList('add-facet-event-success').size() > 0}) {
-                            // ファセットプログラム登録後にリダイレクトで遷移してきた時にメッセージを表示する
-                            $.toast({
-                                heading: "ファセットプログラムの登録が完了しました。",
-                                text:"ファセットプログラム・ファセットイベントはファセットバージョンを更新しないと、クライアント側に更新の通知が行われません。",
-                                showHideTransition: "slide",
-                                icon: "info",
-                                hideAfter : 15000,
-                                position: "bottom-right",
-                                stack: "1"
-                            });
-                        }
-                        
-                        if (#{facesContext.getMessageList('edit-facet-event-success').size() > 0}) {
-                            // ファセットプログラム変更後にリダイレクトで遷移してきた時にメッセージを表示する
-                            $.toast({
-                                heading: "ファセットプログラムの更新が完了しました。",
-                                text:"ファセットプログラム・ファセットイベントはファセットバージョンを更新しないと、クライアント側に更新の通知が行われません。",
-                                showHideTransition: "slide",
-                                icon: "info",
-                                hideAfter : 15000,
-                                position: "bottom-right",
-                                stack: "1"
-                            });
-                        }
-                        
-                        if (#{facesContext.getMessageList('remove-facet-event-success').size() > 0}) {
-                            // ファセットプログラム削除後にリダイレクトで遷移してきた時にメッセージを表示する
-                            $.toast({
-                                heading: "ファセットプログラムの削除が完了しました。",
-                                text:"ファセットプログラム・ファセットイベントはファセットバージョンを更新しないと、クライアント側に更新の通知が行われません。",
-                                showHideTransition: "slide",
-                                icon: "info",
-                                hideAfter : 15000,
-                                position: "bottom-right",
-                                stack: "1"
-                            });
-                        }
                         
                         // ファセットイベントの追加の場合は、変更と削除ボタンをdisabledにする
                         $("#show-facet-event-edit-modal").click(function(){
