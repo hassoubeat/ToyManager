@@ -146,12 +146,11 @@
                                                             <td>
                                                                 <!-- 選択したファセットイベントを取得する -->
                                                                 <h:commandButton class="btn btn-success" id="select-facet-event" action="#{facetManagementEditBean.facetEventSelect(item.id)}" value="Edit" style="margin-right: 5px;">
-                                                                    <f:ajax execute="@this" render="facet-event-form" onevent="selectFacetEventAfter" resetValues="true"/>
+                                                                    <f:ajax execute="@this" render=":facet-event-form" onevent="selectFacetEventAfter" resetValues="true"/>
                                                                 </h:commandButton>
                                                             </td>    
                                                         </tr>
                                                     </ui:repeat>
-
                                                 </tbody>
                                             </table>
                                         </ui:fragment>
@@ -217,12 +216,21 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th>Toyに喋らせる？<a data-toggle="tooltip" title="ToyTalkに読み上げさせるイベントにします"><span class="glyphicon glyphicon-question-sign" /></a>:</th>
+                                                <th>Toyに喋らせる？:</th>
                                                 <td><input type="checkbox" id="is-talking" jsf:value="#{facetManagementEditBean.facetEvent.isTalking}"/></td>
                                             </tr>
                                             <tr>
-                                                <th>ループパラメータ:</th>
+                                                <th>ループパラメータ</th>
                                                 <td><input type="number" jsf:id="roop-param" id="roop-param" placeholder="ループパラメータを入力してください。(ループが不要の場合は0を入力してください)" jsf:value="#{facetManagementEditBean.facetEvent.roop}"/></td>
+                                            </tr>
+                                            <tr>
+                                                <th>ループ終了日時:</th>
+                                                <td>
+                                                <input id="roop-end-date" jsf:id="roop-end-date" class="input-date"  placeholder="ループの終了日時" type="text" jsf:value="#{facetManagementEditBean.facetEvent.roopEndDate}">
+                                                    <f:convertDateTime type="both" />
+                                                </input>
+                                                <h:message class="label label-danger" for="roop-end-date"/>
+                                                </td>
                                             </tr>
                                         </table>
                                     </div>
