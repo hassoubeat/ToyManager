@@ -1,0 +1,279 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head jsf:id="head">
+        <meta http-equiv="content-language" content="ja"/>
+    </head>
+    <body>
+        <ui:composition template="/auth/template/template.xhtml">
+            <ui:define name="content">
+                <f:metadata>
+                    <f:viewAction action="#{toyCustomBean.bookmarkable()}" onPostback="false"></f:viewAction>
+                </f:metadata>
+                <div class="row">
+                    <div class="col-xs-3 toy-side-menu">
+                        <ui:include src="/auth/template/toyMenu.xhtml"/>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="well">
+                            <h4><span class="glyphicon glyphicon-wrench"/> Toyのカスタマイズ</h4>
+                            <h4 class="small">Toyのカスタマイズを行いましょう。<br/>追加機能(ファセット)やToyの音声の変更などが行なえます。</h4>
+                        </div>
+                        <h4><span class="glyphicon glyphicon-link"/> ファセットのカスタマイズ</h4>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <ul class="nav nav-tabs">
+                                    <li role="presentation" class="active"><a href="#faset-added"><b>Toyに追加したファセット</b></a></li>
+                                </ul>
+                                <div class="" id="faset-added" style="overflow: scroll; height:500px; border-bottom-style: dotted;">
+                                    <ui:fragment rendered="#{toyCustomBean.targetToy.toyFacetList.size() == 0}">
+                                        <!-- 追加しているファセットが存在しなかった場合 -->
+                                        <div class="bs-callout bs-callout-danger" style="margin-top: 10px;">
+                                            <h4> ファセットが未登録です。</h4>
+                                        </div>
+                                    </ui:fragment>
+                                    <ui:repeat var="toyFacetItem" value="#{toyCustomBean.targetToy.toyFacetList}">
+                                        <p/>
+                                        <div class="panel panel-danger">
+                                            <div class="panel-heading">
+                                                <b><u>#{toyFacetItem.facetId.name} .ver#{toyFacetItem.facetVersion}</u></b>
+                                            </div>
+
+                                            <div class="panel-body">
+                                                #{toyFacetItem.facetId.note}
+                                                <p/>
+                                                <form jsf:id="toy-facet-update-form" style="display: inline">
+                                                    <button class="btn btn-danger" jsf:id="toy-facet-remove" jsf:action="#{toyCustomBean.removeToyFacet(toyFacetItem.id)}">削除</button>
+                                                    <ui:fragment rendered="#{toyFacetItem.facetId.facetVersion > toyFacetItem.facetVersion}">
+                                                        <!-- 現在利用しているバージョンよりも新しい場合、アップデートボタンを追加する -->
+                                                        <button class="btn btn-success" jsf:id="toy-facet-update" jsf:action="#{toyCustomBean.updateToyFacet(toyFacetItem.id)}">アップデート</button>
+                                                   </ui:fragment>
+                                                </form>
+                                                <a class="btn btn-info" data-toggle="modal" data-target="#facet-detail-modal-#{toyFacetItem.facetId.id}">詳細</a>
+                                            </div>
+                                        </div>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+                            <div class="col-xs-6" style="border-left-style: ridge;">
+                                <ul class="nav nav-tabs">
+                                    <li role="presentation" class="active"><a href="#facet-list"><b>ファセット一覧</b></a></li>
+                                </ul>
+                                <div class="" id="facet-list" style="overflow: scroll; height:500px; border-bottom-style: dotted;">
+                                    <ui:repeat var="facetItem" value="#{toyCustomBean.facetList}">
+                                        <p/>
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading"><b><u>#{facetItem.name} .ver#{facetItem.facetVersion}</u></b></div>
+                                            <div class="panel-body">
+                                                <form jsf:id="facet-add-form-#{facetItem.id}" style="display: inline">
+                                                    #{facetItem.note}
+                                                    <p/>
+                                                    <ui:fragment rendered="#{toyCustomBean.isFacetRegisted(facetItem.id)}">
+                                                        <span class="btn btn-danger" disabled="disabled">追加済</span>
+                                                    </ui:fragment>
+                                                    <ui:fragment rendered="#{!toyCustomBean.isFacetRegisted(facetItem.id)}">
+                                                        <button type="submit" class="btn btn-danger" jsf:action="#{toyCustomBean.addToyFacet(facetItem.id)}"><span class="glyphicon glyphicon-plus"/>追加</button>
+                                                    </ui:fragment>
+                                                </form>
+                                                <!-- サーバ側実装時にモーダルのidを動的にする -->
+                                                <a class="btn btn-info" data-toggle="modal" data-target="#facet-detail-modal-#{facetItem.id}">詳細</a>
+                                            </div>
+                                        </div>
+                                        <!-- ファセットの詳細情報表示モーダル -->
+                                        <div class="modal fade" id="facet-detail-modal-#{facetItem.id}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                                        <h4 class="modal-title" >#{facetItem.name}</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <h4><b><u>ファセットの概要</u></b></h4>
+                                                        <div class="well">
+                                                            #{facetItem.note}
+                                                        </div>
+                                                        <h4><b><u>ファセットの要件</u></b></h4>
+                                                        <div class="well">
+                                                            #{facetItem.requirement}
+                                                        </div>
+                                                        <h4><b><u>Toyに追加されるイベント</u></b></h4>
+                                                        <ui:repeat var="facetEventItem" value="#{facetItem.facetEventList}">
+                                                            <div class="panel panel-primary">
+                                                                <div class="panel-heading"><b>タイトル：<u>#{facetEventItem.name}</u></b></div>
+                                                                <div class="panel-body">
+                                                                    <h5><b><u>Toyが読み上げる内容</u></b></h5>
+                                                                    <div class="well">
+                                                                        #{facetEventItem.content}
+                                                                    </div>
+                                                                    <h5><b><u>イベントスケジュール</u></b></h5>
+                                                                    #{toyCustomBean.getLogicalEventInfo(facetEventItem.id)}
+                                                                    <p/>
+                                                                </div>
+                                                            </div>
+                                                        </ui:repeat>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                       </div>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+                        </div>
+                        <p/><br/>
+                        
+                        <hr/>
+                        <div class="well">
+                            <h4><span class="glyphicon glyphicon-link"/> Toyの音声のカスタマイズ</h4>
+                            Toyの音声の変更が行えます。
+                            <p/>
+                            <form jsf:id="toy-voice-type-edit-form">
+                                <h:selectOneMenu id="select-toy-voice-type" value="#{toyCustomBean.targetToy.toyVoiceTypeId.id}">
+                                    <f:selectItems var="toyVoiceItem" value="#{toyCustomBean.toyVoiceTypeList}" itemValue="#{toyVoiceItem.id}" itemLabel="#{toyVoiceItem.name}"/>
+                                </h:selectOneMenu>
+                            
+                                <p/>
+                                <ui:repeat var="sampleVoiceItem" value="#{toyCustomBean.toyVoiceTypeList}">
+                                    <div id="sample-voice-block-#{sampleVoiceItem.id}" style="display: none;">
+                                        #{sampleVoiceItem.note}
+                                        <p/>
+                                        <a class="btn btn-primary" id="sample-voice-btn-1"><span class="glyphicon glyphicon-volume-up"/> サンプルボイス1</a>
+                                        <audio class="hide" id="sample-voice-1" src="#{toyCustomBean.targetToy.toyVoiceTypeId.sampleVoice1Url}" />
+                                        <a class="btn btn-primary" id="sample-voice-btn-2"><span class="glyphicon glyphicon-volume-up"/> サンプルボイス2</a>
+                                        <audio class="hide" id="sample-voice-2" src="#{toyCustomBean.targetToy.toyVoiceTypeId.sampleVoice2Url}" />
+                                        <a class="btn btn-primary" id="sample-voice-btn-3"><span class="glyphicon glyphicon-volume-up"/> サンプルボイス3</a>
+                                        <audio class="hide" id="sample-voice-3" src="#{toyCustomBean.targetToy.toyVoiceTypeId.sampleVoice3Url}" />
+                                        <a class="btn btn-primary" id="sample-voice-btn-4"><span class="glyphicon glyphicon-volume-up"/> サンプルボイス4</a>
+                                        <audio class="hide" id="sample-voice-4" src="#{toyCustomBean.targetToy.toyVoiceTypeId.sampleVoice4Url}" />
+                                        <a class="btn btn-primary" id="sample-voice-btn-5"><span class="glyphicon glyphicon-volume-up"/> サンプルボイス5</a>
+                                        <audio class="hide" id="sample-voice-5" src="#{toyCustomBean.targetToy.toyVoiceTypeId.sampleVoice5Url}" />
+                                    </div>
+                                </ui:repeat>
+                                <button class="btn btn-success" type="submit" jsf:id="toy-voice-type-change" jsf:action="#{toyCustomBean.editToyVoiceType()}" style="margin-top: 10px;">ボイス変更</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- ToyFacetの削除警告モーダルダイアログ -->
+                <div class="modal fade" id="toy-facet-remove-modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                <h4 class="modal-title">ファセットを削除します。</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="bs-callout bs-callout-warning">
+                                    <h4>ファセットを削除すると以下の処理が実行されます。</h4>
+                                    <h5 class="small">・ファセットから取得したイベントの削除</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Toy未選択時の通知モーダルダイアログ -->
+                <div class="modal fade" id="not-selected-toy-modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                <h4 class="modal-title">Toyが未選択です。</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="bs-callout bs-callout-warning">
+                                    <h4>画面右のToy一覧からToyを選択してください。</h4>
+                                    <h5 class="small">・カスタマイズを行うToyが未選択です。</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+            <ui:define name="css">
+                <!-- jQueryUI CSS -->
+                <link jsf:library="css" jsf:name="jquery-ui.css"/>
+            </ui:define>
+            <ui:define name="js">
+                <!-- jQueryUI JS -->
+                <script jsf:library="js" jsf:name="jquery-ui.js"/>
+                <script type="text/javascript">
+                    var selectedToy = "";
+                    
+                    $(window).load(function () {
+                        // ナビゲーションバーのactiveを変更
+                        $("#toy").addClass("active");
+                        
+                        // Toy選択済チェック
+                        if(#{sessionBean.selectedToyId} === 0) {
+                            // Toyが未選択だった場合、選択を促すダイアログを表示する
+                            $("#not-selected-toy-modal").modal();
+                        }
+                        
+                        $("[id^=toy-item]").hover(
+                            function(){
+                                // マウスホバー時の処理(背景色の変更, 枠線の変更)
+                               $(this).css("background-color","#d4d4d4");
+                            },
+                            function(){
+                                // マウスブラー時の処理
+                               $(this).css("background-color","");
+                            }
+                        );
+                        
+                        $("[id^=toy-item]").click(function(){
+                            // 他の選択を初期化する
+                            $("[id^=toy]").removeClass("toy-selected");
+                            
+                            // 選択した要素のclassに.toy-selectedを付与する
+                            $(this).addClass("toy-selected");
+                            
+                            // toy-menuを有効化する
+                            $("#toy-menu-select-alert").hide();
+                            $("#toy-menu-selected-item").removeClass("hide");
+                            $("[id^=toy-menu").removeClass("disabled");
+                            $("[id^=toy-menu").children().removeClass("unselected");
+                        });
+                        
+                        // ボイスタイプを変更した時の処理
+                        $("[id$=select-toy-voice-type]").change(function(){
+                            $("[id^=sample-voice-block]").hide();
+                            var selectId = $(this).val();
+                            console.log("selectID" + selectId);
+                            $("#sample-voice-block-" + selectId).show();
+                        });
+                        
+                        $("[id^=sample-voice-block]").hide();
+                        $("#sample-voice-block-#{toyCustomBean.targetToy.toyVoiceTypeId.id}").show();
+                        
+                        $("#sample-voice-btn-1").click(function(){
+                           $("#sample-voice-1").get(0).play(); 
+                        });
+                        
+                        $("#sample-voice-btn-2").click(function(){
+                           $("#sample-voice-2").get(0).play(); 
+                        });
+                        
+                        $("#sample-voice-btn-3").click(function(){
+                           $("#sample-voice-3").get(0).play(); 
+                        });
+                        
+                        $("#sample-voice-btn-4").click(function(){
+                           $("#sample-voice-4").get(0).play(); 
+                        });
+                        
+                        $("#sample-voice-btn-5").click(function(){
+                           $("#sample-voice-5").get(0).play(); 
+                        });
+                        
+                        
+                    });
+                </script>
+            </ui:define>
+        </ui:composition>        
+    </body>
+</html>
+

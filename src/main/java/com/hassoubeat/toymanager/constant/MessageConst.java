@@ -40,6 +40,11 @@ public enum MessageConst {
     SUCCESS_FACET_EVENT_CREATE("MIR_01000027", "ファセットイベントの登録が完了しました。"),
     SUCCESS_FACET_EVENT_EDIT("MIR_01000028", "ファセットイベントの変更が完了しました。"),
     SUCCESS_FACET_EVENT_REMOVE("MIR_01000029", "ファセットイベントの削除が完了しました。"),
+    SUCCESS_TOY_VOICE_TYPE_EDIT("MIR_01000030", "Toyのボイスタイプを変更しました。"),
+    SUCCESS_TOY_FACET_CREATE("MIR_01000031", "Toyにファセットへの追加が完了しました。"),
+    SUCCESS_FACET_EVENT_COPY("MIR_01000032", "ファセットイベントからイベントのコピーを完了しました。"),
+    SUCCESS_TOY_FACET_REMOVE("MIR_01000033", "Toyからファセットを削除しました。"),
+    SUCCESS_TOY_FACET_UPDATE("MIR_01000034", "ファセットのアップデートが完了しました。"),
     
     // MER(ToyManager側で発生する想定内エラー系)
     ALREADY_REGISTED_USER("MER_01000001", "入力したメールアドレスは既に登録されています。"),

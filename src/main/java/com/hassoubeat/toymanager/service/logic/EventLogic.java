@@ -20,9 +20,13 @@ import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import static org.quartz.CalendarIntervalScheduleBuilder.calendarIntervalSchedule;
+import static org.quartz.TriggerBuilder.newTrigger;
 import org.slf4j.Logger;
 
 /**
@@ -271,5 +275,98 @@ public class EventLogic{
         return event;
     }
     
+    /**
+     * 受け取ったEventエンティティからどういったイベントであるかを論理的な文字列で返却するメソッド
+     * @param Eventエンティティ
+     * @return 
+     */
+    public String genEventInfo(Event event) {
+        final LocalDateTime EVENT_START_DATE = LocalDateTime.ofInstant(event.getStartDate().toInstant(), ZoneId.systemDefault());
+        final int ROOP_PARAM = event.getRoop();
+        LocalDateTime ROOP_END_DATE = null;
+        if (event.getRoopEndDate() != null) {
+            ROOP_END_DATE = LocalDateTime.ofInstant(event.getRoopEndDate().toInstant(), ZoneId.systemDefault());
+        }
+        // ループ間隔値の取得
+        final int ROOP_INTERVAL = bitLogic.bitAnd(ROOP_PARAM, bitLogic.bitNot(erpConst.IS_ROOP_INTERVAL_BIT));
+        
+        String eventInfo = "";
+        
+        if (!bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_ROOP)) {
+            // イベントの繰り返しが無効の場合
+            eventInfo += EVENT_START_DATE.getYear() + "年" + EVENT_START_DATE.getMonthValue() + "月" + EVENT_START_DATE.getDayOfMonth() + "日" + EVENT_START_DATE.getHour() + "時" + EVENT_START_DATE.getMinute() + "分に一度だけ実行されます。";
+            
+        } 
+        
+        // 以下、イベントの繰り返しが有効の場合
+        
+        if (bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_EVERY_DAY_ROOP)) {
+            // 日時繰り返しの場合
+            eventInfo += ROOP_INTERVAL + "日間隔で" + EVENT_START_DATE.getHour()  + "時" + EVENT_START_DATE.getMinute() + "分に実行されます。";
+        }
+
+        if (bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_EVERY_WEEK_ROOP)) {
+            // 週次繰り返しの場合
+            eventInfo += ROOP_INTERVAL + "週間隔で";
+            
+            // 曜日指定の確認
+            if (bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_ROOP_SUNDAY)) {
+                // 日曜日が指定されていた場合
+                eventInfo += "日";
+            }
+            if (bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_ROOP_MONDAY)) {
+                // 月曜日が指定されていた場合
+                eventInfo += "月";
+            }
+            if (bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_ROOP_TUESDAY)) {
+                // 火曜日が指定されていた場合
+                eventInfo += "火";
+            }
+            if (bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_ROOP_WEDNESDAY)) {
+                // 水曜日が指定されていた場合
+                eventInfo += "水";
+            }
+            if (bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_ROOP_THURSDAY)) {
+                // 木曜日が指定されていた場合
+                eventInfo += "木";
+            }
+            if (bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_ROOP_FRIDAY)) {
+                // 金曜日が指定されていた場合
+                eventInfo += "金";
+            }
+            if (bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_ROOP_SATURDAY)) {
+                // 土曜日が指定されていた場合
+                eventInfo += "土";
+            }
+            
+            eventInfo += "曜日の" + EVENT_START_DATE.getHour()  + "時" + EVENT_START_DATE.getMinute() + "分に実行されます。";
+        }
+        
+        if (bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_EVERY_MOUTH_ROOP)) {
+            // 月次繰り返しの場合
+            
+            eventInfo += ROOP_INTERVAL + "月間隔で";
+            
+            if (bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_ROOP_STANDARD_DAY)) {
+                // 日付基準の繰り返しの場合(毎月 N 日)
+                eventInfo += EVENT_START_DATE.getHour()  + "時" + EVENT_START_DATE.getMinute() + "分に実行されます。";
+            } else {
+                // TODO 曜日基準の繰り返しの場合(毎月 第 N 曜日)
+                
+            }
+        }
+        
+        if (bitLogic.bitCheck(ROOP_PARAM, erpConst.IS_EVERY_YEAR_ROOP)) {
+            // 年次繰り返しの場合
+            eventInfo += eventInfo += ROOP_INTERVAL + "年間隔で" + EVENT_START_DATE.getMonthValue() + "月" + EVENT_START_DATE.getDayOfMonth() + "日" + EVENT_START_DATE.getHour() + "時" + EVENT_START_DATE.getMinute();
+        }
+        
+        if (ROOP_END_DATE != null) {
+            // ループの終わりが設定されていた場合
+            eventInfo += "(" + ROOP_END_DATE.getYear() + "年" + ROOP_END_DATE.getMonthValue() + "月" + ROOP_END_DATE.getDayOfMonth() + "日" + ROOP_END_DATE.getHour() + "時" + ROOP_END_DATE.getMinute() + "分まで本イベントは継続的に行われます。)";
+        }
+        
+        return eventInfo;
+    }
     
 }
