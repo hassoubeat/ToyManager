@@ -187,6 +187,7 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
         int roopInterval = bitLogic.bitAnd(targetEvent.getRoop(), bitLogic.bitNot(erpConst.IS_ROOP_INTERVAL_BIT));
         
         int startIndex = 1;
+        // TODO ロジックをなんとかするのだ。。。取得したい範囲の日付になるまで日付加算を繰り返すっていう頭のおかしいことをしてる
         while (nextStartDate.compareTo(startDate) <= 0) {
             if (roopType == erpConst.IS_EVERY_DAY_ROOP) {
                 // 日次ループ
@@ -221,7 +222,7 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
         }
         
         int endIndex = 1;
-        while (nextStartDate.compareTo(targetEvent.getRoopEndDate()) <= 0) {
+        while (nextStartDate.compareTo(endDate) <= 0) {
             // クローンで実装する
             Event roopEvent = new Event();
             try {
