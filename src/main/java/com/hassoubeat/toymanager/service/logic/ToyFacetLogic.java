@@ -95,10 +95,12 @@ public class ToyFacetLogic{
     public ToyFacet update(Integer updateToyFacetId) {
         // 先にToyFacetに紐付いているイベントを削除する
         ToyFacet updateToyFacet = toyFacetFacade.find(updateToyFacetId);
-        for (Event removeEvent : updateToyFacet.getToyId().getEventList()) {
-            // TODO ToyFacetIDからイベントを削除する(いまのままだと紐付いているEventが全部消える)
-            eventFacade.remove(removeEvent);
-        }
+        // ToyFacetIDからイベントを削除する(いまのままだと紐付いているEventが全部消える)
+        eventFacade.removeByToyFacetId(updateToyFacet);
+//        for (Event removeEvent : updateToyFacet.getToyId().getEventList()) {
+//            // TODO 
+//            
+//        }
         updateToyFacet.setFacetVersion(updateToyFacet.getFacetId().getFacetVersion());
         // ToyFacetの変更
         ToyFacet editToyFacet = toyFacetFacade.edit(updateToyFacet);

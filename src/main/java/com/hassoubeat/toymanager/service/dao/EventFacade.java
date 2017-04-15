@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -362,6 +363,24 @@ public class EventFacade extends AbstractFacade<Event> {
         cq.where(isToyFacetIdEqual, isStandardEvent, isTalking, isRoopEndDate);
         
         return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    /**
+     * 
+     * @param toyFacetId 
+     */
+    public void removeByToyFacetId(ToyFacet toyFacetId) {
+        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+        CriteriaDelete<Event> delete = builder.createCriteriaDelete(Event.class);
+        Root<Event> root = delete.from(Event.class);
+
+        delete.where(builder.equal(root.get(Event_.toyFacetId), toyFacetId));
+
+        Query q = getEntityManager().createQuery(delete);
+        q.executeUpdate();
+        
+        this.flush();
+        this.clear();
     }
     
     /**
