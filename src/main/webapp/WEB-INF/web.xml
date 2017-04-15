@@ -18,8 +18,9 @@
         <url-pattern>/faces/*</url-pattern>
     </servlet-mapping>
     <session-config>
+        <!-- 12時間セッションを保持する -->
         <session-timeout>
-            30
+            720
         </session-timeout>
         <!-- cookieを利用する(セッションIDのURL埋めこみを利用しない) -->
         <tracking-mode>

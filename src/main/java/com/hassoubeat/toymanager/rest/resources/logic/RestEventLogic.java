@@ -13,6 +13,7 @@ import com.hassoubeat.toymanager.service.dao.ToyFacade;
 import com.hassoubeat.toymanager.service.entity.Account;
 import com.hassoubeat.toymanager.service.entity.Event;
 import com.hassoubeat.toymanager.service.entity.Toy;
+import com.hassoubeat.toymanager.service.entity.ToyFacet;
 import com.hassoubeat.toymanager.util.BitLogic;
 import com.hassoubeat.toymanager.util.UtilLogic;
 import java.util.ArrayList;
@@ -69,18 +70,21 @@ public class RestEventLogic extends AbstractRestLogic {
      */
     public List<RestEvent> fetchEvent(Toy targetToy, Date fetchStartDate, Date fetchEndDate) {
         List<RestEvent> responseList = new ArrayList();
-//        Toy toy = toyFacade.findByRotNumber(rotNum);
         
         // Toyイベントの取得
         responseList.addAll(fetchToyEvent(targetToy, fetchStartDate, fetchEndDate));
         // アカウントイベントの取得
         responseList.addAll(fetchAccountEvent(targetToy.getAccountId(), fetchStartDate, fetchEndDate));
-        // TODO ファセットイベントの取得
+        // ファセットイベントの取得
+        // TODO 一回のSQL発行で取得できないか検討する
+        for (ToyFacet toyFacet : targetToy.getToyFacetList()) {
+            responseList.addAll(fetchFacetEvent(toyFacet, fetchStartDate, fetchEndDate));
+        }
         return responseList;
     }
     
     /**
-     * Toyイベントを取得する
+     * Toyに紐付いているイベントを取得する
      * @param toyId
      * @return 
      */
@@ -98,11 +102,39 @@ public class RestEventLogic extends AbstractRestLogic {
         return responseList;
     }
     
+    /**
+     * Accountに紐付いているイベントを取得する
+     * @param accountId
+     * @param fetchStartDate
+     * @param fetchEndDate
+     * @return 
+     */
     private List<RestEvent> fetchAccountEvent(Account accountId, Date fetchStartDate, Date fetchEndDate) {
         List<Event> convertList = new ArrayList();
         List<RestEvent> responseList = new ArrayList();
         convertList.addAll(eventFacade.findStandardEventByAccountIdForToyTalk(accountId, fetchStartDate, fetchEndDate));
         convertList.addAll(eventFacade.findRoopEventByAccountIdForToyTalk(accountId, fetchStartDate));
+        for(Event toyEvent : convertList) {
+            responseList.add(convertEvent(toyEvent));
+        }
+        for (RestEvent item: responseList) {
+            logger.debug(item.toString());
+        }
+        return responseList;
+    }
+    
+    /**
+     * Facetに紐付いているイベントを取得する
+     * @param facetId
+     * @param fetchStartDate
+     * @param fetchEndDate
+     * @return 
+     */
+    private List<RestEvent> fetchFacetEvent(ToyFacet toyFacetId, Date fetchStartDate, Date fetchEndDate) {
+        List<Event> convertList = new ArrayList();
+        List<RestEvent> responseList = new ArrayList();
+        convertList.addAll(eventFacade.findStandardEventByToyFacetIdForToyTalk(toyFacetId, fetchStartDate, fetchEndDate));
+        convertList.addAll(eventFacade.findRoopEventByToyFacetIdForToyTalk(toyFacetId, fetchStartDate));
         for(Event toyEvent : convertList) {
             responseList.add(convertEvent(toyEvent));
         }
@@ -133,7 +165,9 @@ public class RestEventLogic extends AbstractRestLogic {
             rEvent.setAccountId(targetEvent.getAccountId().getId());
         }
         if (targetEvent.getToyFacetId() != null) {
-            rEvent.setFacetId(targetEvent.getToyFacetId().getFacetId().getId());
+            rEvent.setToyFacetId(targetEvent.getToyFacetId().getId());
+            rEvent.setFacetVersion(targetEvent.getToyFacetId().getFacetVersion());
+            rEvent.setFacetProgramPath(targetEvent.getToyFacetId().getFacetId().getProgramPath());
         }
         
         return rEvent;

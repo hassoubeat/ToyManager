@@ -13,13 +13,18 @@ import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.constant.MessageConst;
 import com.hassoubeat.toymanager.service.dao.FacetEventFacade;
 import com.hassoubeat.toymanager.service.dao.FacetFacade;
+import com.hassoubeat.toymanager.service.entity.Event;
 import com.hassoubeat.toymanager.service.entity.Facet;
 import com.hassoubeat.toymanager.service.entity.FacetEvent;
 import com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException;
+import com.hassoubeat.toymanager.service.logic.EventLogic;
 import com.hassoubeat.toymanager.util.S3Logic;
 import com.hassoubeat.toymanager.util.ToastMessage;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -50,6 +55,8 @@ public class FacetManagementEditBean implements Serializable{
     @EJB
     FacetEventFacade facetEventFacade;
     @EJB
+    EventLogic eventLogic;
+    @EJB
     S3Logic s3Logic;
     
     @Getter
@@ -67,6 +74,10 @@ public class FacetManagementEditBean implements Serializable{
     @Getter
     @Setter
     Part facetProgram;
+    
+    @Getter
+    @Setter
+    String logicalEventInfo = "";
 
     /**
      * Creates a new instance of TopBean
@@ -284,6 +295,46 @@ public class FacetManagementEditBean implements Serializable{
         facesContext.addMessage("", new FacesMessage(toastMessage.genList()));
         context.getExternalContext().getFlash().setKeepMessages(true);
         return "edit?faces-redirect=true&id=" + facet.getId();
+    }
+    
+    
+    /**
+     * ajaxでループイベントの論理的な情報を取得する
+     */
+    public void genLogicalEventInfo() {
+        Event event = new Event();
+        
+        String startDateStr = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("startDate");
+        String roopParamStr = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("roopParam");
+        String roopEndDateStr = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("roopEndDate");
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date startDate = new Date();
+        int roopParam;
+        Date roopEndDate = new Date();
+        
+        try {
+            startDate = sdf.parse(startDateStr);
+        } catch (ParseException ex) {
+            return;
+        }
+        
+        try {
+            roopParam = Integer.parseInt(roopParamStr);
+        } catch (NumberFormatException ex) {
+            roopParam = 0;
+        }
+        
+        try {
+            roopEndDate = sdf.parse(roopEndDateStr);
+        } catch (ParseException ex) {
+            roopEndDate = null;
+        }
+        event.setStartDate(startDate);
+        event.setRoop(roopParam);
+        event.setRoopEndDate(roopEndDate);
+        
+        logicalEventInfo = eventLogic.genEventInfo(event);
     }
     
 } 

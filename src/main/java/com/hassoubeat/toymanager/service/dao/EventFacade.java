@@ -9,6 +9,7 @@ import com.hassoubeat.toymanager.service.entity.Account;
 import com.hassoubeat.toymanager.service.entity.Event;
 import com.hassoubeat.toymanager.service.entity.Event_;
 import com.hassoubeat.toymanager.service.entity.Toy;
+import com.hassoubeat.toymanager.service.entity.ToyFacet;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -251,6 +252,114 @@ public class EventFacade extends AbstractFacade<Event> {
         Predicate isTalking = builder.equal(root.get(Event_.isTalking), true);
         Predicate isRoopEndDate = builder.greaterThanOrEqualTo(root.get(Event_.roopEndDate), startDate);
         cq.where(isToyIdEqual, isStandardEvent, isTalking, isRoopEndDate);
+        
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    /**
+     * 引数で受け取ったToyFacetIdのEventを全件取得するメソッド
+     * @param toyFacetId 検索したいToyFacetId(Entity)
+     * @return ToyFacetIDに紐づくEventの一覧
+     */
+    public List<Event> findByToyFacetId(ToyFacet toyFacetId) {
+        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery cq = builder.createQuery();
+        Root<Event> root = cq.from(Event.class);
+        cq.select(root);
+        
+        // WHERE条件の型と検索条件名(Entityの要素名)を指定する
+        Predicate isEqual = builder.equal(root.get(Event_.toyFacetId), toyFacetId);
+        cq.where(isEqual);
+        
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    /**
+     * 引数で受け取ったToyFacetIdと開始時刻と終了時刻の間の非ループEventを全件取得するメソッド
+     * @param toyFacetId 検索したいToyFacetId(Entity)
+     * @param startDate
+     * @param endDate
+     * @return ToyFacetIDに紐づくEventの一覧
+     */
+    public List<Event> findStandardEventByToyFacetId(ToyFacet toyFacetId, Date startDate, Date endDate) {
+        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery cq = builder.createQuery();
+        Root<Event> root = cq.from(Event.class);
+        cq.select(root);
+        
+        // WHERE条件の型と検索条件名(Entityの要素名)を指定する
+        Predicate isToyFacetIdEqual = builder.equal(root.get(Event_.toyFacetId), toyFacetId);
+        Predicate isStandardEvent = builder.equal(root.get(Event_.roop), 0);
+        Predicate isStartDateBetween = builder.between(root.get(Event_.startDate), startDate, endDate);
+        cq.where(isToyFacetIdEqual, isStandardEvent, isStartDateBetween);
+        
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    /**
+     * 引数で受け取ったToyFacetIdとループ終了時刻が指定した日にちより未来のループEventを全件取得するメソッド
+     * @param toyFacetId 検索したいToyFacetId(Entity)
+     * @param startDate
+     * @return ToyIDに紐づくEventの一覧
+     */
+    public List<Event> findRoopEventByToyFacetId(ToyFacet toyFacetId, Date startDate) {
+        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery cq = builder.createQuery();
+        Root<Event> root = cq.from(Event.class);
+        cq.select(root);
+        
+        // WHERE条件の型と検索条件名(Entityの要素名)を指定する
+        Predicate isToyFacetIdEqual = builder.equal(root.get(Event_.toyFacetId), toyFacetId);
+        Predicate isStandardEvent = builder.notEqual(root.get(Event_.roop), 0);
+        Predicate isRoopEndDate = builder.greaterThanOrEqualTo(root.get(Event_.roopEndDate), startDate);
+        cq.where(isToyFacetIdEqual, isStandardEvent, isRoopEndDate);
+        
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    /**
+     * 引数で受け取ったToyFacetIdと開始時刻と終了時刻の間の非ループEventを全件取得するメソッド
+     * ToyTalk用のため、ToyTalkフラグがTrueの情報のみ取得する
+     * @param toyFacetId 検索したいToyFacetId(Entity)
+     * @param startDate
+     * @param endDate
+     * @return ToyFacetIDに紐づくEventの一覧
+     */
+    public List<Event> findStandardEventByToyFacetIdForToyTalk(ToyFacet toyFacetId, Date startDate, Date endDate) {
+        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery cq = builder.createQuery();
+        Root<Event> root = cq.from(Event.class);
+        cq.select(root);
+        
+        // WHERE条件の型と検索条件名(Entityの要素名)を指定する
+        Predicate isToyFacetIdEqual = builder.equal(root.get(Event_.toyFacetId), toyFacetId);
+        Predicate isStandardEvent = builder.equal(root.get(Event_.roop), 0);
+        Predicate isTalking = builder.equal(root.get(Event_.isTalking), true);
+        Predicate isStartDateBetween = builder.between(root.get(Event_.startDate), startDate, endDate);
+        cq.where(isToyFacetIdEqual, isStandardEvent, isTalking,isStartDateBetween);
+        
+        return getEntityManager().createQuery(cq).getResultList();
+    }
+    
+    /**
+     * 引数で受け取ったToyFacetIdとループ終了時刻が指定した日にちより未来のループEventを全件取得するメソッド
+     * ToyTalk用のため、ToyTalkフラグがTrueの情報のみ取得する
+     * @param toyFacetId 検索したいToyFacetId(Entity)
+     * @param startDate
+     * @return ToyIDに紐づくEventの一覧
+     */
+    public List<Event> findRoopEventByToyFacetIdForToyTalk(ToyFacet toyFacetId, Date startDate) {
+        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery cq = builder.createQuery();
+        Root<Event> root = cq.from(Event.class);
+        cq.select(root);
+        
+        // WHERE条件の型と検索条件名(Entityの要素名)を指定する
+        Predicate isToyFacetIdEqual = builder.equal(root.get(Event_.toyFacetId), toyFacetId);
+        Predicate isStandardEvent = builder.notEqual(root.get(Event_.roop), 0);
+        Predicate isTalking = builder.equal(root.get(Event_.isTalking), true);
+        Predicate isRoopEndDate = builder.greaterThanOrEqualTo(root.get(Event_.roopEndDate), startDate);
+        cq.where(isToyFacetIdEqual, isStandardEvent, isTalking, isRoopEndDate);
         
         return getEntityManager().createQuery(cq).getResultList();
     }

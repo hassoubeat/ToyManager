@@ -198,6 +198,7 @@ public class ToyCustomBean implements Serializable{
     }
     /**
      * 渡されたFacetEventを論理的な文字列に表現して返却する
+     * @param facetEventId
      * @return 
      */
     public String getLogicalEventInfo(Integer facetEventId) {
@@ -212,7 +213,7 @@ public class ToyCustomBean implements Serializable{
     
     @LogInterceptor
     private void fetchFacetList() {
-        facetList = facetFacade.findAll();
+        facetList = facetFacade.findAllByReleasedFacet();
     }
     
     @LogInterceptor

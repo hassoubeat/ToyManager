@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:jsf="http://xmlns.jcp.org/jsf"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <head jsf:id="head">
         <meta http-equiv="content-language" content="ja"/>
     </head>
@@ -221,7 +222,10 @@
                                             </tr>
                                             <tr>
                                                 <th>ループパラメータ</th>
-                                                <td><input type="number" jsf:id="roop-param" id="roop-param" placeholder="ループパラメータを入力してください。(ループが不要の場合は0を入力してください)" jsf:value="#{facetManagementEditBean.facetEvent.roop}"/></td>
+                                                <td>
+                                                    <input type="number" jsf:id="roop-param" id="roop-param" placeholder="ループパラメータを入力してください。(ループが不要の場合は0を入力してください)" jsf:value="#{facetManagementEditBean.facetEvent.roop}"/><br/>
+                                                    <h:outputText id="logicalEventInfo" value="#{facetManagementEditBean.logicalEventInfo}" />
+                                                </td>    
                                             </tr>
                                             <tr>
                                                 <th>ループ終了日時:</th>
@@ -246,6 +250,9 @@
 <!--                                        <f:ajax execute="@form" render="facet-event-form" onevent="removeFacetEventAfter" resetValues="true"/>-->
                                     </h:commandButton>
                                 </h:form>
+                                <form jsf:id="test">
+                                    <p:remoteCommand name="genLogicalEventInfo" action="#{facetManagementEditBean.genLogicalEventInfo}" update=":facet-event-form:logicalEventInfo" resetValues="true"/>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -326,6 +333,8 @@
                             
                         });
                         
+                        roopParamChange()
+                        
                         // ファセットイベントの追加の場合は、変更と削除ボタンをdisabledにする
                         $("#show-facet-event-edit-modal").click(function(){
                             $("[id$=update-facet-event]").prop("disabled", true);
@@ -335,6 +344,35 @@
                         // イベントファセットフォーム内のイベントを適応する
                         eventFacetFormSetup();
                     });
+                    
+                    function roopParamChange() {
+                        // ループパラメータ変更時に、ajaxで論理的なイベントの取得を行う
+                        $("[id$=roop-param]").change(function(){
+                            genLogicalEventInfo([
+                                {
+                                    name: "startDate", value: $("[id$=start-event-date]").val()
+                                },{
+                                    name: "roopParam", value: $("[id$=roop-param]").val()
+                                },{
+                                    name: "roopEndDate", value: $("[id$=roop-end-date]").val()
+                                }
+                            ]);
+                            return false;
+                        });
+                        $("[id$=roop-end-date]").change(function(){
+                            console.log("test");
+                            genLogicalEventInfo([
+                                {
+                                    name: "startDate", value: $("[id$=start-event-date]").val()
+                                },{
+                                    name: "roopParam", value: $("[id$=roop-param]").val()
+                                },{
+                                    name: "roopEndDate", value: $("[id$=roop-end-date]").val()
+                                }
+                            ]);
+                            return false;
+                        });
+                    }
                     
                     // イベント選択時のコールバックメソッド
                     function selectFacetEventAfter (e) {
@@ -352,6 +390,7 @@
                             });
 
                             colorBlockSetup();
+                            roopParamChange()    
                             $("#facet-event-edit-modal").modal();
                         }
                     }

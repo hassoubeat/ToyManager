@@ -7,6 +7,7 @@ package com.hassoubeat.toymanager.service.dao;
 
 import com.hassoubeat.toymanager.service.entity.Facet;
 import com.hassoubeat.toymanager.service.entity.Facet_;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,6 +34,23 @@ public class FacetFacade extends AbstractFacade<Facet> {
 
     public FacetFacade() {
         super(Facet.class);
+    }
+    
+    /**
+     * 公開済のファセット全件を取得する
+     * @return 公開済のファセット一覧
+     */
+    public List<Facet> findAllByReleasedFacet() {
+        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery cq = builder.createQuery();
+        Root<Facet> root = cq.from(Facet.class);
+        cq.select(root);
+        
+        // WHERE条件の型と検索条件名(Entityの要素名)を指定する
+        Predicate isReleasedEqual = builder.equal(root.get(Facet_.isRelease), true);
+        cq.where(isReleasedEqual);
+        
+        return getEntityManager().createQuery(cq).getResultList();
     }
     
     /**

@@ -55,7 +55,15 @@ public class RestEvent {
     
     @Getter
     @Setter
-    private Integer FacetId;
+    private Integer toyFacetId;
+    
+    @Getter
+    @Setter
+    private Double facetVersion;
+    
+    @Getter
+    @Setter
+    private String facetProgramPath;
 
     public RestEvent() {
     }
