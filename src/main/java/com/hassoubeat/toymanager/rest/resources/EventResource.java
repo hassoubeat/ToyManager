@@ -183,29 +183,26 @@ public class EventResource {
         
     }
     
-    /**
-     * Toyのイベント取得完了を通知する
-     * @param header ヘッダー情報
-     */
-    @PUT
-    @Path("0.1/events/notice")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @LogInterceptor
-    public void fetchEventsCompleteNotice(@Context HttpHeaders header) {
-        // ヘッダから認可情報の取得
-        String rotNumStr = header.getHeaderString("rotNum");
-        String accessToken = header.getHeaderString("authorication");
-        String macAddress = header.getHeaderString("macAddress");
-        
-        // 実行前チェック
-        restEventLogic.RestAuthorization(rotNumStr, accessToken, macAddress);
-        
-        Toy toy = toyFacade.findByRotNumber(Integer.parseInt(rotNumStr));
-        // 同期最終時刻の更新
-        toy.setLastSyncDate(new Date());
-        toyFacade.edit(toy);
-        
-    }
+//    /**
+//     * Toyのイベント取得完了を通知する
+//     * @param header ヘッダー情報
+//     */
+//    @GET
+//    @Path("0.1/events/notice")
+//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+//    @LogInterceptor
+//    public void fetchEventsCompleteNotice(@Context HttpHeaders header) {
+//        // ヘッダから認可情報の取得
+//        String rotNumStr = header.getHeaderString("rotNum");
+//        String accessToken = header.getHeaderString("authorication");
+//        String macAddress = header.getHeaderString("macAddress");
+//        
+//        // 実行前チェック
+//        restEventLogic.RestAuthorization(rotNumStr, accessToken, macAddress);
+//        
+//        
+//        
+//    }
     
 //    @POST
 //    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})

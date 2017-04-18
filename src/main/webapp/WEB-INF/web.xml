@@ -4,8 +4,14 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
+    <!-- システムのタイムゾーンを適応する -->
     <context-param>
         <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <!-- jsfページでコメントアウトした際にfacelet式も評価されないようにする -->
+    <context-param>
+        <param-name>facelets.SKIP_COMMENTS</param-name>
         <param-value>true</param-value>
     </context-param>
     <servlet>
@@ -23,6 +29,7 @@
             720
         </session-timeout>
         <!-- cookieを利用する(セッションIDのURL埋めこみを利用しない) -->
+        <!-- というかURL埋め込みされると、REST_APIなどが利用できなくなる -->
         <tracking-mode>
             COOKIE
         </tracking-mode>
@@ -30,4 +37,8 @@
     <welcome-file-list>
         <welcome-file>faces/login.xhtml</welcome-file>
     </welcome-file-list>
+<!--    <error-page>
+        <error-code>404</error-code>
+        <location>/error/505.html</location>
+    </error-page>-->
 </web-app>

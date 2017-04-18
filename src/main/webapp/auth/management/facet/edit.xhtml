@@ -34,7 +34,7 @@
                                 <tr>
                                     <th>* ファセットバージョン <span id="facet-version-help" class="glyphicon glyphicon-question-sign"/></th>
                                     <td>
-                                        <input type="number" step="0.1" id="facet-version" jsf:id="facet-version" class="form-control" placeholder="ファセットバージョンを入力してください。" jsf:value="#{facetManagementEditBean.facet.facetVersion}"/>
+                                        <input type="number" step="0.01" id="facet-version" jsf:id="facet-version" class="form-control" placeholder="ファセットバージョンを入力してください。" jsf:value="#{facetManagementEditBean.facet.facetVersion}"/>
                                         <h:message class="label label-danger" for="facet-version"/>
                                     </td>
                                 </tr>
@@ -52,10 +52,10 @@
                                         <h:message class="label label-danger" for="facet-requirement"/>
                                     </td>
                                 </tr>
-                                <tr class="test">
+                                <tr>
+                                    <th>ファセットプログラムのアップロード <span id="facet-program-upload-help" class="glyphicon glyphicon-question-sign"/><br/><a id="facet-program-create-guide-modal-switch" data-toggle="modal" href="#facet-program-create-guide-modal">※ ファセットプログラム作成のルール</a></th>
                                     <ui:fragment rendered="#{facetManagementEditBean.facet.programPath.length() == 0 || facetManagementEditBean.facet.programPath == null}">
                                         <!-- ファセットアップロードは、ファセットプログラムが指定されていない時のみ表示する -->
-                                        <th>オリジナルファセットのアップロード <span id="facet-program-upload-help" class="glyphicon glyphicon-question-sign"/><br/><a href="#">※ オリジナルファセット作成のルール</a></th>
                                         <td>
                                             <input type="file" accept=".jar" id="facet-program-upload" jsf:id="facet-program-upload" jsf:value="#{facetManagementEditBean.facetProgram}"/><p/>
                                             <h:message class="label label-danger" for="facet-program-upload"/>
@@ -64,7 +64,6 @@
                                     </ui:fragment>
                                     <ui:fragment rendered="#{facetManagementEditBean.facet.programPath.length() > 0}">
                                         <!-- ファセットプログラム編集は、既にファセットプログラムがアップロードされている場合のみ表示する -->
-                                        <th>プログラムのアップデート <span id="facet-program-upload-help" class="glyphicon glyphicon-question-sign"/><br/><a href="#">※ オリジナルファセット作成のルール</a></th>
                                         <td>
                                             URL:<a href="#{facetManagementEditBean.facet.programPath}">#{facetManagementEditBean.facet.programPath}</a>
                                             <input type="file" accept=".jar" id="facet-program-update" jsf:id="facet-program-update" jsf:value="#{facetManagementEditBean.facetProgram}"/><p/>
@@ -278,6 +277,7 @@
                         </div>
                     </div>
                 </div>
+                <ui:include src="../template/facetProgramCreateGuide.xhtml"></ui:include>
             </ui:define>
             <ui:define name="css">
                 <!-- jQueryDataTables CSS -->
@@ -328,7 +328,7 @@
                         });
                         
                         $("#facet-event-help").balloon({
-                            contents:"ファセットを追加したクライアントに追加されるイベントです。ファセットプログラムを定義している場合はイベント発生時にオリジナルファセットの処理が実行されます。",
+                            contents:"ファセットを追加したクライアントに追加されるイベントです。ファセットプログラムを定義している場合はイベント発生時にファセットプログラムの処理が実行されます。",
                             position: "right"
                             
                         });

@@ -32,7 +32,7 @@
                                     <td>
                                         <ui:fragment  rendered="#{item.lastSyncDate != null}">
                                             <!-- 最終同期時刻が存在した場合 -->
-                                            <h:outputText class="label label-default" value="#{item.lastSyncDate}" >
+                                            <h:outputText class="label label-success" value="#{item.lastSyncDate}" >
                                                 <f:convertDateTime pattern="yyyy/MM/dd HH:mm"/>
                                             </h:outputText>
                                         </ui:fragment>

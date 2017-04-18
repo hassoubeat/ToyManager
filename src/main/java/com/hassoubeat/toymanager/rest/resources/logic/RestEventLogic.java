@@ -80,6 +80,11 @@ public class RestEventLogic extends AbstractRestLogic {
         for (ToyFacet toyFacet : targetToy.getToyFacetList()) {
             responseList.addAll(fetchFacetEvent(toyFacet, fetchStartDate, fetchEndDate));
         }
+        
+        // Toyの最終イベント取得時刻を更新する
+        targetToy.setLastSyncDate(new Date());
+        toyFacade.edit(targetToy);
+        
         return responseList;
     }
     

@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <body>
+        <ui:composition>
+            <!-- ファセットプログラム作成ガイド -->
+            <div class="modal fade" id="facet-program-create-guide-modal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                            <h4 class="modal-title">ファセットプログラムの作成ガイド</h4>
+                        </div>
+                        <div class="modal-body">
+                            
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    1.ファセットプログラムの概要
+                                </div>
+                                <div class="panel-body">
+                                    ファセットプログラムとは、イベントの基本動作である<u>読み上げ</u>以外の独自の処理を行わせることが出来るプラグイン機能である。<br/>
+                                    特定のルールに従った<u>.jarファイル</u>を実装し、ファセット編集画面よりアップロードすることで、指定したイベントの日時に実装した独自処理を走らせることが出来る。
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    2.ファセットプログラムの実装ルール
+                                </div>
+                                <div class="panel-body">
+                                    幾つかのルールに従って実装することで、正しく動作するプログラムとなる。
+                                    <h5><b><u>ルール1.パッケージ名</u></b></h5>
+                                    まず、Javaプロジェクトを作成し、以下のパッケージを作成する。
+                                    <div class="well well-sm">
+                                        <h5>com.hassoubeat</h5>
+                                    </div>
+                                    後述するFacetInterfaceを実装するクラスは、本パッケージ直下にファイルを作成する。<br/>
+                                    <h5><b><u>ルール2.独自実装を行うクラスの作成</u></b></h5>
+                                    実際に行いたい独自処理を実装するクラスを先程作成したパッケージ直下に作成する。
+                                    なお、クラス名はファセットプログラム名と同一の名前を指定する。
+                                    <div class="well well-sm">
+                                        ※ 例<br/>
+                                        ファセット名：Sample<br/>
+                                        作成したクラス：com.hassoubeat.Sample.java
+                                    </div>
+                                    <h5><b><u>ルール3.FacetInterfaceの実装</u></b></h5>
+                                    先程作成したクラスでFacetInterfaceを実装する。
+                                    FacetInterfaceは以下のURLからダウンロードし、プロジェクトのクラスパスに含めて利用する。<br/>
+                                    <a href="https://s3-ap-northeast-1.amazonaws.com/toymanager/FacetInterface.jar">https://s3-ap-northeast-1.amazonaws.com/toymanager/FacetInterface.jar</a><br/>
+                                    以下を例に実装する。
+                                    <pre class="brush:java">
+                                        public class Sample implements FacetInterface{
+                                            @Override
+                                            public Result execute() throws Exception {
+                                                // 独自処理を実装する
+                                            }
+                                        }
+                                    </pre>
+                                    <!-- TODO Resultの戻り値による処理を実装した後に文章の書き換え -->
+                                    ※1 戻り値として指定している【Result】クラスは現在、意味を持ちませんが、アップデートで指定したパラメータに値をセットすることでLCDへ文字を表示したりすることを出来るようにすることを検討しています。<br/>
+                                    ※2 独自処理内で読み上げを行いたい時は、【ToyTalk】クラスの【talking】メソッドを呼び出すことで可能。<br/>
+                                    詳細は<a href="#">JavaDoc</a>参照。
+                                    <!-- TODO JavaDocのリンクを貼る -->
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    3.jarファイルの生成
+                                </div>
+                                <div class="panel-body">
+                                    実装が完了したところで、実行形式ファイルを生成する。<br/>
+                                    生成するjarファイル名は、【ファセット名】.jarとなるように出力させる。<br/>
+                                    また、別途外部ライブラリを利用する際は、maven-assembly-pluginなどを利用して、外部ライブラリをjarの中に含むようにすること。<br/>
+                                    (含まなかった場合、外部依存ライブラリのクラスが見つからない例外が発生し、正しく処理を実行できなくなる。)
+                                </div>
+                            </div>
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    4.jarファイルのアップロード
+                                </div>
+                                <div class="panel-body">
+                                    jarファイルの生成が完了した後、本画面 or ファセット編集画面からjarファイルのアップロードが行われる。<br/>
+                                    ファイルのアップロード先はAmazonS3となっており、【誰でも読み取り可能】権限を付与される。<br/>
+                                </div>
+                            </div>
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    Tips1.ファセットプログラムのアップデート
+                                </div>
+                                <div class="panel-body">
+                                    jarの処理を更新した場合は、ファセット編集画面より再度jarファイルのアップロードを行い、<br/>
+                                    ファセットのバージョンを上げることで、ユーザにファセットカスタマイズ画面にアップデートが通告される。<br/>
+                                    ユーザがアップデート通告に従って、バージョンアップを行うことでToyTalkにも新しいjarがダウンロードされる仕組みとなっている。<br/>
+                                    <!-- TODO 分かりやすい仕組みの一枚絵を作って載せる -->
+                                </div>
+                            </div>
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    Tips2.ファセットプログラムのパラメータをユーザに編集させたい場合
+                                </div>
+                                <div class="panel-body">
+<!--                                    プログラムの内容によって、ユーザによってパラメータをカスタマイズ画面から選択/編集してもらい、動的処理の実行を行いたい。といった場合が考えられる。
+                                    <div class="well well-sm">
+                                        ※ 例<br/>
+                                        特定地域の情報を取得する処理で、特定地域をユーザに選択してもらいたいケース。
+                                    </div>-->
+                                    <div class="bs-callout bs-callout-danger">
+                                        <h4>現在実装を検討しております。アップデートによる対応完了後、改めて告知させていただきます。</h4>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    注意事項
+                                </div>
+                                <div class="panel-body">
+                                    <div class="well well-sm">
+                                        <b><u>イベントは並列で処理されない。</u></b>
+                                    </div>
+                                    イベントは並列で処理が行われません。<br/>
+                                    同時に複数のイベントが走った場合、一つずつ処理が行われ、処理が完了するまでは次の処理は待機されます。<br/>
+                                    そのため、前の処理の実行に時間がかかった場合、指定していた時刻に必ずしも処理が実行されるわけではないことに留意してください。<br/>
+                                    厳密に指定した時刻に処理を実行する必要となる場合は、以下メールアドレスまでご相談ください。<br/>
+                                    <p/>
+                                    <u>hassoubeat.work@gmail.com</u>
+                                    <p/>
+                                    <div class="well well-sm">
+                                        <b><u>イベントが重なった場合、実行順は保証されない。</u></b>
+                                    </div>
+                                    原則としてイベントの処理順は保証されていません。<br/>
+                                    前の処理に依存するような処理の実装は避けて下さい。<br/>
+                                    <!-- TODO ファセットイベントの優先度を上げた後に、デフォルトのイベント優先度のパラメータを指定してください。 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script src="https://www.howtonote.jp/css/sh/scripts/shCore.js"></script>
+            <script src="https://www.howtonote.jp/css/sh/scripts/shBrushJava.js"></script>
+            <link rel="stylesheet" href="https://www.howtonote.jp/css/sh/css/shCoreDefault.css" type="text/css" />
+            <script type="text/javascript">
+                SyntaxHighlighter.all();
+            </script>
+        </ui:composition>
+    </body>
+</html>
