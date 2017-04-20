@@ -11,6 +11,7 @@ import com.hassoubeat.toymanager.annotation.AuthManagerInterceptor;
 import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.constant.MessageConst;
+import com.hassoubeat.toymanager.constant.PropertyConst;
 import com.hassoubeat.toymanager.service.dao.FacetEventFacade;
 import com.hassoubeat.toymanager.service.dao.FacetFacade;
 import com.hassoubeat.toymanager.service.entity.Event;
@@ -117,7 +118,7 @@ public class FacetManagementEditBean implements Serializable{
             }
             // ファセットプログラムをS3にアップロードする
             try {
-                String fpUploadUri = s3Logic.upload(facetProgram, CannedAccessControlList.PublicRead);
+                String fpUploadUri = s3Logic.upload(facetProgram, PropertyConst.S3_FACET_LIB_PATH , CannedAccessControlList.PublicRead);
                 facet.setProgramPath(fpUploadUri);
             } catch (AmazonS3Exception ex) {
                 // ファセットのアップロードに失敗した場合、
@@ -151,8 +152,8 @@ public class FacetManagementEditBean implements Serializable{
     public String remove() {
         if (facet.getProgramPath() != null) {
             // ファセットプログラムが存在する場合は、S3のオブジェクトを削除する
-            String s3ObjectKey = FilenameUtils.getName(facet.getProgramPath());
-            s3Logic.remove(s3ObjectKey);
+            String facetProgramS3Key = PropertyConst.S3_FACET_LIB_PATH + FilenameUtils.getName(facet.getProgramPath());
+            s3Logic.remove(facetProgramS3Key);
         }
         Facet removeFacet = facetFacade.remove(facet);
         logger.info("{}.{} USER_ID:{}, FACET_ID:{}", MessageConst.SUCCESS_FACET_REMOVE.getId(), MessageConst.SUCCESS_FACET_REMOVE.getMessage(), sessionBean.getUserId(), removeFacet.getId());
@@ -177,8 +178,8 @@ public class FacetManagementEditBean implements Serializable{
     @LogInterceptor
     public String removeFacetProgram() {
         // S3のオブジェクトを削除する
-        String s3ObjectKey = FilenameUtils.getName(facet.getProgramPath());
-        s3Logic.remove(s3ObjectKey);
+        String facetProgramS3Key = PropertyConst.S3_FACET_LIB_PATH + FilenameUtils.getName(facet.getProgramPath());
+        s3Logic.remove(facetProgramS3Key);
         
         // エンティティのプログラムパスをNULLに指定してアップデートする
         facet.setProgramPath(null);

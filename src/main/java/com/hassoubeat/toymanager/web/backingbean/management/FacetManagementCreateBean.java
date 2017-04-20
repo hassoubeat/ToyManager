@@ -11,6 +11,7 @@ import com.hassoubeat.toymanager.annotation.AuthManagerInterceptor;
 import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
 import com.hassoubeat.toymanager.constant.MessageConst;
+import com.hassoubeat.toymanager.constant.PropertyConst;
 import com.hassoubeat.toymanager.service.dao.FacetFacade;
 import com.hassoubeat.toymanager.service.entity.Facet;
 import com.hassoubeat.toymanager.util.S3Logic;
@@ -100,7 +101,7 @@ public class FacetManagementCreateBean implements Serializable{
             }
             // ファセットプログラムをS3にアップロードする
             try {
-                String fpUploadUri = s3Logic.upload(facetProgram, CannedAccessControlList.PublicRead);
+                String fpUploadUri = s3Logic.upload(facetProgram, PropertyConst.S3_FACET_LIB_PATH, CannedAccessControlList.PublicRead);
                 facet.setProgramPath(fpUploadUri);
             } catch (AmazonS3Exception ex) {
                 // ファセットのアップロードに失敗した場合、

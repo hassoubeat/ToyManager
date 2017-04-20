@@ -23,6 +23,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.hassoubeat.toymanager.constant.MessageConst;
+import com.hassoubeat.toymanager.constant.PropertyConst;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.IOException;
 import javax.ejb.Stateless;
@@ -43,36 +44,37 @@ public class S3Logic {
     @Inject
     SessionBean sessionBean;
     
-    final private String S3_ACCESS_KEY = "AKIAJJYL72P5W7QQ5A3Q";
-    final private String S3_SECRET_KEY = "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";
-    final private String S3_SERVICE_END_POINT = "https://s3-ap-northeast-1.amazonaws.com";
-    final private String S3_REGION = "ap-northeast-1";
-    final private String S3_BUCKET_NAME = "toymanager";
+    final private String S3_ACCESS_KEY = PropertyConst.S3_ACCESS_KEY;
+    final private String S3_SECRET_KEY = PropertyConst.S3_SECRET_KEY;
+    final private String S3_SERVICE_END_POINT = PropertyConst.S3_SERVICE_END_POINT;
+    final private String S3_REGION = PropertyConst.S3_REGION;
+    final private String S3_BUCKET_NAME = PropertyConst.S3_BUCKET_NAME;
     
     /**
      * ファイルのアップロードを行う
      * @param uploadFile アップロード対象のファイル
+     * @param uploadPath S3バケット内のファイルのアップロード先(例：testフォルダへファイルをアップロードする場合 /test/ )
      * @param fileAuthority アップロードするファイルのアクセス権限
      * @return アップロードしたファイルのURI
      */
-    public String upload(Part uploadFile, CannedAccessControlList fileAuthority) throws AmazonClientException{
+    public String upload(Part uploadFile, String uploadPath, CannedAccessControlList fileAuthority) throws AmazonClientException{
         AmazonS3 client = getS3Client();
-        
-        try {  
+        String fileUploadPath = uploadPath + uploadFile.getSubmittedFileName();
+        try {
             // アップロード対象のオブジェクトを作成  
-            final PutObjectRequest por = new PutObjectRequest(S3_BUCKET_NAME, uploadFile.getSubmittedFileName(), uploadFile.getInputStream(), new ObjectMetadata());  
+            final PutObjectRequest por = new PutObjectRequest(S3_BUCKET_NAME, fileUploadPath, uploadFile.getInputStream(), new ObjectMetadata());  
             // アップロード対象ファイルの権限を設定する  
             por.setCannedAcl(fileAuthority);  
             // アップロード  
             PutObjectResult result = client.putObject(por);
-            logger.info("{}.{} USER_ID:{}, UPLOAD_OBJECT_KEY:{}", MessageConst.SUCCESS_S3_OBJECT_UPLOAD.getId(), MessageConst.SUCCESS_S3_OBJECT_UPLOAD.getMessage(), sessionBean.getId(), uploadFile.getSubmittedFileName());
+            logger.info("{}.{} USER_ID:{}, UPLOAD_OBJECT_KEY:{}", MessageConst.SUCCESS_S3_OBJECT_UPLOAD.getId(), MessageConst.SUCCESS_S3_OBJECT_UPLOAD.getMessage(), sessionBean.getId(), fileUploadPath);
         } catch(IOException | AmazonClientException ex) {  
             // ロガー出力
             logger.warn("{}.{} USER_ID" , MessageConst.S3_FILE_UPLOAD_FAILED.getId(), MessageConst.S3_FILE_UPLOAD_FAILED.getMessage(), sessionBean.getId());
             throw new AmazonS3Exception(MessageConst.S3_FILE_UPLOAD_FAILED.getMessage(), ex);
         }
         // アップロードしたURIを返却する
-        return getFileUploadUri(uploadFile.getSubmittedFileName());   
+        return getFileUploadUri(fileUploadPath);   
     }
     
     /**
@@ -121,7 +123,7 @@ public class S3Logic {
      */
     private String getFileUploadUri(String uploadFileName) {
         // アップロードファイル
-        String uploadUri = S3_SERVICE_END_POINT + "/" + S3_BUCKET_NAME + "/" + uploadFileName;
+        String uploadUri = S3_SERVICE_END_POINT + "/" + S3_BUCKET_NAME + uploadFileName;
         return uploadUri;
     }
     

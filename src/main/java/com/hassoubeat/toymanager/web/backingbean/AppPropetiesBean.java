@@ -7,6 +7,7 @@ package com.hassoubeat.toymanager.web.backingbean;
 
 import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
+import com.hassoubeat.toymanager.constant.PropertyConst;
 import java.util.ResourceBundle;
 import javax.inject.Named;
 import javax.enterprise.context.ApplicationScoped;
@@ -25,16 +26,15 @@ public class AppPropetiesBean {
     @Getter
     private final String RESOURCES_URL;
     @Getter
-    private final String RESOUCES_ABSOLUTE_PATH;
+    private final String RESOURCES_ABSOLUTE_PATH;
     
     /**
      * Creates a new instance of AppPropetiesBean
      */
     public AppPropetiesBean() {
-        ResourceBundle pathProperties = ResourceBundle.getBundle("PathConfig");
-        HOST_PATH = pathProperties.getString("host.path");
-        RESOURCES_URL = pathProperties.getString("resources.url");
-        RESOUCES_ABSOLUTE_PATH = pathProperties.getString("resources.absolute.path");
+        HOST_PATH = PropertyConst.HOST_PATH;
+        RESOURCES_URL = PropertyConst.RESOURCES_URL;
+        RESOURCES_ABSOLUTE_PATH = PropertyConst.RESOURCES_ABSOLUTE_PATH;
     }
     
 }

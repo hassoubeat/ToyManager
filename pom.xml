@@ -12,6 +12,15 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- AmazonS3関連のプロパティ -->
+        <s3.accesskey>AKIAJJYL72P5W7QQ5A3Q</s3.accesskey>
+        <s3.secretkey>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</s3.secretkey>
+        <s3.service.end.point>https://s3-ap-northeast-1.amazonaws.com</s3.service.end.point>
+        <s3.region>ap-northeast-1</s3.region>
+        <s3.bucket.name>toymanager</s3.bucket.name>
+        <s3.facet.lib.path>/facet/lib/</s3.facet.lib.path>
+        <s3.facet.properties.path>/facet/properties/</s3.facet.properties.path>
+        <s3.facet.properties.edit.view.path>/facet/editview/</s3.facet.properties.edit.view.path>
     </properties>
     
     <dependencies>
