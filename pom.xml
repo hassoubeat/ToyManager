@@ -18,9 +18,9 @@
         <s3.service.end.point>https://s3-ap-northeast-1.amazonaws.com</s3.service.end.point>
         <s3.region>ap-northeast-1</s3.region>
         <s3.bucket.name>toymanager</s3.bucket.name>
-        <s3.facet.lib.path>/facet/lib/</s3.facet.lib.path>
-        <s3.facet.properties.path>/facet/properties/</s3.facet.properties.path>
-        <s3.facet.properties.edit.view.path>/facet/editview/</s3.facet.properties.edit.view.path>
+        <s3.facet.lib.path>facet/lib/</s3.facet.lib.path>
+        <s3.facet.properties.path>facet/properties/</s3.facet.properties.path>
+        <s3.facet.properties.edit.view.path>${s3.facet.properties.path}editview/</s3.facet.properties.edit.view.path>
     </properties>
     
     <dependencies>

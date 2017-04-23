@@ -78,6 +78,7 @@ public class ToyFacetLogic{
             event.setColorCode(facetEvent.getColorCode());
             event.setRoop(facetEvent.getRoop());
             event.setRoopEndDate(facetEvent.getRoopEndDate());
+            event.setPriority(facetEvent.getPriority());
             event.setIsTalking(facetEvent.getIsTalking());
             event.setToyFacetId(createToyFacet);
             Event createEvent = eventFacade.create(event);

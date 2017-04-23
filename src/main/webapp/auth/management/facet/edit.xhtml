@@ -67,11 +67,56 @@
                                         <td>
                                             URL:<a href="#{facetManagementEditBean.facet.programPath}">#{facetManagementEditBean.facet.programPath}</a>
                                             <input type="file" accept=".jar" id="facet-program-update" jsf:id="facet-program-update" jsf:value="#{facetManagementEditBean.facetProgram}"/><p/>
-                                            <h:message class="label label-danger" for="facet-program-update"/>
+                                            <h:message class="label label-danger" for="facet-program-upload"/>
                                             <span class="label label-warning">※ アップデートするファイル名は現在登録されている【ファセット名】.jarとなるように指定してください。</span><br/>
                                             <span class="label label-warning">※ ファセットプログラムのアップデート後、ファセットバージョンを変更しなければToyTalkでファセットプログラムの更新が行われません。</span><br/>
                                             <p/>
-                                            <h:commandButton class="btn-sm btn-danger" id="facet-program-remove-button" action="#{facetManagementEditBean.removeFacetProgram()}" value="ファセットプログラムの削除" style="margin-right: 5px;"/>
+                                            <div class="btn btn-danger" id="facet-program-remove-modal-switch" data-toggle="modal" href="#facet-program-remove-modal">ファセットプログラムの削除</div>
+                                        </td>
+                                    </ui:fragment>
+                                </tr>
+                                <tr>
+                                    <th>ファセットプロパティのアップロード <span id="facet-properties-upload-help" class="glyphicon glyphicon-question-sign"/><br/></th>
+                                    <ui:fragment rendered="#{facetManagementEditBean.facet.propertiesPath.length() == 0 || facetManagementEditBean.facet.propertiesPath == null}">
+                                        <!-- ファセットアップロードは、ファセットプログラムが指定されていない時のみ表示する -->
+                                        <td>
+                                            <input type="file" accept=".properties" id="facet-properties-upload" jsf:id="facet-properties-upload" jsf:value="#{facetManagementEditBean.facetProperties}"/><p/>
+                                            <h:message class="label label-danger" for="facet-properties-upload"/>
+                                            <span class="label label-warning">※ アップロードするファイル名は上項目の【ファセット名】.propertiesとなるように指定してください。</span>
+                                        </td>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{facetManagementEditBean.facet.propertiesPath.length() > 0}">
+                                        <!-- ファセットプロパティ編集は、既にファセットプログラムがアップロードされている場合のみ表示する -->
+                                        <td>
+                                            URL:<a href="#{facetManagementEditBean.facet.propertiesPath}">#{facetManagementEditBean.facet.propertiesPath}</a>
+                                            <input type="file" accept=".properties" id="facet-properties-update" jsf:id="facet-properties-update" jsf:value="#{facetManagementEditBean.facetProperties}"/><p/>
+                                            <h:message class="label label-danger" for="facet-properties-upload"/>
+                                            <span class="label label-warning">※ アップデートするファイル名は現在登録されている【ファセット名】.propertiesとなるように指定してください。</span><br/>
+                                            <p/>
+                                            <h:commandButton class="btn btn-danger" id="facet-properties-remove-button" action="#{facetManagementEditBean.removeFacetProperties()}" value="ファセットプロパティの削除" style="margin-right: 5px;"/>
+                                        </td>
+                                    </ui:fragment>
+                                </tr>
+                                <tr>
+                                    <th>ファセットプロパティ編集画面(PHP)のアップロード <span id="facet-properties-edit-view-upload-help" class="glyphicon glyphicon-question-sign"/><br/></th>
+                                    <ui:fragment rendered="#{facetManagementEditBean.facet.propertiesEditViewPath.length() == 0 || facetManagementEditBean.facet.propertiesEditViewPath == null}">
+                                        <!-- ファセットアップロードは、ファセットプログラムが指定されていない時のみ表示する -->
+                                        <td>
+                                            <input type="file" accept=".php" id="facet-properties-edit-view-upload" jsf:id="facet-properties-edit-view-upload" jsf:value="#{facetManagementEditBean.facetPropertiesEditView}"/><p/>
+                                            <h:message class="label label-danger" for="facet-properties-edit-view-upload"/>
+                                            <span class="label label-warning">※ アップロードするファイル名は上項目の【ファセット名】.phpとなるように指定してください。</span>
+                                        </td>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{facetManagementEditBean.facet.propertiesEditViewPath.length() > 0}">
+                                        <!-- ファセットプロパティ編集画面は、既にファセットプログラムがアップロードされている場合のみ表示する -->
+                                        <td>
+                                            URL:<a href="#{facetManagementEditBean.facet.propertiesEditViewPath}">#{facetManagementEditBean.facet.propertiesEditViewPath}</a>
+                                            <input type="file" accept=".php" id="facet-properties-edit-view-update" jsf:id="facet-properties-edit-view-update" jsf:value="#{facetManagementEditBean.facetPropertiesEditView}"/><p/>
+                                            <h:message class="label label-danger" for="facet-properties-edit-view-upload"/>
+                                            <span class="label label-warning">※ アップデートするファイル名は現在登録されている【ファセット名】.phpとなるように指定してください。</span><br/>
+                                            <span class="label label-warning">※ ファセットプログラムのアップデート後、ファセットバージョンを変更しなければToyTalkでファセットプロパティ編集画面の更新が行われません。</span><br/>
+                                            <p/>
+                                            <h:commandButton class="btn btn-danger" id="facet-properties-edit-view-remove-button" action="#{facetManagementEditBean.removeFacetPropertiesEditView()}" value="ファセットプロパティ編集画面の削除" style="margin-right: 5px;"/>
                                         </td>
                                     </ui:fragment>
                                 </tr>
@@ -256,6 +301,27 @@
                         </div>
                     </div>
                 </div>
+                <!-- ファセットプログラム削除前の警告モーダルダイアログ -->
+                <div class="modal fade" id="facet-program-remove-modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                <h4 class="modal-title">ファセットプログラムの削除を実施しますか？</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="bs-callout bs-callout-danger">
+                                    <h4>ファセットプログラムを削除した場合、以下の処理が実施されます。</h4>
+                                    <h5 class="small">・S3にアップロードされているファセットプロパティの削除</h5>
+                                    <h5 class="small">・S3にアップロードされているファセットプロパティ編集画面の削除</h5>
+                                </div>
+                                <form jsf:id="facet-program-remove-form">
+                                    <h:commandButton class="btn-sm btn-danger" id="facet-program-remove-button" action="#{facetManagementEditBean.removeFacetProgram()}" value="ファセットプログラムの削除" style="margin-right: 5px;"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- ファセット削除前の警告モーダルダイアログ -->
                 <div class="modal fade" id="facet-remove-modal" tabindex="-1">
                     <div class="modal-dialog">
@@ -268,6 +334,7 @@
                                 <div class="bs-callout bs-callout-danger">
                                     <h4>ファセットを削除した場合、以下の処理が実施されます。</h4>
                                     <h5 class="small">・ファセットに紐づくファセットイベントの削除</h5>
+                                    <h5 class="small">・S3にアップロードされているオブジェクトの削除</h5>
                                     <h5 class="small">・現在、このファセットを利用しているクライアントのファセットイベントの削除</h5>
                                 </div>
                                 <form jsf:id="facet-remove-form">
@@ -320,7 +387,18 @@
                         });
                         
                         $("#facet-program-upload-help").balloon({
-                            contents:"独自に開発したプログラムを登録します(本項目を設定しなかった場合は、後に設定するファセットイベントで登録した内容がToyTalkされる仕様となります。)"
+                            contents:"独自に開発したプログラムを登録します(本項目を設定しなかった場合は、後に設定するファセットイベントで登録した内容がToyTalkされる仕様となります。)",
+                            position: "right"
+                        });
+                        
+                        $("#facet-properties-upload-help").balloon({
+                            contents:"ファセットプログラムから利用するプロパティファイルを登録します。(ファセットプログラムが未指定の状態でアップロードすることは出来ません)",
+                            position: "right"
+                        });
+                        
+                        $("#facet-properties-edit-view-upload-help").balloon({
+                            contents:"ファセットプロパティファイルをユーザが編集するためのPHPページを登録します。(ファセットプログラムが未指定の状態でアップロードすることは出来ません)",
+                            position: "right"
                         });
                         
                         $("#facet-viewing-help").balloon({

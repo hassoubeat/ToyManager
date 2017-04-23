@@ -76,6 +76,12 @@ public class Facet implements Serializable {
     @Size(max = 500)
     @Column(name = "program_path")
     private String programPath;
+    @Size(max = 500)
+    @Column(name = "properties_path")
+    private String propertiesPath;
+    @Size(max = 500)
+    @Column(name = "properties_edit_view_path")
+    private String propertiesEditViewPath;
     @Basic(optional = false)
     @NotNull
     @Column(name = "is_release")
@@ -179,6 +185,22 @@ public class Facet implements Serializable {
 
     public void setProgramPath(String programPath) {
         this.programPath = programPath;
+    }
+    
+    public String getPropertiesPath() {
+        return propertiesPath;
+    }
+
+    public void setPropertiesPath(String propertiesPath) {
+        this.propertiesPath = propertiesPath;
+    }
+
+    public String getPropertiesEditViewPath() {
+        return propertiesEditViewPath;
+    }
+
+    public void setPropertiesEditViewPath(String propertiesEditViewPath) {
+        this.propertiesEditViewPath = propertiesEditViewPath;
     }
 
     public boolean getIsRelease() {

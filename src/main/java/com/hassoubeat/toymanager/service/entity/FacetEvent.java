@@ -85,6 +85,10 @@ public class FacetEvent implements Serializable {
     private Date roopEndDate;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "priority")
+    private Integer priority;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "is_talking")
     private boolean isTalking;
     @Basic(optional = false)
@@ -124,6 +128,8 @@ public class FacetEvent implements Serializable {
     
     @PrePersist
     public void prePersist(){
+        // デフォルトの優先度をセットする
+        this.setPriority(10);
         // 削除フラグを入力する
         this.setIsDeleted(false);
         // 登録日時と更新日時に現在日時を設定する
@@ -210,7 +216,15 @@ public class FacetEvent implements Serializable {
     public void setRoopEndDate(Date roopEndDate) {
         this.roopEndDate = roopEndDate;
     }
+    
+    public int getPriority() {
+        return priority;
+    }
 
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+    
     public boolean getIsTalking() {
         return isTalking;
     }

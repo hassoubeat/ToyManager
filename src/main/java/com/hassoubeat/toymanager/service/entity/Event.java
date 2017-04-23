@@ -82,6 +82,10 @@ public class Event implements Serializable, Cloneable {
     private Date roopEndDate;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "priority")
+    private Integer priority;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "is_talking")
     private boolean isTalking;
     @Basic(optional = false)
@@ -132,6 +136,8 @@ public class Event implements Serializable, Cloneable {
     
     @PrePersist
     public void prePersist(){
+        // デフォルトの優先度をセットする
+        this.setPriority(5);
         // 削除フラグを入力する
         this.setIsDeleted(false);
         // 登録日時と更新日時に現在日時を設定する
@@ -209,6 +215,14 @@ public class Event implements Serializable, Cloneable {
 
     public void setRoopEndDate(Date roopEndDate) {
         this.roopEndDate = roopEndDate;
+    }
+    
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     public boolean getIsTalking() {

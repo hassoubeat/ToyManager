@@ -47,6 +47,10 @@ public class RestEvent {
     
     @Getter
     @Setter
+    private int priority;
+    
+    @Getter
+    @Setter
     private Integer toyId;
     
     @Getter
@@ -64,6 +68,14 @@ public class RestEvent {
     @Getter
     @Setter
     private String facetProgramPath;
+    
+    @Getter
+    @Setter
+    private String facetPropertiesPath;
+    
+    @Getter
+    @Setter
+    private String facetPropertiesEditViewPath;
 
     public RestEvent() {
     }

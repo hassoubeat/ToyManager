@@ -163,6 +163,7 @@ public class RestEventLogic extends AbstractRestLogic {
         rEvent.setEndDate(targetEvent.getEndDate());
         rEvent.setRoop(targetEvent.getRoop());
         rEvent.setRoopEndDate(targetEvent.getRoopEndDate());
+        rEvent.setPriority(targetEvent.getPriority());
         if (targetEvent.getToyId() != null) {
             rEvent.setToyId(targetEvent.getToyId().getId());
         }
@@ -173,6 +174,8 @@ public class RestEventLogic extends AbstractRestLogic {
             rEvent.setToyFacetId(targetEvent.getToyFacetId().getId());
             rEvent.setFacetVersion(targetEvent.getToyFacetId().getFacetVersion());
             rEvent.setFacetProgramPath(targetEvent.getToyFacetId().getFacetId().getProgramPath());
+            rEvent.setFacetPropertiesPath(targetEvent.getToyFacetId().getFacetId().getPropertiesPath());
+            rEvent.setFacetPropertiesEditViewPath(targetEvent.getToyFacetId().getFacetId().getPropertiesEditViewPath());
         }
         
         return rEvent;

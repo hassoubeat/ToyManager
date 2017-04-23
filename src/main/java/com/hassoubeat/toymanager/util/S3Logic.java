@@ -17,6 +17,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
 import com.amazonaws.services.s3.model.DeleteObjectsResult;
 import com.amazonaws.services.s3.model.DeleteObjectsResult.DeletedObject;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -26,6 +27,7 @@ import com.hassoubeat.toymanager.constant.MessageConst;
 import com.hassoubeat.toymanager.constant.PropertyConst;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.IOException;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.servlet.http.Part;
@@ -93,6 +95,21 @@ public class S3Logic {
     }
     
     /**
+     * ファイルの削除を行う(複数同時削除)
+     * @param removeKeys 削除対象のキー
+     */
+    public void remove(List<KeyVersion> removeKeys) {
+        AmazonS3 client = getS3Client();
+        
+        DeleteObjectsRequest request = new DeleteObjectsRequest(S3_BUCKET_NAME).withKeys(removeKeys);
+        DeleteObjectsResult  result  = client.deleteObjects(request);
+        
+        for (DeletedObject object:result.getDeletedObjects()) {
+            logger.info("{}.{} USER_ID:{} REMOVE_OBJECT_KEY:{}", MessageConst.SUCCESS_S3_OBJECT_REMOVE.getId(), MessageConst.SUCCESS_S3_OBJECT_REMOVE.getMessage(), sessionBean.getId(), object.getKey());
+        }
+    }
+    
+    /**
      * AWSS3のS3クライアントを取得する
      * @return 
      */
@@ -123,7 +140,7 @@ public class S3Logic {
      */
     private String getFileUploadUri(String uploadFileName) {
         // アップロードファイル
-        String uploadUri = S3_SERVICE_END_POINT + "/" + S3_BUCKET_NAME + uploadFileName;
+        String uploadUri = S3_SERVICE_END_POINT + "/" + S3_BUCKET_NAME + "/" + uploadFileName;
         return uploadUri;
     }
     

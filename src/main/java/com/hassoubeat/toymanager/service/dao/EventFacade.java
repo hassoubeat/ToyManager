@@ -96,8 +96,10 @@ public class EventFacade extends AbstractFacade<Event> {
         // WHERE条件の型と検索条件名(Entityの要素名)を指定する
         Predicate isToyIdEqual = builder.equal(root.get(Event_.toyId), toyId);
         Predicate isStandardEvent = builder.notEqual(root.get(Event_.roop), 0);
+        Predicate isInfiniteRoop = builder.isNull(root.get(Event_.roopEndDate));
         Predicate isRoopEndDate = builder.greaterThanOrEqualTo(root.get(Event_.roopEndDate), startDate);
-        cq.where(isToyIdEqual, isStandardEvent, isRoopEndDate);
+        Predicate isRoop = builder.or(isInfiniteRoop, isRoopEndDate);
+        cq.where(isToyIdEqual, isStandardEvent, isRoop);
         
         return getEntityManager().createQuery(cq).getResultList();
     }
@@ -143,8 +145,10 @@ public class EventFacade extends AbstractFacade<Event> {
         Predicate isToyIdEqual = builder.equal(root.get(Event_.toyId), toyId);
         Predicate isStandardEvent = builder.notEqual(root.get(Event_.roop), 0);
         Predicate isTalking = builder.equal(root.get(Event_.isTalking), true);
+        Predicate isInfiniteRoop = builder.isNull(root.get(Event_.roopEndDate));
         Predicate isRoopEndDate = builder.greaterThanOrEqualTo(root.get(Event_.roopEndDate), startDate);
-        cq.where(isToyIdEqual, isStandardEvent, isTalking, isRoopEndDate);
+        Predicate isRoop = builder.or(isInfiniteRoop, isRoopEndDate);
+        cq.where(isToyIdEqual, isStandardEvent, isTalking, isRoop);
         
         return getEntityManager().createQuery(cq).getResultList();
     }
@@ -205,7 +209,9 @@ public class EventFacade extends AbstractFacade<Event> {
         Predicate isToyIdEqual = builder.equal(root.get(Event_.accountId), accountId);
         Predicate isStandardEvent = builder.notEqual(root.get(Event_.roop), 0);
         Predicate isRoopEndDate = builder.greaterThanOrEqualTo(root.get(Event_.roopEndDate), startDate);
-        cq.where(isToyIdEqual, isStandardEvent, isRoopEndDate);
+        Predicate isInfiniteRoop = builder.isNull(root.get(Event_.roopEndDate));
+        Predicate isRoop = builder.or(isInfiniteRoop, isRoopEndDate);
+        cq.where(isToyIdEqual, isStandardEvent, isRoopEndDate, isRoop);
         
         return getEntityManager().createQuery(cq).getResultList();
     }
@@ -251,8 +257,10 @@ public class EventFacade extends AbstractFacade<Event> {
         Predicate isToyIdEqual = builder.equal(root.get(Event_.accountId), accountId);
         Predicate isStandardEvent = builder.notEqual(root.get(Event_.roop), 0);
         Predicate isTalking = builder.equal(root.get(Event_.isTalking), true);
+        Predicate isInfiniteRoop = builder.isNull(root.get(Event_.roopEndDate));
         Predicate isRoopEndDate = builder.greaterThanOrEqualTo(root.get(Event_.roopEndDate), startDate);
-        cq.where(isToyIdEqual, isStandardEvent, isTalking, isRoopEndDate);
+        Predicate isRoop = builder.or(isInfiniteRoop, isRoopEndDate);
+        cq.where(isToyIdEqual, isStandardEvent, isTalking, isRoop);
         
         return getEntityManager().createQuery(cq).getResultList();
     }
@@ -312,8 +320,10 @@ public class EventFacade extends AbstractFacade<Event> {
         // WHERE条件の型と検索条件名(Entityの要素名)を指定する
         Predicate isToyFacetIdEqual = builder.equal(root.get(Event_.toyFacetId), toyFacetId);
         Predicate isStandardEvent = builder.notEqual(root.get(Event_.roop), 0);
+        Predicate isInfiniteRoop = builder.isNull(root.get(Event_.roopEndDate));
         Predicate isRoopEndDate = builder.greaterThanOrEqualTo(root.get(Event_.roopEndDate), startDate);
-        cq.where(isToyFacetIdEqual, isStandardEvent, isRoopEndDate);
+        Predicate isRoop = builder.or(isInfiniteRoop, isRoopEndDate);
+        cq.where(isToyFacetIdEqual, isStandardEvent, isRoop);
         
         return getEntityManager().createQuery(cq).getResultList();
     }
@@ -359,8 +369,10 @@ public class EventFacade extends AbstractFacade<Event> {
         Predicate isToyFacetIdEqual = builder.equal(root.get(Event_.toyFacetId), toyFacetId);
         Predicate isStandardEvent = builder.notEqual(root.get(Event_.roop), 0);
         Predicate isTalking = builder.equal(root.get(Event_.isTalking), true);
+        Predicate isInfiniteRoop = builder.isNull(root.get(Event_.roopEndDate));
         Predicate isRoopEndDate = builder.greaterThanOrEqualTo(root.get(Event_.roopEndDate), startDate);
-        cq.where(isToyFacetIdEqual, isStandardEvent, isTalking, isRoopEndDate);
+        Predicate isRoop = builder.or(isInfiniteRoop, isRoopEndDate);
+        cq.where(isToyFacetIdEqual, isStandardEvent, isTalking, isRoop);
         
         return getEntityManager().createQuery(cq).getResultList();
     }

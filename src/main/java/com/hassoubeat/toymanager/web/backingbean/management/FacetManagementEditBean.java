@@ -7,6 +7,7 @@ package com.hassoubeat.toymanager.web.backingbean.management;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest.KeyVersion;
 import com.hassoubeat.toymanager.annotation.AuthManagerInterceptor;
 import com.hassoubeat.toymanager.annotation.ErrorInterceptor;
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
@@ -25,7 +26,9 @@ import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -36,6 +39,7 @@ import javax.servlet.http.Part;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 /**
@@ -75,6 +79,14 @@ public class FacetManagementEditBean implements Serializable{
     @Getter
     @Setter
     Part facetProgram;
+    
+    @Getter
+    @Setter
+    Part facetProperties;
+    
+    @Getter
+    @Setter
+    Part facetPropertiesEditView;
     
     @Getter
     @Setter
@@ -129,6 +141,77 @@ public class FacetManagementEditBean implements Serializable{
             }
             
         } 
+        if (facetProperties != null) {
+            if (StringUtils.isEmpty(facet.getProgramPath())) {
+                // ファセットプログラムがアップロードされていなかった場合
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                facesContext.addMessage("facet-form:facet-properties-upload", new FacesMessage(MessageConst.UN_REGISTED_FACET_PROGRAM.getMessage()));
+                
+                logger.info("{}.{} USER_ID:{}", MessageConst.UN_REGISTED_FACET_PROGRAM.getId(), MessageConst.UN_REGISTED_FACET_PROGRAM.getMessage(), sessionBean.getUserId());
+                
+                // 元の画面に戻る
+                return "";
+            }
+            
+            if (!facet.getName().equals(FilenameUtils.getBaseName(facetProperties.getSubmittedFileName()))) {
+                // ファセット名とファセットプログラムの名前が不一致だった場合
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                facesContext.addMessage("facet-form:facet-properties-upload", new FacesMessage(MessageConst.MISMATCH_FACET_NAME.getMessage()));
+                
+                logger.info("{}.{} USER_ID:{}", MessageConst.MISMATCH_FACET_NAME.getId(), MessageConst.MISMATCH_FACET_NAME.getMessage(), sessionBean.getUserId());
+                
+                // 元の画面に戻る
+                return "";
+            }
+            // ファセットプロパティをS3にアップロードする
+            try {
+                String fpUploadUri = s3Logic.upload(facetProperties, PropertyConst.S3_FACET_PROPERTIES_PATH , CannedAccessControlList.PublicRead);
+                facet.setPropertiesPath(fpUploadUri);
+            } catch (AmazonS3Exception ex) {
+                // ファセットのアップロードに失敗した場合、
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                facesContext.addMessage("facet-form:facet-properties-upload", new FacesMessage(MessageConst.S3_FILE_UPLOAD_FAILED.getMessage()));
+                // 元の画面に戻る
+                return "";
+            }
+            
+        } 
+        
+        if (facetPropertiesEditView != null) {
+            if (StringUtils.isEmpty(facet.getProgramPath())) {
+                // ファセットプログラムがアップロードされていなかった場合
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                facesContext.addMessage("facet-form:facet-properties-edit-view-upload", new FacesMessage(MessageConst.UN_REGISTED_FACET_PROGRAM.getMessage()));
+                
+                logger.info("{}.{} USER_ID:{}", MessageConst.UN_REGISTED_FACET_PROGRAM.getId(), MessageConst.UN_REGISTED_FACET_PROGRAM.getMessage(), sessionBean.getUserId());
+                
+                // 元の画面に戻る
+                return "";
+            }
+            
+            if (!facet.getName().equals(FilenameUtils.getBaseName(facetPropertiesEditView.getSubmittedFileName()))) {
+                // ファセット名とファセットプログラムの名前が不一致だった場合
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                facesContext.addMessage("facet-form:facet-properties-edit-view-upload", new FacesMessage(MessageConst.MISMATCH_FACET_NAME.getMessage()));
+                
+                logger.info("{}.{} USER_ID:{}", MessageConst.MISMATCH_FACET_NAME.getId(), MessageConst.MISMATCH_FACET_NAME.getMessage(), sessionBean.getUserId());
+                
+                // 元の画面に戻る
+                return "";
+            }
+            // ファセットプロパティ変更画面をS3にアップロードする
+            try {
+                String fpUploadUri = s3Logic.upload(facetPropertiesEditView, PropertyConst.S3_FACET_PROPERTIES_EDIT_VIEW_PATH, CannedAccessControlList.PublicRead);
+                facet.setPropertiesEditViewPath(fpUploadUri);
+            } catch (AmazonS3Exception ex) {
+                // ファセットのアップロードに失敗した場合、
+                FacesContext facesContext = FacesContext.getCurrentInstance();
+                facesContext.addMessage("facet-form:facet-properties-edit-view-upload", new FacesMessage(MessageConst.S3_FILE_UPLOAD_FAILED.getMessage()));
+                // 元の画面に戻る
+                return "";
+            }
+        }
+        
         // 更新処理(EJB)
         Facet editedFacet = facetFacade.edit(facet);
         logger.info("{}.{} USER_ID:{}, FACET_ID:{}", MessageConst.SUCCESS_FACET_EDIT.getId(), MessageConst.SUCCESS_FACET_EDIT.getMessage(), sessionBean.getUserId(), editedFacet.getId());
@@ -150,10 +233,24 @@ public class FacetManagementEditBean implements Serializable{
      * @return 遷移先
      */
     public String remove() {
+        List<KeyVersion> removeS3KeyList = new ArrayList<>();
         if (facet.getProgramPath() != null) {
             // ファセットプログラムが存在する場合は、S3のオブジェクトを削除する
             String facetProgramS3Key = PropertyConst.S3_FACET_LIB_PATH + FilenameUtils.getName(facet.getProgramPath());
-            s3Logic.remove(facetProgramS3Key);
+            removeS3KeyList.add(new KeyVersion(facetProgramS3Key));
+        }
+        if (facet.getPropertiesPath() != null) {
+            // ファセットプロパティが存在する場合は、S3のオブジェクトを削除する
+            String facetPropertiesS3Key = PropertyConst.S3_FACET_PROPERTIES_PATH + FilenameUtils.getName(facet.getPropertiesPath());
+            removeS3KeyList.add(new KeyVersion(facetPropertiesS3Key));
+        }
+        if (facet.getPropertiesEditViewPath() != null) {
+            // ファセットプロパティ編集画面が存在する場合は、S3のオブジェクトを削除する
+            String facetPropertiesEditViewS3Key = PropertyConst.S3_FACET_PROPERTIES_EDIT_VIEW_PATH + FilenameUtils.getName(facet.getPropertiesEditViewPath());
+            removeS3KeyList.add(new KeyVersion(facetPropertiesEditViewS3Key));
+        }
+        if(removeS3KeyList.size() > 0) {
+            s3Logic.remove(removeS3KeyList);
         }
         Facet removeFacet = facetFacade.remove(facet);
         logger.info("{}.{} USER_ID:{}, FACET_ID:{}", MessageConst.SUCCESS_FACET_REMOVE.getId(), MessageConst.SUCCESS_FACET_REMOVE.getMessage(), sessionBean.getUserId(), removeFacet.getId());
@@ -177,12 +274,64 @@ public class FacetManagementEditBean implements Serializable{
     @AuthManagerInterceptor
     @LogInterceptor
     public String removeFacetProgram() {
-        // S3のオブジェクトを削除する
-        String facetProgramS3Key = PropertyConst.S3_FACET_LIB_PATH + FilenameUtils.getName(facet.getProgramPath());
-        s3Logic.remove(facetProgramS3Key);
+        List<KeyVersion> removeS3KeyList = new ArrayList<>();
+        if (facet.getProgramPath() != null) {
+            // ファセットプログラムが存在する場合は、S3のオブジェクトを削除する
+            String facetProgramS3Key = PropertyConst.S3_FACET_LIB_PATH + FilenameUtils.getName(facet.getProgramPath());
+            removeS3KeyList.add(new KeyVersion(facetProgramS3Key));
+        }
+        if (facet.getPropertiesPath() != null) {
+            // ファセットプロパティが存在する場合は、S3のオブジェクトを削除する
+            String facetPropertiesS3Key = PropertyConst.S3_FACET_PROPERTIES_PATH + FilenameUtils.getName(facet.getPropertiesPath());
+            removeS3KeyList.add(new KeyVersion(facetPropertiesS3Key));
+        }
+        if (facet.getPropertiesEditViewPath() != null) {
+            // ファセットプロパティ編集画面が存在する場合は、S3のオブジェクトを削除する
+            String facetPropertiesEditViewS3Key = PropertyConst.S3_FACET_PROPERTIES_EDIT_VIEW_PATH + FilenameUtils.getName(facet.getPropertiesEditViewPath());
+            removeS3KeyList.add(new KeyVersion(facetPropertiesEditViewS3Key));
+        }
+        if(removeS3KeyList.size() > 0) {
+            s3Logic.remove(removeS3KeyList);
+        }
         
-        // エンティティのプログラムパスをNULLに指定してアップデートする
+        // エンティティのファセットパス関連をNULLに指定してアップデートする
         facet.setProgramPath(null);
+        facet.setPropertiesPath(null);
+        facet.setPropertiesEditViewPath(null);
+        return edit();
+    }
+    
+    /**
+     * ファセットプロパティを削除する
+     * @return 遷移先
+     */
+    @ErrorInterceptor
+    @AuthManagerInterceptor
+    @LogInterceptor
+    public String removeFacetProperties() {
+        // S3のオブジェクトを削除する
+        String facetPropertiesS3Key = PropertyConst.S3_FACET_PROPERTIES_PATH + FilenameUtils.getName(facet.getPropertiesPath());
+        s3Logic.remove(facetPropertiesS3Key);
+        
+        // エンティティのファセットプロパティパスをNULLに指定してアップデートする
+        facet.setPropertiesPath(null);
+        return edit();
+    }
+    
+    /**
+     * ファセットプロパティ編集画面を削除する
+     * @return 遷移先
+     */
+    @ErrorInterceptor
+    @AuthManagerInterceptor
+    @LogInterceptor
+    public String removeFacetPropertiesEditView() {
+        // S3のオブジェクトを削除する
+        String facetPropertiesEditViewS3Key = PropertyConst.S3_FACET_PROPERTIES_EDIT_VIEW_PATH + FilenameUtils.getName(facet.getPropertiesEditViewPath());
+        s3Logic.remove(facetPropertiesEditViewS3Key);
+        
+        // エンティティのファセットプロパティ編集画面パスをNULLに指定してアップデートする
+        facet.setPropertiesEditViewPath(null);
         return edit();
     }
     
@@ -218,6 +367,9 @@ public class FacetManagementEditBean implements Serializable{
                 context.addMessage("facet-event-form:start-event-date", message);
                 return "";
             }
+        }
+        if (facetEvent.getRoop() == null) {
+            facetEvent.setRoop(0);
         }
         // 外部キーの設定
         facetEvent.setFacetId(facet);

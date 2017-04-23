@@ -64,8 +64,9 @@ public enum MessageConst {
     INVALID_ROT_NUMBER_OR_PASSWORD("MER_10000015", "入力されたロットナンバー/パスワードのどちらかが誤っています。"),
     ALREADY_TYING_ROT_NUMBER("MER_10000016", "入力されたロットナンバーは既に別のアカウントに登録されています。"),
     S3_FILE_UPLOAD_FAILED("MER_10000017", "AmazonS3へのファイルアップロードに失敗しました。"),
-    MISMATCH_FACET_NAME("MER_01000018", "ファセット名とファセットプログラムの名前が一致しません。"),
+    MISMATCH_FACET_NAME("MER_01000018", "ファセット名とアップロードファイル名が一致しません。"),
     ALREADY_USED_FACET_NAME("MER_01000019", "ファセット名は既に利用されています。"),
+    UN_REGISTED_FACET_PROGRAM("MER_01000020", "ファセットプログラムが登録されていないため、登録ができません。"),
     
     
     // MCR(ToyManager側で発生する想定外エラー系)
