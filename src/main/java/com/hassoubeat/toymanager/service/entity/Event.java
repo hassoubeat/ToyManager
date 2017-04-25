@@ -136,8 +136,11 @@ public class Event implements Serializable, Cloneable {
     
     @PrePersist
     public void prePersist(){
-        // デフォルトの優先度をセットする
-        this.setPriority(5);
+        
+        // パラメータがセットされていない場合、デフォルトの優先度をセットする
+        if (priority == null | priority == 0) {
+            this.setPriority(5);
+        }
         // 削除フラグを入力する
         this.setIsDeleted(false);
         // 登録日時と更新日時に現在日時を設定する
