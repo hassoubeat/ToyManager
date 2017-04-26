@@ -96,12 +96,22 @@ public class ToyFacetLogic{
     public ToyFacet update(Integer updateToyFacetId) {
         // 先にToyFacetに紐付いているイベントを削除する
         ToyFacet updateToyFacet = toyFacetFacade.find(updateToyFacetId);
-        // ToyFacetIDからイベントを削除する(いまのままだと紐付いているEventが全部消える)
+        updateToyFacet.setFacetVersion(updateToyFacet.getFacetId().getFacetVersion());
+        // ToyFacetの変更
+        ToyFacet editToyFacet = toyFacetFacade.edit(updateToyFacet);
+        logger.info("{}.{} USER_ID:{} TOY_FACET_ID:{}", MessageConst.SUCCESS_TOY_FACET_UPDATE.getId(), MessageConst.SUCCESS_TOY_FACET_UPDATE.getMessage(), sessionBean.getId(), updateToyFacet.getId());
+        return updateToyFacet;
+    }
+    
+    /**
+     * ToyFacetのアップデート(ToyFacetに紐づくイベントを削除→ファセットから再登録)
+     * @param updateToyFacetId アップデートするToyFacetIdを取得する
+     * @return 更新したToyFacet
+     */
+    public ToyFacet eventResetUpdate(Integer updateToyFacetId) {
+        // 先にToyFacetに紐付いているイベントを削除する
+        ToyFacet updateToyFacet = toyFacetFacade.find(updateToyFacetId);
         eventFacade.removeByToyFacetId(updateToyFacet);
-//        for (Event removeEvent : updateToyFacet.getToyId().getEventList()) {
-//            // TODO 
-//            
-//        }
         updateToyFacet.setFacetVersion(updateToyFacet.getFacetId().getFacetVersion());
         // ToyFacetの変更
         ToyFacet editToyFacet = toyFacetFacade.edit(updateToyFacet);

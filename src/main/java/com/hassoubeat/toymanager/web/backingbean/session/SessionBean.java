@@ -6,6 +6,7 @@
 package com.hassoubeat.toymanager.web.backingbean.session;
 
 import com.hassoubeat.toymanager.annotation.LogInterceptor;
+import com.hassoubeat.toymanager.service.dao.ToyFacade;
 import com.hassoubeat.toymanager.service.entity.Account;
 import com.hassoubeat.toymanager.util.RoleLogic;
 import javax.inject.Named;
@@ -28,6 +29,8 @@ public class SessionBean implements Serializable {
     
     @EJB
     RoleLogic roleLogic;
+    @EJB
+    ToyFacade toyFacade;
     
     @Getter
     Integer id = null;
@@ -47,6 +50,10 @@ public class SessionBean implements Serializable {
     @Getter
     @Setter
     Integer selectedToyId = 0;
+    
+    @Getter
+    @Setter
+    Integer selectedToyRotNum = 0;
     
     /**
      * Creates a new instance of SessionBean
@@ -72,6 +79,11 @@ public class SessionBean implements Serializable {
         roleAuthority = account.getRoleId().getAuthority();
         isAuth = true;
         selectedToyId = account.getLastSelectedToyId();
+        if (isToySelected()) {
+            // Toyが存在する場合
+            selectedToyRotNum = toyFacade.find(selectedToyId).getRotNum();
+        }
+        
     }
     
     /**
@@ -86,6 +98,14 @@ public class SessionBean implements Serializable {
         roleAuthority = 0;
         isAuth = false;
         selectedToyId = 0;
+    }
+    
+    /**
+     * Toyが選択済であるかをチェックする
+     * @return 
+     */
+    public boolean isToySelected() {
+        return selectedToyId > 0;
     }
     
     /**

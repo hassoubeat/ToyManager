@@ -90,6 +90,11 @@ public class ToyCustomBean implements Serializable{
     @Getter
     @Setter
     private List<ToyVoiceType> toyVoiceTypeList;
+    
+    // ファセットアップデート時にイベントを全てファセットから登録しなおすかを判断する
+    @Getter
+    @Setter
+    private Boolean isEventResetFacetUpdate = false;
 
     /**
      * Creates a new instance of ToyMenuBean
@@ -129,7 +134,13 @@ public class ToyCustomBean implements Serializable{
     @AuthGeneralInterceptor
     @LogInterceptor
     public String updateToyFacet(Integer toyFacetId) {
-        toyFacetLogic.update(toyFacetId);
+        if (isEventResetFacetUpdate) {
+            // ToyFacetに紐づいたイベントをリセットする場合
+            toyFacetLogic.eventResetUpdate(toyFacetId);
+        } else {
+            // ToyFacetに紐づいたイベントをリセットしない場合
+            toyFacetLogic.update(toyFacetId);
+        }
         // メッセージの生成/自画面にリダイレクトで遷移する
         ToastMessage toastMessage = new ToastMessage();
         toastMessage.setRender(true);

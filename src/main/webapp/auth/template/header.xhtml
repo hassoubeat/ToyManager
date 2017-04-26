@@ -34,8 +34,11 @@
                                     <li><a href="" data-toggle="modal" data-target="#logout-modal" ><span class="glyphicon glyphicon-log-out"/> ログアウト</a></li>
                                 </ul>
                             </li>
+                            <ui:fragment rendered="#{sessionBean.isToySelected()}">
+                                <li><a href="" data-toggle="modal" data-target="#toytalk-jump-modal" ><span class="glyphicon glyphicon-cog"/> ToyTalk管理画面</a></li>
+                            </ui:fragment>
                             <ui:fragment rendered="#{sessionBean.isManagerRole()}">
-                                <li id="management" role="presentation"><a jsf:outcome="/auth/management/index"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> 管理機能</a></li>
+                                <li id="management" role="presentation"><a jsf:outcome="/auth/management/index"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> ToyManager管理機能</a></li>
                             </ui:fragment>
                           </ul>
                         </nav>
@@ -57,6 +60,23 @@
                             <form jsf:id="logout-form">
                                 <input class="btn btn-primary" type="submit" value="ログアウト" id="logout" jsf:action="#{accountBean.logout()}"/>
                             </form>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            <!-- ToyTalk管理画面遷移先モーダルダイアログ -->
+            <div class="modal fade" id="toytalk-jump-modal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                            <h4 class="modal-title">選択中のToyの管理画面へ遷移します</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>同じネットワーク内にToyが接続されていない場合は、遷移することができません。</h4>
+                            </div>
+                            <a class="btn btn-primary" href="http://toytalk#{sessionBean.selectedToyRotNum}.local/ToyTalkConsole/index.php">ToyTalk管理画面へ遷移する</a>
                         </div>                        
                     </div>
                 </div>
