@@ -226,12 +226,21 @@
                             <div class="modal-body">
                                 <h:form id="facet-event-form">
                                     <div class="well">
-                                        <textarea id="event-note" class="form-control" jsf:id="event-note" placeholder="Toyのカスタマイズ画面で表示されるイベントの説明文を【400】文字以内で入力してください" jsf:value="#{facetManagementEditBean.facetEvent.note}"/>
-                                        <h:message class="label label-danger" for="event-note"/>
-                                        <input type="text" id="event-title" jsf:id="event-title" class="form-control" placeholder="イベントのタイトルを【30】文字以内で入力してください" jsf:value="#{facetManagementEditBean.facetEvent.name}"/>
-                                        <h:message class="label label-danger" for="event-title"/>
-                                        <textarea id="event-content" class="form-control" jsf:id="event-content" placeholder="Toyが読み上げる内容を【200】文字以内で入力してください" jsf:value="#{facetManagementEditBean.facetEvent.content}"/>
-                                        <h:message class="label label-danger" for="event-content"/>
+                                        <div class="form-group">
+                                            <lable><b>イベントのタイトル</b></lable>
+                                            <input type="text" id="event-title" jsf:id="event-title" class="form-control" placeholder="イベントのタイトルを【30】文字以内で入力してください" jsf:value="#{facetManagementEditBean.facetEvent.name}"/>
+                                            <h:message class="label label-danger" for="event-title"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <lable><b>イベントの読み上げる内容</b></lable>
+                                            <textarea id="event-content" class="form-control" jsf:id="event-content" placeholder="Toyが読み上げる内容を【200】文字以内で入力してください" jsf:value="#{facetManagementEditBean.facetEvent.content}"/>
+                                            <h:message class="label label-danger" for="event-content"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <lable><b>Toyのカスタマイズ画面で表示されるイベントの説明文</b></lable>
+                                            <textarea id="event-note" class="form-control" jsf:id="event-note" placeholder="Toyのカスタマイズ画面で表示されるイベントの説明文を【400】文字以内で入力してください" jsf:value="#{facetManagementEditBean.facetEvent.note}"/>
+                                            <h:message class="label label-danger" for="event-note"/>
+                                        </div>
                                         <input id="start-event-date" jsf:id="start-event-date" class="input-date"  placeholder="開始日時" type="text" jsf:value="#{facetManagementEditBean.facetEvent.startDate}">
                                             <f:convertDateTime type="both" />
                                         </input>

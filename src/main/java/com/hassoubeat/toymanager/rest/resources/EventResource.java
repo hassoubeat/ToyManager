@@ -81,6 +81,7 @@ public class EventResource {
      * ※ 他のAPIと異なり、ToyManager利用中でのみ実行することができるAPI
      * @param startDateStr
      * @param endDateStr
+     * @param isFetchFacetEvent
      * @return 
      */
     @GET
@@ -88,8 +89,7 @@ public class EventResource {
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @LogInterceptor
     @AuthGeneralInterceptor
-    public List<RestCalenderEvent> fetchEventForCalender(@QueryParam("start") String startDateStr, @QueryParam("end") String endDateStr) {  
-        
+    public List<RestCalenderEvent> fetchEventForCalender(@QueryParam("start") String startDateStr, @QueryParam("end") String endDateStr, @QueryParam("isFetchAccountEvent") boolean isFetchAccountEvent, @QueryParam("isFetchFacetEvent") boolean isFetchFacetEvent) {  
         // 日付形式のパラメータでなかった場合、(変換した時にparseExceptionが出た時にはBadRequestを返却する
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = null;
@@ -101,7 +101,7 @@ public class EventResource {
             // 日付型に合致しないデータだった場合、リクエスト不備として返却する
             throw new BadRequestException(ex);
         }
-        return restCalenderEventLogic.fetchCalenderEvent(startDate, endDate);
+        return restCalenderEventLogic.fetchCalenderEvent(startDate, endDate, isFetchAccountEvent, isFetchFacetEvent);
 //        List<RestCalenderEvent> restCalnderEventList = ;
 //        for (int index = 0; index <= restCalnderEventList.size(); index++) {
 //            RestCalenderEvent item = restCalnderEventList.get(index);

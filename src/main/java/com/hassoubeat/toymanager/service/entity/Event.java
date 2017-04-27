@@ -138,7 +138,7 @@ public class Event implements Serializable, Cloneable {
     public void prePersist(){
         
         // パラメータがセットされていない場合、デフォルトの優先度をセットする
-        if (priority == null | priority == 0) {
+        if (priority == null) {
             this.setPriority(5);
         }
         // 削除フラグを入力する

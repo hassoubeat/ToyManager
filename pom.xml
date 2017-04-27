@@ -137,7 +137,7 @@
                 <resources.url>http://52.196.234.137:8080/ToyManager/resources/</resources.url>
                 <resources.absolute.path>/usr/local/glassfish4/glassfish/domains/domain1/applications/ToyManager/resources</resources.absolute.path>
                 <!-- ログ出力用の変数 -->
-                <log.output.level>trace</log.output.level>
+                <log.output.level>info</log.output.level>
                 <log.file.output.pattern>[%level]: %logger :"%message" :%date{ISO8601} %n</log.file.output.pattern>
                 <log.file.output.path>./</log.file.output.path>
                 <log.file.output.name>toymanager_aws.log</log.file.output.name>

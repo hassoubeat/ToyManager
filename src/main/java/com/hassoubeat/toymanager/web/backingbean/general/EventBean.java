@@ -13,6 +13,7 @@ import com.hassoubeat.toymanager.constant.MessageConst;
 import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.dao.EventFacade;
 import com.hassoubeat.toymanager.service.dao.ToyFacade;
+import com.hassoubeat.toymanager.service.dao.ToyFacetFacade;
 import com.hassoubeat.toymanager.service.entity.Account;
 import com.hassoubeat.toymanager.service.entity.Event;
 import com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException;
@@ -63,6 +64,9 @@ public class EventBean implements Serializable{
     ToyFacade toyFacade;
     
     @EJB
+    ToyFacetFacade toyFacetFacade;
+    
+    @EJB
     EventFacade eventFacade;
     
     @EJB
@@ -107,6 +111,10 @@ public class EventBean implements Serializable{
     @Setter
     private Date roopEndDate;
     
+    @Getter
+    @Setter
+    private Integer priority;
+    
     @NotNull
     @Getter
     @Setter
@@ -117,18 +125,9 @@ public class EventBean implements Serializable{
     @Setter
     private boolean isAccountShare = false;
     
-    
-//    // アカウントに紐づくイベント
-//    @Getter
-//    private List<Event> accountEventList;
-    
-//    // Toyに紐づくイベント
-//    @Getter
-//    private List<Event> toyEventList;
-    
-//    // カラーコードの一覧
-//    @Getter
-//    private List<ColorType> colorTypeList;
+    @Getter
+    @Setter
+    private Integer toyFacetId;
     
     // ajaxロジックの成功判定処理
     @Getter
@@ -174,18 +173,26 @@ public class EventBean implements Serializable{
         event.setColorCode(this.getEventColorCode());
         event.setRoop(this.getRoop());
         event.setRoopEndDate(this.getRoopEndDate());
+        if (this.getPriority() != null) {
+            event.setPriority(this.getPriority());
+        }
         event.setIsTalking(this.isTalking);
         
-        if (isAccountShare) {
+        if (toyFacetId == null) {
+            // ファセットイベントではない場合
+            
+            if (isAccountShare) {
             // アカウント共有がONの場合
             Account account = accountFacade.find(sessionBean.getId());
             event.setAccountId(account);
+            } else {
+                // アカウント共有がOFFの場合(Toyに紐づくイベントの場合)
+                event.setToyId(toyFacade.find(sessionBean.getSelectedToyId()));
+            }
         } else {
-            // アカウント共有がOFFの場合(Toyに紐づくイベントの場合)
-            event.setToyId(toyFacade.find(sessionBean.getSelectedToyId()));
+            // ファセットイベントの場合
+            event.setToyFacetId(toyFacetFacade.find(toyFacetId));
         }
-        
-        
         
         // 登録処理の実行
         eventLogic.create(event);
@@ -240,16 +247,25 @@ public class EventBean implements Serializable{
             event.setColorCode(this.getEventColorCode());
             event.setRoop(this.getRoop());
             event.setRoopEndDate(this.getRoopEndDate());
+            if (this.getPriority() != null) {
+               event.setPriority(this.getPriority());
+            }
             event.setIsTalking(this.isTalking);
             
-            if (isAccountShare) {
-                // アカウント共有がONの場合(アカウントに紐づくIDの場合)
-                event.setToyId(null);
-                event.setAccountId(accountFacade.find(sessionBean.getId()));
+            if (toyFacetId == null) {
+                // ファセットイベントではない場合
+            
+                if (isAccountShare) {
+                    // アカウント共有がONの場合
+                    Account account = accountFacade.find(sessionBean.getId());
+                    event.setAccountId(account);
+                } else {
+                    // アカウント共有がOFFの場合(Toyに紐づくイベントの場合)
+                    event.setToyId(toyFacade.find(sessionBean.getSelectedToyId()));
+                }
             } else {
-                // アカウント共有がOFFの場合(Toyに紐づくイベントの場合)
-                event.setAccountId(null);
-                event.setToyId(toyFacade.find(sessionBean.getSelectedToyId()));
+                // ファセットイベントの場合
+                event.setToyFacetId(toyFacetFacade.find(toyFacetId));
             }
             
             // 変更処理の実行
@@ -319,8 +335,6 @@ public class EventBean implements Serializable{
         if (eventFacade.countById(Integer.parseInt(selectedEventId)) > 0) {
             Event targetEvent = eventFacade.find(Integer.parseInt(selectedEventId));
             
-//            quartzLogic.triggerGen(targetEvent);
-            
             // 合致するイベントが存在していた時
             this.setEventId(targetEvent.getId());
             this.setEventName(targetEvent.getName());
@@ -330,8 +344,17 @@ public class EventBean implements Serializable{
             this.setEventColorCode(targetEvent.getColorCode());
             this.setRoop(targetEvent.getRoop());
             this.setRoopEndDate(targetEvent.getRoopEndDate());
+            this.setPriority(targetEvent.getPriority());
             this.setTalking(targetEvent.getIsTalking());
             this.setAccountShare(targetEvent.getAccountId() != null);
+            if (targetEvent.getToyFacetId() != null) {
+                // ファセットイベントの時のみ、パラメーターを保存する
+                this.setToyFacetId(targetEvent.getToyFacetId().getId());
+            } else {
+                // ファセットイベントでは無いはnullをセットする
+                this.setToyFacetId(null);
+            }
+            
             
             logger.warn("{}:{} USER_ID:{}, SELECT_EVENT_ID:{} {}.{}", MessageConst.SELECT_EVENT.getId(), MessageConst.SELECT_EVENT.getMessage(), sessionBean.getUserId(), selectedEventId, this.getClass().getName(), this.getClass());
             
@@ -344,6 +367,23 @@ public class EventBean implements Serializable{
             logger.warn("{}:{} USER_ID:{}, SELECT_EVENT_ID:{} {}.{}", MessageConst.ALREADY_REMOVE_EVENT.getId(), MessageConst.ALREADY_REMOVE_EVENT.getMessage(), sessionBean.getUserId(), selectedEventId, this.getClass().getName(), this.getClass());
         }
     }
+    
+//    /**
+//     * 現在EventBeanに保持されているイベント情報をクリアする
+//     */
+//    public void selectEventClear() {
+//        eventId = 0;
+//        eventName = "";
+//        eventContent = "";
+//        eventStartDate = null;
+//        eventEndDate = null;
+//        eventColorCode = "";
+//        roop = 0;   
+//        roopEndDate = null;
+//        isTalking = false;
+//        isAccountShare = false;
+//        toyFacetId = null;
+//    }
     
     @ErrorInterceptor
     @AuthGeneralInterceptor

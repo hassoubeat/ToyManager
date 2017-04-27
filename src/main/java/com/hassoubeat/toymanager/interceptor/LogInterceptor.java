@@ -33,22 +33,16 @@ public class LogInterceptor implements Serializable{
         String targetClassName = context.getTarget().getClass().getSuperclass().getName();
         String targetMethodName = context.getMethod().getName();
         
-        logger.info("{} : {}","START_METHOD_RUN", targetClassName + "." + targetMethodName);
+        logger.debug("{} : {}","START_METHOD_RUN", targetClassName + "." + targetMethodName);
         long beforeTime = System.nanoTime();
         
         // インターセプトするオブジェクトの実行
         Object ret = context.proceed();
         
         long afterTime = System.nanoTime();
-        logger.info("{} : {}", "METHOD_RUN_TIME", targetClassName + "." + targetMethodName + ":" + (afterTime - beforeTime) + "nsecs.");
+        logger.debug("{} : {}", "METHOD_RUN_TIME", targetClassName + "." + targetMethodName + ":" + (afterTime - beforeTime) + "nsecs.");
         
-        logger.info("{} : {}", "END_METHOD_RUN", targetClassName + "." + targetMethodName);
-        
-//        logger.trace("trace");
-//        logger.debug("debug");
-//        logger.info("info");
-//        logger.warn("warn");
-//        logger.error("error");
+        logger.debug("{} : {}", "END_METHOD_RUN", targetClassName + "." + targetMethodName);
         
         return ret;
     }

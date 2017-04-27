@@ -23,19 +23,39 @@
                         <ui:include src="/auth/template/toyMenu.xhtml"/>
                     </div>
                     <div class="col-xs-9">
-<!--                        <div class="event-loading">
-                            <img src="#{appPropetiesBean.HOST_PATH}ToyManager/resources/img/calender_loading.gif"/>
-                        </div>-->
+                        <p>
+                            <a data-toggle="collapse" href="#calender-option" style="text-decoration: none;">
+                                <span class="label label-default">カレンダーオプション <span class="glyphicon glyphicon-chevron-down"/></span>
+                            </a>
+                            <a data-toggle="collapse" href="#calender-help" style="text-decoration: none;">
+                                <span class="label label-default">ヘルプ <span class="glyphicon glyphicon-chevron-down"/></span>
+                            </a>
+                        </p>
+                        <div id="calender-option" class="collapse">
+                            <div class="well">
+                                <h4>カレンダーオプション</h4>
+                                <b><span class="glyphicon glyphicon-user"/> アカウントイベントを表示する </b><input id="calender-option-is-fetch-calender-account-event" type="checkbox" /><br/>
+                                <b><span class="glyphicon glyphicon-wrench"/> ファセットイベントを表示する </b><input id="calender-option-is-fetch-calender-facet-event" type="checkbox" />
+                            </div>
+                        </div>
+                        <div id="calender-help" class="collapse">
+                            <div class="well">
+                                <h4>ヘルプ</h4>
+                                <p/>
+                                <h5><u>Q.イベントの横の記号の意味は？</u></h5>
+                                <h5 class="small"><span class="glyphicon glyphicon-user"/>...アカウント共有が指定されているイベントです。全てのToyで適応されるイベントです。</h5>
+                                <h5 class="small"><span class="glyphicon glyphicon-volume-up"/>...ToyTalk属性が指定されたイベントです。ToyTalkにイベントが同期された後、イベントの開始時刻に読み上げを行ってくれます。</h5>
+                                <h5 class="small"><span class="glyphicon glyphicon-wrench"/>...Toyに追加したファセットに紐づくイベントです。</h5>
+                                <h5 class="small"><span class="glyphicon glyphicon-repeat"/>...繰り返しが指定されたイベントです。</h5>
+                                <p/>
+                                <h5><u>Q.ファセットのイベントを自分で追加/編集ってできないの？</u></h5>
+                                <h5 class="small">可能です。</h5>
+                                <h5 class="small">ファセットイベントの追加はイベントを追加したいファセットのイベントを選択し、編集後に【追加】ボタンを押下することで追加できます。</h5>
+                                <h5 class="small">ファセットイベントの編集は編集したいファセットのイベントを選択し、編集後に【変更】ボタンを押下することで編集できます。</h5>
+                            </div>
+                        </div>
                         <div id="calendar"></div>
                         <p/>
-                        <div class="well">
-                            <h4>ヘルプ</h4>
-                            <p/>
-                            <h5>Q.イベントの横の記号の意味は？</h5>
-                            <h5 class="small"><span class="glyphicon glyphicon-user"/>...アカウント共有が指定されているイベントです。全てのToyで適応されるイベントです。</h5>
-                            <h5 class="small"><span class="glyphicon glyphicon-volume-up"/>...ToyTalk属性が指定されたイベントです。ToyTalkにイベントが同期された後、イベントの開始時刻に読み上げを行ってくれます。</h5>
-                            <h5 class="small"><span class="glyphicon glyphicon-repeat"/>...繰り返しが指定されたイベントです。</h5>
-                        </div>
                     </div>
                 </div>
                 <!-- Toy未選択時の通知ダイアログ -->
@@ -67,10 +87,16 @@
                             <div class="modal-body">
                                 <div class="well">
                                     <form jsf:id="event-form">
-                                        <input type="text" id="event-title" jsf:id="event-title" class="form-control" placeholder="イベントのタイトルを【30】文字以内で入力してください" jsf:value="#{eventBean.eventName}"/>
-                                        <h:message class="label label-danger" for="event-title"/>
-                                        <textarea id="event-content" class="form-control" jsf:id="event-content" placeholder="Toyが読み上げる内容を【200】文字以内で入力してください" jsf:value="#{eventBean.eventContent}"/>
-                                        <h:message class="label label-danger" for="event-content"/>
+                                        <div class="form-group">
+                                            <lable><b>イベントのタイトル</b></lable>
+                                            <input type="text" id="event-title" jsf:id="event-title" class="form-control" placeholder="イベントのタイトルを【30】文字以内で入力してください" jsf:value="#{eventBean.eventName}"/>
+                                            <h:message class="label label-danger" for="event-title"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <lable><b>イベントの読み上げる内容</b></lable>
+                                            <textarea id="event-content" class="form-control" jsf:id="event-content" placeholder="Toyが読み上げる内容を【200】文字以内で入力してください" jsf:value="#{eventBean.eventContent}"/>
+                                            <h:message class="label label-danger" for="event-content"/>
+                                        </div>
                                         <input id="start-event-date" jsf:id="start-event-date" class="input-date"  placeholder="開始日時" type="text" jsf:value="#{eventBean.eventStartDate}">
                                             <f:convertDateTime type="both" />
                                         </input>
@@ -100,11 +126,11 @@
                                                 </td>
 
                                             </tr>
-                                            <tr>
+                                            <tr id="tr-is-account-share">
                                                 <th>アカウント共通のイベント<a data-toggle="tooltip" title="現在ログインしているアカウントに紐づくイベントにします(設定した場合、別のToy上でもイベントが表示されるようになります)"><span class="glyphicon glyphicon-question-sign" /></a>:</th>
                                                 <td><input type="checkbox" id="is-account-share" jsf:value="#{eventBean.accountShare}"/></td>
                                             </tr>
-                                            <tr>
+                                            <tr id="tr-is-talking">
                                                 <th>Toyに喋らせる？<a data-toggle="tooltip" title="ToyTalkに読み上げさせるイベントにします"><span class="glyphicon glyphicon-question-sign" /></a>:</th>
                                                 <td><input type="checkbox" id="is-talking" jsf:value="#{eventBean.talking}"/></td>
                                             </tr>
@@ -165,10 +191,11 @@
                                                 </h:selectOneMenu>
                                                 ヶ月毎
                                                 <p/>
-                                                繰り返しの基準
-                                                <input type="radio" name="roop-standard" value="date" id="roop-standard-default">日付</input>
-                                                <input type="radio" name="roop-standard" value="day-of-the-week" id="roop-stardard-dotw">曜日</input>
-
+                                                <div class="hide">
+                                                    繰り返しの基準
+                                                    <input type="radio" name="roop-standard" value="date" id="roop-standard-default">日付</input>
+                                                    <input type="radio" name="roop-standard" value="day-of-the-week" id="roop-stardard-dotw">曜日</input>
+                                                </div>
                                                 <p/>
                                             </div>
                                             <div id="roop-option-every-year" style="display:none;">
@@ -186,6 +213,8 @@
                                                 </input>
                                             </div>
                                             <input type="hidden" jsf:id="roop-param" id="roop-param" jsf:value="#{eventBean.roop}"/>
+                                            <input type="hidden" jsf:id="priority" id="priority" jsf:value="#{eventBean.priority}"/>
+                                            <input type="hidden" jsf:id="toy-facet-id" id="toy-facet-id" jsf:value="#{eventBean.toyFacetId}"/>
                                         </div>
                                         <!-- 繰り返しオプションここまで -->
                                         <p/>
@@ -271,6 +300,14 @@
                 <script type="text/javascript">
                     // イベント選択(ajax処理)二度押し防止フラグ
                     var isEventSelectAjaxConnecting = false;
+                    // カレンダーにアカウントイベントを表示するかを判定するフラグ
+                    var isFetchCalenderAccountEvent = "true";
+                    // カレンダーにファセットイベントを表示するかを判定するフラグ
+                    var isFetchCalenderFacetEvent = "false";
+                    // カレンダーの表示形式を持つパラメータ
+                    var defaultCalenderViewType = "agendaWeek";
+                    // TODO 何故かリソースの箇所に直接エスケープ書くと、正しく処理されないため。
+                    var ampersand = "&amp;";
                     
                     $(window).load(function () {
                         // Toy選択済チェック
@@ -281,6 +318,9 @@
                         
                         // ナビゲーションバーのactiveを変更
                         $("#event").addClass("active");
+                        
+                        // ローカルストレージからパラメータを取得する
+                        getLocalStorageParam();
                         
                         // カレンダー表示
                         $("#calendar").fullCalendar({
@@ -300,6 +340,8 @@
                             eventStartEditable:false,
                             // 選択する時間間隔
                             snapMinutes: 15,
+                            // カレンダーの表示形式
+                            defaultView: defaultCalenderViewType,
                             
                             eventRender: function(event, $element) {
 //                                $element.html('<span class="fc-title">' + event.title + ':' + event.start + '</span>');
@@ -311,6 +353,10 @@
                                         // アカウント共有イベントの場合
                                         $element.find('.fc-title').before('<span class="glyphicon glyphicon-user"/> ');
                                         
+                                    }
+                                    if (elem === "facet") {
+                                        // ファセットイベントだった場合
+                                        $element.find('.fc-title').before('<span class="glyphicon glyphicon-wrench"/> ');
                                     }
                                     if (elem === "roop") {
                                         // ループするイベントだった場合
@@ -329,7 +375,8 @@
                                 // ローディング画像の非表示
                                 $(".loadingWrap").fadeOut();
                             },
-                            events: "${appPropetiesBean.HOST_PATH}ToyManager/webapi/events/0.1/calenderEvents",
+                            
+                            events: "${appPropetiesBean.HOST_PATH}ToyManager/webapi/events/0.1/calenderEvents?isFetchAccountEvent=" + isFetchCalenderAccountEvent + ampersand + "isFetchFacetEvent=" + isFetchCalenderFacetEvent,
                             //日付ドラッグ時処理
                             select: function(start, end) {
                                 // Toyが未選択なら、エラーのトースター表示
@@ -371,7 +418,7 @@
                                     // 入力フォームの初期化
                                     clearInputForm();
 
-                                    // 画面上部の編集画面に追加する(ロジック実装後は、idからBackingBeanの要素を検索してその要素を渡す様に変更
+                                    // 選択したイベントIDから情報をajaxで取得
                                     selectEvent([{name: "eventId", value: event.id}]);
 
                                     $.toast({
@@ -405,14 +452,94 @@
 //                            }
                         });
                         
-                        eventFormSetup();
+                        // カレンダーのオプションにイベントをセットする
+                        calenderOptionSetup();
                         
+                        eventFormSetup();
                         // ローディング画像の非表示
 //                        $(".loadingWrap").fadeOut();
                     });
                     
+                    // ローカルストレージから必要な値を取得してセットと処理を行う
+                    function getLocalStorageParam () {
+                        var lsIsFetchCalenderAccountEvent = localStorage.getItem("is_fetch_calender_account_event");
+                        var lsIsFetchCalenderFacetEvent = localStorage.getItem("is_fetch_calender_facet_event");
+                        var lsDefaultCalenderViewType = localStorage.getItem("default_calender_view_type");
+                        if (lsIsFetchCalenderAccountEvent !== null) {
+                            // 空じゃなかった場合
+                            isFetchCalenderAccountEvent = lsIsFetchCalenderAccountEvent;
+                        }
+                        if (lsIsFetchCalenderFacetEvent !== null) {
+                            // 空じゃなかった場合
+                            isFetchCalenderFacetEvent = lsIsFetchCalenderFacetEvent;
+                        }
+                        if (lsDefaultCalenderViewType !== null) {
+                            // 空じゃなかった場合
+                            defaultCalenderViewType = lsDefaultCalenderViewType;
+                        }
+                        
+                        if (isFetchCalenderAccountEvent === "true") {
+                            $("#calender-option-is-fetch-calender-account-event").prop("checked", true);
+                        } else {
+                            $("#calender-option-is-fetch-calender-account-event").prop("checked", false);
+                        }
+                        if (isFetchCalenderFacetEvent === "true") {
+                            $("#calender-option-is-fetch-calender-facet-event").prop("checked", true);
+                        } else {
+                            $("#calender-option-is-fetch-calender-facet-event").prop("checked", false);
+                        }                        
+                    }
+                    
+                    function calenderOptionSetup() {
+                        // アカウントイベントの取得チェックボックスを変更した場合の処理
+                        $("#calender-option-is-fetch-calender-account-event").change(function(){
+                            if ($(this).prop("checked")) {
+                                // チェックが入った場合
+                                isFetchCalenderAccountEvent = "true";
+                            } else {
+                                // チェックが入らなかった場合
+                                isFetchCalenderAccountEvent = "false";
+                            }
+                            // ローカルストレージに状態を保存する
+                            localStorage.setItem('is_fetch_calender_account_event', isFetchCalenderAccountEvent);
+                            location.reload();
+                        });
+                        // ファセットイベントの取得チェックボックスを変更した場合の処理
+                        $("#calender-option-is-fetch-calender-facet-event").change(function(){
+                            if ($(this).prop("checked")) {
+                                // チェックが入った場合
+                                isFetchCalenderFacetEvent = "true";
+                            } else {
+                                // チェックが入らなかった場合
+                                isFetchCalenderFacetEvent = "false";
+                            }
+                            // ローカルストレージに状態を保存する
+                            localStorage.setItem('is_fetch_calender_facet_event', isFetchCalenderFacetEvent);
+                            location.reload();
+                        });
+                        // カレンダーの表示形式選択ボタン【月】を選択した場合の処理
+                        $(".fc-month-button").click(function(){
+                            defaultCalenderViewType = "month";
+                            // ローカルストレージに状態を保存する
+                            localStorage.setItem('default_calender_view_type', defaultCalenderViewType);
+                        });
+                        // カレンダーの表示形式選択ボタン【週】を選択した場合の処理
+                        $(".fc-agendaWeek-button").click(function(){
+                            defaultCalenderViewType = "agendaWeek";
+                            // ローカルストレージに状態を保存する
+                            localStorage.setItem('default_calender_view_type', defaultCalenderViewType);
+                        });
+                        // カレンダーの表示形式選択ボタン【日】を選択した場合の処理
+                        $(".fc-agendaDay-button").click(function(){
+                            defaultCalenderViewType = "agendaDay";
+                            // ローカルストレージに状態を保存する
+                            localStorage.setItem('default_calender_view_type', defaultCalenderViewType);
+                        });
+                        
+                    }
+                    
                     // 入力フォームの値をクリアする
-                    function clearInputForm () {
+                    function clearInputForm() {
                         selectedEvent = "";
                         $("#selected-event-id").val("");
                         $("#event-title").val("");
@@ -420,9 +547,13 @@
                         $("#start-event-date").val("");
                         $("#end-event-date").val("");
                         $("#event-color-code").val("");
+                        $("#toy-facet-id").val("");
                         $("[id^=event-colorset]").removeClass("block-sm-checked");
                         $("#is-account-share").prop("checked", false);
                         $("#is-talking").prop("checked", false);
+                        // ファセットイベント選択時に隠すアカウント共有編集とToyTalking編集を見えるようにする
+                        $("#tr-is-account-share").show();
+                        $("#tr-is-talking").show();
                         // 編集ボタン削除ボタンの無効化
                         $("[id$=update-event]").prop("disabled", true);
                         $("[id$=remove-event]").prop("disabled", true);
@@ -439,9 +570,10 @@
                         $("[id^=roop-option-every-week-checker]").prop("checked", false);
                         // ループ種別"毎月"のループ基準セレクトボックスの初期化
                         $("[name=roop-standard]").prop("checked", false);
-
                         // 全ループオプションブロックの非表示
-                       $("[id^=roop-option]").hide();
+                        $("[id^=roop-option]").hide();
+                        // 優先度のクリア
+                        $("#priority").val("");
                     }
                     
                     // イベント選択時のコールバックメソッド
@@ -451,7 +583,7 @@
                         
                         // ajaxで選択したイベントの情報をフォームにセットして再描画した後の処理
                         if ($("#is-select-event-success").val() === "true") {
-
+                            
                             $.toast({
                                 heading: "イベントの読込が完了しました。",
                                 text: "イベントの編集/削除が行えます。",
@@ -460,6 +592,16 @@
                                 position: "bottom-right",
                                 stack: "1"
                             });
+                            
+//                            if ($("[id$=toy-facet-id]").val() !== null) {
+                            if ($("#toy-facet-id").val() !== "") {
+                                console.log($("#toy-facet-id").val());
+                                // 選択したイベントがファセットイベントだった場合
+                                
+                                // ファセットイベントでは編集してはいけないアカウント共有フラグとToyTalkingフラグを見えなくする
+                                $("#tr-is-account-share").hide();
+                                $("#tr-is-talking").hide();
+                            }
                             
                             colorBlockSetup();
                             roopBlockSetup();

@@ -13,6 +13,7 @@ import com.hassoubeat.toymanager.service.dao.ToyFacade;
 import com.hassoubeat.toymanager.service.entity.Account;
 import com.hassoubeat.toymanager.service.entity.Event;
 import com.hassoubeat.toymanager.service.entity.Toy;
+import com.hassoubeat.toymanager.service.entity.ToyFacet;
 import com.hassoubeat.toymanager.service.exception.ToyManagerException;
 import com.hassoubeat.toymanager.util.BitLogic;
 import com.hassoubeat.toymanager.util.UtilLogic;
@@ -68,20 +69,27 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
     
     /**
      * カレンダーイベントを取得する
-     * TODO 引数に開始時間と終了時間を渡して指定した範囲のカレンダーイベントを取得する
+     * 引数に開始時間と終了時間を渡して指定した範囲のカレンダーイベントを取得する
      * @param startDate イベント取得開始範囲
      * @param endDate　イベント取得終了範囲
+     * @param isFetchAccountEvent アカウントイベントの取得フラグ
+     * @param isFetchFacetEvent ファセットイベントを取得フラグ
      * @return 
      */
-    public List<RestCalenderEvent> fetchCalenderEvent (Date startDate, Date endDate) {
+    public List<RestCalenderEvent> fetchCalenderEvent (Date startDate, Date endDate, boolean isFetchAccountEvent, boolean isFetchFacetEvent) {
         List<RestCalenderEvent> responseList = new ArrayList();
         Toy targetToy = toyFacade.find(sessionBean.getSelectedToyId());
         // Toyのイベント
         responseList.addAll(fetchToyEvent(targetToy, startDate, endDate));
-        // アカウントのイベント
-        responseList.addAll(fetchAccountEvent(targetToy.getAccountId(), startDate, endDate));
-        // TODO ファセットのイベント
-        
+        if (isFetchAccountEvent) {
+            // アカウントのイベント
+            responseList.addAll(fetchAccountEvent(targetToy.getAccountId(), startDate, endDate));
+        }
+        if (isFetchFacetEvent) {
+            // ファセットのイベント
+            responseList.addAll(fetchFacetEvent(targetToy.getToyFacetList(), startDate, endDate));
+            
+        }
         return responseList;
     }
     
@@ -155,6 +163,40 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
 //        for (RestCalenderEvent item: responseList) {
 //            logger.debug(item.toString());
 //        }
+        return responseList;
+    }
+    
+    private List<RestCalenderEvent> fetchFacetEvent(List<ToyFacet> toyFacetList, Date startDate, Date endDate) {
+        List<Event> convertList = new ArrayList();
+        List<RestCalenderEvent> responseList = new ArrayList();
+        for(ToyFacet toyFacet : toyFacetList) {
+            convertList.addAll(eventFacade.findStandardEventByToyFacetId(toyFacet, startDate, endDate));
+            convertList.addAll(eventFacade.findRoopEventByToyFacetId(toyFacet, startDate));
+        }
+        for(Event facetEvent : convertList) {
+            if (!bitLogic.bitCheck(facetEvent.getRoop(), erpConst.IS_ROOP)) {
+                // ループなしの場合(ループ終了日時が設定されていない時も同様
+                responseList.add(convertEvent(facetEvent));
+            } else {
+                if (bitLogic.bitCheck(facetEvent.getRoop(), erpConst.IS_EVERY_DAY_ROOP)) {
+                    // 日次ループの場合
+                    responseList.addAll(convertRoopEvent(facetEvent, erpConst.IS_EVERY_DAY_ROOP, startDate, endDate));
+                }
+                if (bitLogic.bitCheck(facetEvent.getRoop(), erpConst.IS_EVERY_WEEK_ROOP)) {
+                    // 週次ループの場合
+                    responseList.addAll(convertWeekRoopAllEvent(facetEvent, startDate, endDate));
+                }
+                if (bitLogic.bitCheck(facetEvent.getRoop(), erpConst.IS_EVERY_MOUTH_ROOP)) {
+                    // 月次ループの場合
+                    responseList.addAll(convertRoopEvent(facetEvent, erpConst.IS_EVERY_MOUTH_ROOP, startDate, endDate));
+                    // TODO 曜日基準の場合を表示する
+                }
+                if (bitLogic.bitCheck(facetEvent.getRoop(), erpConst.IS_EVERY_YEAR_ROOP)) {
+                    // 年次ループの場合
+                    responseList.addAll(convertRoopEvent(facetEvent, erpConst.IS_EVERY_YEAR_ROOP, startDate, endDate));
+                }
+            }
+        }
         return responseList;
     }
     

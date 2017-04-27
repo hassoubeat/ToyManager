@@ -256,21 +256,22 @@ public class EventLogic{
         }
         
         event.setRoop(roop);
-        
-        if (event.getRoopEndDate() == null) {
-            if (bitLogic.bitCheck(roop, erpConst.IS_EVERY_DAY_ROOP)) {
-                event.setRoopEndDate(utilLogic.calDate(event.getStartDate(), DAY_ROOP_END_DEFAULT, Calendar.MONTH));
-            }
-            if (bitLogic.bitCheck(roop, erpConst.IS_EVERY_WEEK_ROOP)) {
-                event.setRoopEndDate(utilLogic.calDate(event.getStartDate(), WEEK_ROOP_END_DEFAULT, Calendar.MONTH));
-            }
-            if (bitLogic.bitCheck(roop, erpConst.IS_EVERY_MOUTH_ROOP)) {
-                event.setRoopEndDate(utilLogic.calDate(event.getStartDate(), MOUTH_ROOP_END_DEFAULT, Calendar.MONTH));
-            }
-            if (bitLogic.bitCheck(roop, erpConst.IS_EVERY_YEAR_ROOP)) {
-                event.setRoopEndDate(utilLogic.calDate(event.getStartDate(), YEAR_ROOP_END_DEFAULT, Calendar.MONTH));
-            }
-        }
+
+// TODO ループ終了日時のデフォルトを指定するかは要検討
+//        if (event.getRoopEndDate() == null) {
+//            if (bitLogic.bitCheck(roop, erpConst.IS_EVERY_DAY_ROOP)) {
+//                event.setRoopEndDate(utilLogic.calDate(event.getStartDate(), DAY_ROOP_END_DEFAULT, Calendar.MONTH));
+//            }
+//            if (bitLogic.bitCheck(roop, erpConst.IS_EVERY_WEEK_ROOP)) {
+//                event.setRoopEndDate(utilLogic.calDate(event.getStartDate(), WEEK_ROOP_END_DEFAULT, Calendar.MONTH));
+//            }
+//            if (bitLogic.bitCheck(roop, erpConst.IS_EVERY_MOUTH_ROOP)) {
+//                event.setRoopEndDate(utilLogic.calDate(event.getStartDate(), MOUTH_ROOP_END_DEFAULT, Calendar.MONTH));
+//            }
+//            if (bitLogic.bitCheck(roop, erpConst.IS_EVERY_YEAR_ROOP)) {
+//                event.setRoopEndDate(utilLogic.calDate(event.getStartDate(), YEAR_ROOP_END_DEFAULT, Calendar.MONTH));
+//            }
+//        }
         
         return event;
     }
