@@ -10,6 +10,8 @@ import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.dao.DiffSyncEventFacade;
 import com.hassoubeat.toymanager.service.dao.EventFacade;
 import com.hassoubeat.toymanager.service.dao.ToyFacade;
+import com.hassoubeat.toymanager.service.dao.ToyFacetFacade;
+import com.hassoubeat.toymanager.service.dao.ToyWebapiAccessFilterFacade;
 import com.hassoubeat.toymanager.service.entity.Account;
 import com.hassoubeat.toymanager.service.entity.Event;
 import com.hassoubeat.toymanager.service.entity.Toy;
@@ -46,7 +48,13 @@ public class ToyLogic{
     EventFacade eventFacade;
     
     @EJB
+    ToyFacetFacade toyFacetFacade;
+    
+    @EJB
     DiffSyncEventFacade diffSyncEventFacade;
+    
+    @EJB
+    ToyWebapiAccessFilterFacade toyWebApiAccessFilterFacade;
 
     public ToyLogic() {
     }
@@ -88,13 +96,16 @@ public class ToyLogic{
         // TODO Toyのデフォルトのボイスタイプに初期化する処理を追加
 //        toy.setToyVoiceTypeId(null);
         
-        
         Toy editToy = toyFacade.edit(toy);
         
         // Toyに紐づくイベントを全て削除する
-        for (Event targetEvent: editToy.getEventList()) {
-            eventFacade.remove(targetEvent);
-        }
+        eventFacade.removeByToyId(editToy);
+        
+        // Toyに紐づくファセットを全て削除する
+        toyFacetFacade.removeByToyId(editToy);
+        
+        // Toyに紐づくアクセスフィルターを全て削除する
+        toyWebApiAccessFilterFacade.removeByToyId(editToy);
         
         // TODO 差分イベントの削除
 //        for (DiffSyncEvent targetDiffSyncEvent: editToy.getDiffSyncEventList()) {

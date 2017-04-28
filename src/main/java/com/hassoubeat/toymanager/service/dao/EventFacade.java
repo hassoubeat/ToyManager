@@ -378,6 +378,26 @@ public class EventFacade extends AbstractFacade<Event> {
     }
     
     /**
+     * Toyに紐づくするイベントを削除する
+     * 
+     * @param toyId 
+     */
+    public void removeByToyId(Toy toyId) {
+        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+        CriteriaDelete<Event> delete = builder.createCriteriaDelete(Event.class);
+        Root<Event> root = delete.from(Event.class);
+
+        delete.where(builder.equal(root.get(Event_.toyId), toyId));
+
+        Query q = getEntityManager().createQuery(delete);
+        q.executeUpdate();
+        
+        this.flush();
+        this.clear();
+    }
+    
+    /**
+     * ToyFacetに紐づくするイベントを削除する
      * 
      * @param toyFacetId 
      */

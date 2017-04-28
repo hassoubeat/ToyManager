@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -82,6 +83,25 @@ public class ToyWebapiAccessFilterFacade extends AbstractFacade<ToyWebapiAccessF
             // データが存在しなかった場合
             return false;
         }
-        
+         
     }
+    
+   /**
+    * Toyに紐づくするフィルターを削除する
+    * 
+    * @param toyId 
+    */
+    public void removeByToyId(Toy toyId) {
+       CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+       CriteriaDelete<ToyWebapiAccessFilter> delete = builder.createCriteriaDelete(ToyWebapiAccessFilter.class);
+       Root<ToyWebapiAccessFilter> root = delete.from(ToyWebapiAccessFilter.class);
+
+       delete.where(builder.equal(root.get(ToyWebapiAccessFilter_.toyId), toyId));
+
+       Query q = getEntityManager().createQuery(delete);
+       q.executeUpdate();
+
+       this.flush();
+       this.clear();
+   }
 }

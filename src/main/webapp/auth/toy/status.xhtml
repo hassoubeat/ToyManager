@@ -420,7 +420,9 @@
                             <div class="modal-body">
                                 <div class="bs-callout bs-callout-danger">
                                     <h4>アカウント紐付けを解除した場合、以下の処理が実行されます。</h4>
-                                    <h5 class="small">・Toyに登録したイベントの削除(アカウント共有イベントは削除対象外です。)</h5>
+                                    <h5 class="small">・Toyに登録したイベントの削除(アカウント共有イベントは削除対象外です)</h5>
+                                    <h5 class="small">・Toyに追加したファセットの削除(ファセットに付随するイベントも削除されます)</h5>
+                                    <h5 class="small">・Toyのアクセスフィルターの削除</h5>
                                 </div>
                                 <form jsf:id="toy-account-tying-cancel-form">
                                     <button class="btn btn-danger" jsf:id="toy-account-tying-cancel" jsf:action="#{toyStatusBean.accountTyingCancel()}" style="margin-right: 5px;">Toyの紐付け解除</button>

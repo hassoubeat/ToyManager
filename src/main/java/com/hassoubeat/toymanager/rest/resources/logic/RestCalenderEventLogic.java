@@ -100,7 +100,7 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
         convertList.addAll(eventFacade.findStandardEventByToyId(targetToy, startDate, endDate));
         convertList.addAll(eventFacade.findRoopEventByToyId(targetToy, startDate));
         for(Event toyEvent : convertList) {
-            if (!bitLogic.bitCheck(toyEvent.getRoop(), erpConst.IS_ROOP) || toyEvent.getRoopEndDate() == null) {
+            if (!bitLogic.bitCheck(toyEvent.getRoop(), erpConst.IS_ROOP)) {
                 // ループなしの場合(ループ終了日時が設定されていない時も同様
                 responseList.add(convertEvent(toyEvent));
             } else {
@@ -136,7 +136,7 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
         convertList.addAll(eventFacade.findStandardEventByAccountId(targetAccount, startDate, endDate));
         convertList.addAll(eventFacade.findRoopEventByAccountId(targetAccount, startDate));
         for(Event accountEvent : convertList) {
-            if (!bitLogic.bitCheck(accountEvent.getRoop(), erpConst.IS_ROOP) || accountEvent.getRoopEndDate() == null) {
+            if (!bitLogic.bitCheck(accountEvent.getRoop(), erpConst.IS_ROOP)) {
                 // ループなしの場合(ループ終了日時が設定されていない時も同様
                 responseList.add(convertEvent(accountEvent));
             } else {

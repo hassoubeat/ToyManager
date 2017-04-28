@@ -88,7 +88,7 @@ public class ToyStatusBean implements Serializable{
     @LogInterceptor
     public String accountTyingCancel(){
         // 選択中のToyを取得し、アカウント紐付けから解除する
-        if (sessionBean.getSelectedToyId() != 0) {
+        if (sessionBean.isToySelected()) {
             toyLogic.accountTyingCancel(toyFacade.find(sessionBean.getSelectedToyId()));
             
             // 紐付け解除完了のメッセージをリダイレクト先で表示するように、フラッシュメッセージに格納する
