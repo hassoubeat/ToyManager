@@ -105,7 +105,10 @@ public class SessionBean implements Serializable {
      * @return 
      */
     public boolean isToySelected() {
-        return selectedToyId > 0;
+        if (selectedToyId != null) {
+            return selectedToyId > 0;
+        }
+        return false;
     }
     
     /**

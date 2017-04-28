@@ -20,6 +20,7 @@ import com.hassoubeat.toymanager.service.entity.Facet;
 import com.hassoubeat.toymanager.service.entity.FacetEvent;
 import com.hassoubeat.toymanager.service.entity.ToyFacet;
 import com.hassoubeat.toymanager.service.entity.ToyVoiceType;
+import com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException;
 import com.hassoubeat.toymanager.service.logic.FacetEventLogic;
 import com.hassoubeat.toymanager.service.logic.ToyFacetLogic;
 import com.hassoubeat.toymanager.service.logic.ToyWebApiAccessFilterLogic;
@@ -236,11 +237,14 @@ public class ToyCustomBean implements Serializable{
     @AuthGeneralInterceptor
     @LogInterceptor
     public void bookmarkable(){
-        if (sessionBean.getSelectedToyId() != 0) {
+        if (sessionBean.isToySelected()) {
             // Toyが選択済の場合
             fetchToy();
             fetchFacetList();
             fetchToyVoiceTypeList();
+        } else {
+            // Toyが選択されていない状態では本画面に遷移されることは無いため、不正遷移とする
+            throw new InvalidScreenTransitionException();
         }
     }
     

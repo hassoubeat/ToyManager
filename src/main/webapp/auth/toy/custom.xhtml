@@ -239,7 +239,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Toy未選択時の通知モーダルダイアログ -->
+<!--                 Toy未選択時の通知モーダルダイアログ 
                 <div class="modal fade" id="not-selected-toy-modal" tabindex="-1">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -255,7 +255,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </ui:define>
             <ui:define name="css">
                 <!-- jQueryUI CSS -->
@@ -271,11 +271,11 @@
                         // ナビゲーションバーのactiveを変更
                         $("#toy").addClass("active");
                         
-                        // Toy選択済チェック
-                        if(#{sessionBean.selectedToyId} === 0) {
-                            // Toyが未選択だった場合、選択を促すダイアログを表示する
-                            $("#not-selected-toy-modal").modal();
-                        }
+//                        // Toy選択済チェック
+//                        if(#{sessionBean.selectedToyId} === 0) {
+//                            // Toyが未選択だった場合、選択を促すダイアログを表示する
+//                            $("#not-selected-toy-modal").modal();
+//                        }
                         
                         $("[id^=toy-item]").hover(
                             function(){

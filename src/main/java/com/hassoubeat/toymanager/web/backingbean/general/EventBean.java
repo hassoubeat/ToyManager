@@ -389,15 +389,10 @@ public class EventBean implements Serializable{
     @AuthGeneralInterceptor
     @LogInterceptor
     public void bookmarkable() {
-        if(sessionBean.getSelectedToyId() > 0) {
-            // Toyが選択済であった場合
-            
-            // アカウントに紐づくイベントの取得
-//            accountEventList = eventFacade.findByAccountId(accountFacade.find(sessionBean.getId()));
-            // Toyに紐づくイベントの取得
-//            toyEventList = eventFacade.findByToyId(toyFacade.find(sessionBean.getSelectedToyId()));
-            // カラーコードの一覧を取得
-//            colorTypeList = colorTypeFacade.findAll();
+        if(sessionBean.isToySelected()) {
+        } else {
+            // Toyが選択されていない状態では本画面に遷移されることは無いため、不正遷移とする
+            throw new InvalidScreenTransitionException();
         }
         
     }

@@ -30,7 +30,12 @@
                                 <div class="panel-body">
                                     <h2><span class="glyphicon glyphicon-calendar"/> イベントの編集</h2>
                                     <h3 class="small">Toyに喋らせるイベントの登録/変更/削除などを行うことが出来ます。</h3>
-                                    <a class="btn btn-primary" id="toy-menu-schedule" jsf:outcome="/auth/event/index" >予定を編集する</a>
+                                    <ui:fragment rendered="#{sessionBean.isToySelected()}">
+                                        <a class="btn btn-primary" id="toy-menu-schedule" jsf:outcome="/auth/event/index" >予定を編集する</a>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{!sessionBean.isToySelected()}">
+                                        <span class="label label-danger">Toyが未選択です</span>
+                                    </ui:fragment>
                                 </div>
                             </div>
                         </div>
@@ -39,7 +44,12 @@
                                 <div class="panel-body">
                                     <h2><span class="glyphicon glyphicon-wrench"/> Toyのカスタマイズ</h2>
                                     <h3 class="small">Toyにファセット(追加機能)を追加したり、音声を選択することなどが出来ます。</h3>
-                                    <a class="btn btn-primary" id="toy-menu-faset" jsf:outcome="/auth/toy/custom">Toyをカスタマイズする</a>
+                                    <ui:fragment rendered="#{sessionBean.isToySelected()}">
+                                        <a class="btn btn-primary" id="toy-menu-faset" jsf:outcome="/auth/toy/custom">Toyをカスタマイズする</a>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{!sessionBean.isToySelected()}">
+                                        <span class="label label-danger">Toyが未選択です</span>
+                                    </ui:fragment>
                                 </div>
                             </div>
                             
@@ -49,7 +59,12 @@
                                 <div class="panel-body">
                                     <h2><span class="glyphicon glyphicon-stats"/> Toyのステータス</h2>
                                     <h3 class="small">選択しているToyの情報を確認します。</h3>
-                                    <a class="btn btn-primary" id="toy-menu-status" jsf:outcome="/auth/toy/status">Toyのステータスを確認する</a>
+                                    <ui:fragment rendered="#{sessionBean.isToySelected()}">
+                                        <a class="btn btn-primary" id="toy-menu-status" jsf:outcome="/auth/toy/status">Toyのステータスを確認する</a>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{!sessionBean.isToySelected()}">
+                                        <span class="label label-danger">Toyが未選択です</span>
+                                    </ui:fragment>
                                 </div>
                             </div>
                         </div>
@@ -64,6 +79,23 @@
                                 </div>
                             </div>
                         </ui:fragment>
+                    </div>
+                </div>
+                <!-- Toy未選択時の通知モーダルダイアログ -->
+                <div class="modal fade" id="not-selected-toy-modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+                                <h4 class="modal-title">Toyが未選択です。</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="bs-callout bs-callout-warning">
+                                    <h4>画面右のToy一覧からToyを選択してください。</h4>
+                                    <h5 class="small">登録されているToyが存在しない場合は、Toyの登録を行って下さい。</h5>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </ui:define>
@@ -83,6 +115,11 @@
                         // ナビゲーションバーのactiveを変更
                         $("#top").addClass("active");
                     });
+                    
+                    if(!#{sessionBean.isToySelected()}) {
+                        // Toyが未選択だった場合、選択を促すダイアログを表示する
+                        $("#not-selected-toy-modal").modal();
+                    }
                 </script>
             </ui:define>
         </ui:composition>        

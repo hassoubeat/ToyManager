@@ -13,6 +13,7 @@ import com.hassoubeat.toymanager.service.dao.AccountFacade;
 import com.hassoubeat.toymanager.service.entity.Toy;
 import com.hassoubeat.toymanager.service.dao.ToyFacade;
 import com.hassoubeat.toymanager.service.entity.ToyWebapiAccessFilter;
+import com.hassoubeat.toymanager.service.exception.InvalidScreenTransitionException;
 import com.hassoubeat.toymanager.service.logic.ToyLogic;
 import com.hassoubeat.toymanager.service.logic.ToyWebApiAccessFilterLogic;
 import com.hassoubeat.toymanager.util.ToastMessage;
@@ -72,7 +73,7 @@ public class ToyStatusBean implements Serializable{
     @LogInterceptor
     private void toyReload() {
         // ログイン中のユーザに紐づくToyを取得し、フィールドにセットする
-        if (sessionBean.getSelectedToyId() != 0) {
+        if (sessionBean.isToySelected()) {
             // Toyが選択されている場合、対象のToyをセットする
             this.setTargetToy(toyFacade.find(sessionBean.getSelectedToyId()));
         }
@@ -191,7 +192,13 @@ public class ToyStatusBean implements Serializable{
     @AuthGeneralInterceptor
     @LogInterceptor
     public void bookmarkable(){
-        this.toyReload();
+        if (sessionBean.isToySelected()) {
+            this.toyReload();
+        } else {
+            // Toyが選択されていない状態では本画面に遷移されることは無いため、不正遷移とする
+            throw new InvalidScreenTransitionException();
+        }
+        
     }
     
 }

@@ -12,7 +12,9 @@
                             <a class="navbar-brand" jsf:outcome="/auth/index">Toy Manager</a>
                             <ul class="nav nav-pills pull-right">
                             <li id="top" role="presentation"><a jsf:outcome="/login"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> TOP</a></li>
-                            <li id="event" role="presentation"><a jsf:outcome="/auth/event/index"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> イベント</a></li>
+                            <ui:fragment rendered="#{sessionBean.isToySelected()}">
+                                <li id="event" role="presentation"><a jsf:outcome="/auth/event/index"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> イベント</a></li>
+                            </ui:fragment>
                             <li id="toy" class="dropdown" role="presentation">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     <span class="glyphicon glyphicon-wrench" aria-hidden="true"/> Toy
@@ -20,8 +22,12 @@
                                 </a> 
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a jsf:outcome="/auth/toy/create"><span class="glyphicon glyphicon-plus"/> Toyの新規登録</a></li>
-                                    <li><a jsf:outcome="/auth/toy/status"><span class="glyphicon glyphicon-stats"/> Toyのステータス確認</a></li>
-                                    <li><a jsf:outcome="/auth/toy/custom"><span class="glyphicon glyphicon-wrench"/> Toyのカスタマイズ</a></li>
+                                    <ui:fragment rendered="#{sessionBean.isToySelected()}">
+                                        <li><a jsf:outcome="/auth/toy/status"><span class="glyphicon glyphicon-stats"/> Toyのステータス確認</a></li>
+                                    </ui:fragment>
+                                    <ui:fragment rendered="#{sessionBean.isToySelected()}">
+                                        <li><a jsf:outcome="/auth/toy/custom"><span class="glyphicon glyphicon-wrench"/> Toyのカスタマイズ</a></li>
+                                    </ui:fragment>
                                 </ul>
                             </li>
                             <li id="user" class="dropdown" role="presentation">
