@@ -68,6 +68,30 @@ public class ToyStatusBean implements Serializable{
     }
     
     /**
+     * Toyの名前を変更するメソッド
+     * @return 遷移先
+     */
+    @ErrorInterceptor
+    @AuthGeneralInterceptor
+    @LogInterceptor
+    public String toyTitleEdit(){
+        Toy editToy = toyFacade.edit(targetToy);
+        logger.info("{}.{} USER_ID:{} EDIT_TOY_ID:{}", MessageConst.SUCCESS_TOY_EDIT.getId(), MessageConst.SUCCESS_TOY_EDIT.getMessage(), sessionBean.getId(), editToy.getId());
+        
+        // 紐付け解除完了のメッセージをリダイレクト先で表示するように、フラッシュメッセージに格納する
+        ToastMessage toastMessage = new ToastMessage();
+        toastMessage.setRender(true);
+        toastMessage.setHeading(MessageConst.SUCCESS_TOY_EDIT.getMessage());
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.addMessage("", new FacesMessage(toastMessage.genList()));
+        facesContext.getExternalContext().getFlash().setKeepMessages(true);
+        
+        // 元の画面にリダイレクトで戻る
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        return request.getPathInfo() + "?faces-redirect=true";
+    }
+    
+    /**
      * Toy情報を取得しなおすメソッド
      */
     @LogInterceptor

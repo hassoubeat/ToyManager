@@ -29,9 +29,15 @@
                                 <tr>
                                     <th>Toyの名前</th>
                                     <td>
-                                        #{toyStatusBean.targetToy.name}
-<!--                                            <input type="text" id="event-title" jsf:id="toy-title" class="form-control" placeholder="Toyのタイトルを50文字以内で入力してください。" jsf:value="#{toyStatusBean.targetToy.name}"/>
-                                        <h:message class="label label-danger" for="toy-title"/>-->
+                                        <form jsf:id="toy-title-edit-form">
+                                            <div class="input-group">
+                                                <input type="text" id="event-title" jsf:id="toy-title" class="form-control" placeholder="Toyの名前を50文字以内で入力してください。" jsf:value="#{toyStatusBean.targetToy.name}"/>
+                                                <h:message class="label label-danger" for="toy-title"/>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-primary" jsf:id="toy-title-edit" jsf:action="#{toyStatusBean.toyTitleEdit()}">変更</button>
+                                                </span>
+                                            </div>
+                                        </form>
                                     </td>
                                 </tr>
                                 <tr>
