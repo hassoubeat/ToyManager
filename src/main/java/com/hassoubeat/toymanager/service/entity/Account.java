@@ -115,7 +115,7 @@ public class Account implements Serializable {
     
     @PrePersist
     public void prePersist(){
-        // TODO メール認証完了フラグを設定する　そもそもメール認証完了フラグいらないかも
+        // TODO そもそもメール認証完了フラグいらないかも
         this.setIsAuthenticated(true);
         // 削除フラグを入力する
         this.setIsDeleted(false);

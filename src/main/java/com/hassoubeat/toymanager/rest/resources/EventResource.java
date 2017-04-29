@@ -149,38 +149,7 @@ public class EventResource {
         responseList.addAll(restEventLogic.fetchEvent(toy, fetchStartDate, fetchEndDate));
         
         return responseList;
-        // TODO 現在日時より古いイベントは取得しない
-        
-        // Toyに紐づくイベントの取得
-//        for (Event toyEvent : toy.getEventList()) {
-//            // 取得したイベントリストをREST用エンティティに詰め替える
-//            RestEvent rcEvent = new RestEvent();
-//            rcEvent.setId(toyEvent.getId());
-//            rcEvent.setName(toyEvent.getName());
-//            rcEvent.setContent(toyEvent.getContent());
-//            rcEvent.setStartDate(toyEvent.getStartDate());
-//            rcEvent.setEndDate(toyEvent.getEndDate());
-//            rcEvent.setRoop(toyEvent.getRoop());
-//            rcEvent.setToyId(toyEvent.getToyId().getId());
-//            responseList.add(rcEvent);
-//        }
-        
-        // アカウントに紐づくイベントの取得
-//        for (Event accountEvent :eventFacade.findByAccountId(toy.getAccountId())) {
-//            // 取得したイベントリストをREST用エンティティに詰め替える
-//            RestEvent rcEvent = new RestEvent();
-//            rcEvent.setId(accountEvent.getId());
-//            rcEvent.setName(accountEvent.getName());
-//            rcEvent.setContent(accountEvent.getContent());
-//            rcEvent.setStartDate(accountEvent.getStartDate());
-//            rcEvent.setEndDate(accountEvent.getEndDate());
-//            rcEvent.setRoop(accountEvent.getRoop());
-//            rcEvent.setAccountId(accountEvent.getAccountId().getId());
-//            responseList.add(rcEvent);
-//        }
-        
-        // TODO ファセットに紐づくイベントの取得
-        
+                
     }
     
 //    /**
@@ -203,57 +172,4 @@ public class EventResource {
 //        
 //        
 //    }
-    
-//    @POST
-//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public void create(Event entity) {
-//        
-//    }
-//
-//    @PUT
-//    @Path("{id}")
-//    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public void edit(@PathParam("id") Integer id, Event entity) {
-//
-//    }
-//
-//    @DELETE
-//    @Path("{id}")
-//    public void remove(@PathParam("id") Integer id) {
-//        
-//    }
-//
-//    @GET
-//    @Path("{id}")
-//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public Event find(@PathParam("id") Integer id) {
-//        
-//    }
-//
-//    @GET
-//    
-//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public List<Event> findAll() {
-//        
-//    }
-//
-//    @GET
-//    @Path("{from}/{to}")
-//    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-//    public List<Event> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-//        return super.findRange(new int[]{from, to});
-//    }
-//
-//    @GET
-//    @Path("count")
-//    @Produces(MediaType.TEXT_PLAIN)
-//    public String countREST() {
-//        return String.valueOf(super.count());
-//    }
-//
-//    @Override
-//    protected EntityManager getEntityManager() {
-//        return em;
-//    }
-//    
 }

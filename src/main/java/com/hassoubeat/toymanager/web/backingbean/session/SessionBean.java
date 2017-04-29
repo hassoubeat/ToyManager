@@ -127,4 +127,8 @@ public class SessionBean implements Serializable {
         return roleLogic.isManagerRole(roleAuthority);
     }
     
+    @Override
+    public String toString() {
+        return "id=" + id + ",userId=" + userId + ",role=" + role + ",roleAuthority=" + roleAuthority + ",isAuth=" + isAuth + ",selectedToyId=" + selectedToyId;
+    }
 }

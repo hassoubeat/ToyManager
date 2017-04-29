@@ -49,7 +49,6 @@ public class ExceptionInterceptor implements Serializable{
         try {
             // インターセプトするオブジェクトの実行
             ret = context.proceed();
-            // TODO 今後発生しうるExceptionは以下に追加していく
         } catch (InvalidScreenTransitionException ex) {
             // 不正な画面遷移例外の発生時処理
             logger.warn("{}:{} USER_ID:{} {}.{}", MessageConst.INVALID_SCREEN_TRANSITION.getId(), MessageConst.INVALID_SCREEN_TRANSITION.getMessage(), sessionBean.getUserId(),targetClassName, targetMethodName, ex);

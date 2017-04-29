@@ -115,7 +115,7 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
                 if (bitLogic.bitCheck(toyEvent.getRoop(), erpConst.IS_EVERY_MOUTH_ROOP)) {
                     // 月次ループの場合
                     responseList.addAll(convertRoopEvent(toyEvent, erpConst.IS_EVERY_MOUTH_ROOP , startDate, endDate));
-                    // TODO 曜日基準の場合を表示する
+                    // TODO 曜日基準の場合を実装する
                 }
                 if (bitLogic.bitCheck(toyEvent.getRoop(), erpConst.IS_EVERY_YEAR_ROOP)) {
                     // 年次ループの場合
@@ -151,7 +151,7 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
                 if (bitLogic.bitCheck(accountEvent.getRoop(), erpConst.IS_EVERY_MOUTH_ROOP)) {
                     // 月次ループの場合
                     responseList.addAll(convertRoopEvent(accountEvent, erpConst.IS_EVERY_MOUTH_ROOP, startDate, endDate));
-                    // TODO 曜日基準の場合を表示する
+                    // TODO 曜日基準の場合を実装する
                 }
                 if (bitLogic.bitCheck(accountEvent.getRoop(), erpConst.IS_EVERY_YEAR_ROOP)) {
                     // 年次ループの場合
@@ -189,7 +189,7 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
                 if (bitLogic.bitCheck(facetEvent.getRoop(), erpConst.IS_EVERY_MOUTH_ROOP)) {
                     // 月次ループの場合
                     responseList.addAll(convertRoopEvent(facetEvent, erpConst.IS_EVERY_MOUTH_ROOP, startDate, endDate));
-                    // TODO 曜日基準の場合を表示する
+                    // TODO 曜日基準の場合を実装する
                 }
                 if (bitLogic.bitCheck(facetEvent.getRoop(), erpConst.IS_EVERY_YEAR_ROOP)) {
                     // 年次ループの場合
@@ -270,8 +270,7 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
             try {
                 roopEvent = (Event)targetEvent.clone();
             } catch (CloneNotSupportedException ex) {
-                // TODO 
-                throw new ToyManagerException("何故か複製できなかった", ex);
+                throw new ToyManagerException("オブジェクトのクローンに失敗しました。", ex);
             }
             roopEvent.setStartDate(nextStartDate);
             roopEvent.setEndDate(nextEndDate);
@@ -368,8 +367,7 @@ public class RestCalenderEventLogic extends AbstractRestLogic {
         try {
             roopEvent = (Event)targetEvent.clone();
         } catch (CloneNotSupportedException ex) {
-            // TODO 
-            throw new ToyManagerException("何故か複製できなかった", ex);
+            throw new ToyManagerException("オブジェクトのクローンに失敗しました。", ex);
         }
         roopEvent.setStartDate(utilLogic.calDate(roopEvent.getStartDate(), dayOfTheWeek - eventStartDoW, Calendar.DAY_OF_MONTH));
         if (roopEvent.getEndDate()!= null) {

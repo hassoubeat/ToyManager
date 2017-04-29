@@ -5,6 +5,7 @@
  */
 package com.hassoubeat.toymanager.interceptor;
 
+import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.io.Serializable;
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -23,26 +24,27 @@ public class LogInterceptor implements Serializable{
     @Inject
     Logger logger;
     
+    @Inject
+    SessionBean sessionBean;
+    
     public LogInterceptor() {
     }
-    
-    // TODO セッション情報があれば加えて出力
-    
+        
     @AroundInvoke
     public Object invoke(InvocationContext context) throws Exception{
         String targetClassName = context.getTarget().getClass().getSuperclass().getName();
         String targetMethodName = context.getMethod().getName();
         
-        logger.debug("{} : {}","START_METHOD_RUN", targetClassName + "." + targetMethodName);
+        logger.debug("{} : {} Session:{}","START_METHOD_RUN", targetClassName + "." + targetMethodName, sessionBean.toString());
         long beforeTime = System.nanoTime();
         
         // インターセプトするオブジェクトの実行
         Object ret = context.proceed();
         
         long afterTime = System.nanoTime();
-        logger.debug("{} : {}", "METHOD_RUN_TIME", targetClassName + "." + targetMethodName + ":" + (afterTime - beforeTime) + "nsecs.");
+        logger.debug("{} : {} ", "METHOD_RUN_TIME", targetClassName + "." + targetMethodName + ":" + (afterTime - beforeTime) + "nsecs.");
         
-        logger.debug("{} : {}", "END_METHOD_RUN", targetClassName + "." + targetMethodName);
+        logger.debug("{} : {} Session:{}", "END_METHOD_RUN", targetClassName + "." + targetMethodName, sessionBean.toString());
         
         return ret;
     }
