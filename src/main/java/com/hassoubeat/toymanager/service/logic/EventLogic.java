@@ -19,14 +19,9 @@ import com.hassoubeat.toymanager.util.UtilLogic;
 import com.hassoubeat.toymanager.web.backingbean.session.SessionBean;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import static org.quartz.CalendarIntervalScheduleBuilder.calendarIntervalSchedule;
-import static org.quartz.TriggerBuilder.newTrigger;
 import org.slf4j.Logger;
 
 /**
@@ -219,39 +214,41 @@ public class EventLogic{
             // ループ間隔値が指定されていなかった場合に初期値1と指定する
             roop += 1;
         }
-
-        if(!bitLogic.dayOfTheWeekCheck(roop)) {
-            // ループ曜日設定が指定されていなかった場合にイベント開始日のビットを立てる
+        
+        if(bitLogic.bitCheck(roop, erpConst.IS_EVERY_WEEK_ROOP)) {
+            if(!bitLogic.dayOfTheWeekCheck(roop)) {
+            // 週次ループでループ曜日設定が指定されていなかった場合にイベント開始日のビットを立てる
             
-            switch(startDate.getDayOfWeek().getValue()) {
-                case 7:
-                    // 日曜日の場合
-                    roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_SUNDAY);
-                    break;
-                case 1:
-                    // 月曜日の場合
-                    roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_MONDAY);
-                    break;
-                case 2:
-                    // 火曜日の場合
-                    roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_TUESDAY);
-                    break;
-                case 3:
-                    // 水曜日の場合
-                    roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_WEDNESDAY);
-                    break;
-                case 4:
-                    // 木曜日の場合
-                    roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_THURSDAY);
-                    break;
-                case 5:
-                    // 金曜日の場合
-                    roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_FRIDAY);
-                    break;
-                case 6:
-                    // 土曜日の場合
-                    roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_SATURDAY);
-                    break;
+                switch(startDate.getDayOfWeek().getValue()) {
+                    case 7:
+                        // 日曜日の場合
+                        roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_SUNDAY);
+                        break;
+                    case 1:
+                        // 月曜日の場合
+                        roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_MONDAY);
+                        break;
+                    case 2:
+                        // 火曜日の場合
+                        roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_TUESDAY);
+                        break;
+                    case 3:
+                        // 水曜日の場合
+                        roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_WEDNESDAY);
+                        break;
+                    case 4:
+                        // 木曜日の場合
+                        roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_THURSDAY);
+                        break;
+                    case 5:
+                        // 金曜日の場合
+                        roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_FRIDAY);
+                        break;
+                    case 6:
+                        // 土曜日の場合
+                        roop = bitLogic.bitOr(roop, erpConst.IS_ROOP_SATURDAY);
+                        break;
+                }
             }
         }
         

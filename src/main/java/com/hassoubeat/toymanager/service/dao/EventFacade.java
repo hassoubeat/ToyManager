@@ -208,10 +208,10 @@ public class EventFacade extends AbstractFacade<Event> {
         // WHERE条件の型と検索条件名(Entityの要素名)を指定する
         Predicate isToyIdEqual = builder.equal(root.get(Event_.accountId), accountId);
         Predicate isStandardEvent = builder.notEqual(root.get(Event_.roop), 0);
-        Predicate isRoopEndDate = builder.greaterThanOrEqualTo(root.get(Event_.roopEndDate), startDate);
         Predicate isInfiniteRoop = builder.isNull(root.get(Event_.roopEndDate));
+        Predicate isRoopEndDate = builder.greaterThanOrEqualTo(root.get(Event_.roopEndDate), startDate);
         Predicate isRoop = builder.or(isInfiniteRoop, isRoopEndDate);
-        cq.where(isToyIdEqual, isStandardEvent, isRoopEndDate, isRoop);
+        cq.where(isToyIdEqual, isStandardEvent, isRoop);
         
         return getEntityManager().createQuery(cq).getResultList();
     }

@@ -148,7 +148,6 @@ public class EventBean implements Serializable{
     public void addEvent() {
         
         FacesContext context = FacesContext.getCurrentInstance();
-        
         if (this.eventEndDate != null) {
             // イベント終了日次が設定されている場合
             
