@@ -5,10 +5,10 @@ ToyManagerはJavaEE7フレームワークを利用して作成されたWEB上で
 サーバ上に配置して、Googleカレンダーのように予定を登録することが可能です。  
 
 __カレンダー画面__
-![screen](https://user-images.githubusercontent.com/42881127/48115896-b215f780-e2a7-11e8-8060-21898cfc545b.png)
+![screen2](https://user-images.githubusercontent.com/42881127/48115983-fef9ce00-e2a7-11e8-8bba-d6830b0cb1dc.png)
   
 __予定登録画面__
-![screen2](https://user-images.githubusercontent.com/42881127/48115983-fef9ce00-e2a7-11e8-8bba-d6830b0cb1dc.png)
+![screen](https://user-images.githubusercontent.com/42881127/48115896-b215f780-e2a7-11e8-8060-21898cfc545b.png)
   
   
 登録された予定は用意したAPIからToyTalkが取得して、合成音声にて読み上げを行います。
